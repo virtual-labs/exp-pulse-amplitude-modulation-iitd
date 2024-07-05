@@ -1,0 +1,194 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Virtual Labs</title>
+    <script>
+        function linspace(start, end, num) {
+            const step = (end - start) / (num - 1);
+            return Array.from({ length: num }, (_, index) => start + index * step);
+        }
+
+        function destroyChart(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (canvas) {
+                const context = canvas.getContext('2d');
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                const existingChart = Chart.getChart(canvas);
+                if (existingChart) {
+                    existingChart.destroy();
+                }
+            }
+        }
+
+        function modulate(x, Fc, Fs, P1) {
+            var len = x.length;
+            var t = new Array(len);
+            var y = new Array(len);
+
+            for (var i = 0; i < len; i++) {
+                t[i] = i / Fs;
+
+                // Determine the index based on the current value of x and the time vector
+                var ind = Math.ceil((x[i] + t[i]) * Fs / Fc);
+
+                // Calculate pulse width based on P1 parameter
+                var pulseWidth = P1 * (1 / Fc);
+
+                // Set the PPM signal values
+                y[i] = (ind >= 1 && ind <= len && t[i] % (1 / Fc) <= pulseWidth) ? 1 : 0;
+            }
+
+            return { y: y, t: t };
+        }
+
+        async function generateMessage() {
+            destroyChart('messageChart');
+
+            const duration = 1;
+            const resolution = 10000;
+            const t = linspace(0, duration, resolution * duration);
+
+            const messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
+
+            if (isNaN(messageFrequency)) {
+                console.error('Invalid message frequency');
+                return;
+            }
+
+            const a = 0.5;
+            const messageSignal = linspace(0, duration, resolution * duration)
+                .map(t => a * Math.sin(2 * Math.PI * messageFrequency * t) + 0.5);
+
+            plotSignal('messageChart', t, messageSignal, 'Message Signal');
+            return messageSignal;
+        }
+
+        async function generateCarrier() {
+            destroyChart('carrierChart');
+
+            const duration = 1;
+            const resolution = 10000;
+            const t = linspace(0, duration, resolution * duration);
+
+            const carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
+
+            if (isNaN(carrierFrequency)) {
+                console.error('Invalid carrier frequency');
+                return;
+            }
+
+            const fc = carrierFrequency;
+            const a = 0.5;
+            const carrierSignal = linspace(0, duration, resolution * duration)
+                .map(t => a * Math.cos(2 * Math.PI * fc * t) + 0.5);
+
+            plotSignal('carrierChart', t, carrierSignal, 'Carrier Signal');
+            return carrierSignal;
+        }
+
+        async function generatePPM() {
+            destroyChart('ppmChart');
+
+            const duration = 1;
+            const resolution = 10000;
+            const t = linspace(0, duration, resolution * duration);
+
+            const fc = parseFloat(document.getElementById('carrierFrequency').value);
+            const { messageSignal, carrierSignal } = await generateSignal();
+
+            if (!messageSignal || !carrierSignal) {
+                console.error('Failed to generate signals');
+                return;
+            }
+
+            const ppmSignal = modulate(messageSignal, fc, 10000, 0.01);
+
+            plotSignal('ppmChart', t, ppmSignal.y, 'PPM Signal');
+        }
+
+        function generateSignal() {
+            return Promise.all([generateMessage(), generateCarrier()])
+                .then(([messageSignal, carrierSignal]) => ({ messageSignal, carrierSignal }))
+                .catch(error => console.error('Error generating signals:', error));
+        }
+
+        function plotSignal(canvasId, time, signal, label) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: time,
+                    datasets: [{
+                        label: label,
+                        data: signal,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                        fill: false,
+                    }],
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            position: 'bottom',
+                        },
+                        y: {
+                            min: -1,
+                            max: 1,
+                        },
+                    },
+                },
+            });
+        }
+    </script>
+  </head>
+  <body>
+    <!-- sidebar and body -->
+    <div class="flex min-h-[80vh]">
+      <div class=" px-6 pb-6 flex-1">
+        <div class="flex">
+            <div class="flex-1">
+                <h2 class="text-center p-1 m-1">Message Signal</h2>
+                <div class="flex justify-center items-center gap-1">
+                <input class="border px-2 min-w-[252px] py-1 rounded-sm " type="number" id="messageFrequency" placeholder="Enter message frequency in Hz">
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="generateMessage()">Generate </button>
+                 </div>
+                 <div class="flex justify-center items-center">
+                <div class="w-[400px] h-[200px]">
+                    <canvas id="messageChart" class="mt-5"></canvas>
+                </div>
+                </div>
+            </div>
+            <div class="flex-1">
+                <h2 class="text-center p-1 m-1">Carrier Signal</h2>
+                <div class="flex justify-center items-center gap-1">
+                <input class="border px-2 w-60 py-1 rounded-sm " type="number" id="carrierFrequency" placeholder="Enter carrier frequency in Hz">
+                <button class="bg-blue-500 text-white rounded-md px-2  py-1" onclick="generateCarrier()">Generate </button>
+                </div>
+                <div class="flex justify-center items-center">
+                <div class="w-[400px] h-[200px] ">
+                    <canvas id="carrierChart" class="mt-5"></canvas>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class=" mt-4 border-t-2">
+            <div class="flex flex-col">
+            <h2 class="text-center p-1 text-lg">PPM Signal</h2>
+                <div class="flex justify-center">
+                    <button class="bg-blue-500 text-white rounded-md px-2 py-1" class="button" onclick="generatePPM()">Generate PPM Signal</button>
+                </div>
+                <div class="flex justify-center items-center">
+                    <div class="w-[600px] h-[300px] mb-5 ">
+                        <canvas id="ppmChart" class="w-[650px] h-[280px]"></canvas>
+                    </div>  
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
