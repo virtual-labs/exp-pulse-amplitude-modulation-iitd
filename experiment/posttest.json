@@ -2,38 +2,174 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "In Pulse Amplitude Modulation (PAM), what is the effect of increasing the bandwidth of the transmitted signal?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Increased noise immunity",
+        "b": "Increased inter-symbol interference",
+        "c": "Reduced pulse amplitude",
+        "d": "Improved time resolution"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. Noise immunity is not directly affected by bandwidth.",
+        "b": "Correct! Increasing the bandwidth can increase inter-symbol interference.",
+        "c": "Incorrect. Pulse amplitude is not affected by bandwidth.",
+        "d": "Incorrect. Bandwidth affects frequency resolution, not time resolution."
       },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+      "correctAnswer": "b",
+      "difficulty": "hard"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "Which of the following is a primary disadvantage of using Pulse Width Modulation (PWM) in high-frequency applications?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Increased power consumption",
+        "b": "Increased sensitivity to noise",
+        "c": "Decreased frequency stability",
+        "d": "Complex demodulation process"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Correct! PWM can result in increased power consumption, especially at high frequencies.",
+        "b": "Incorrect. PWM is relatively robust against noise.",
+        "c": "Incorrect. Frequency stability is not inherently decreased in PWM.",
+        "d": "Incorrect. The demodulation process for PWM is relatively straightforward."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "How does quantization noise in Pulse Code Modulation (PCM) affect the signal-to-noise ratio (SNR)?",
+      "answers": {
+        "a": "It improves the SNR.",
+        "b": "It degrades the SNR.",
+        "c": "It has no effect on the SNR.",
+        "d": "It improves the SNR at lower quantization levels."
+      },
+      "explanations": {
+        "a": "Incorrect. Quantization noise reduces SNR.",
+        "b": "Correct! Quantization noise degrades the SNR.",
+        "c": "Incorrect. Quantization noise does affect the SNR.",
+        "d": "Incorrect. Quantization noise worsens SNR at lower levels."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In a Pulse Position Modulation (PPM) system, how does the introduction of timing jitter impact the accuracy of the demodulated signal?",
+      "answers": {
+        "a": "It has no impact on the signal.",
+        "b": "It increases the signal amplitude.",
+        "c": "It causes errors in pulse position detection.",
+        "d": "It increases the signal bandwidth."
+      },
+      "explanations": {
+        "a": "Incorrect. Timing jitter affects PPM.",
+        "b": "Incorrect. Amplitude is unaffected by jitter in PPM.",
+        "c": "Correct! Timing jitter can cause significant errors in pulse position detection.",
+        "d": "Incorrect. Jitter does not increase bandwidth directly."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "hard"
+    },
+    {
+      "question": "Which factor limits the maximum number of quantization levels in Pulse Code Modulation (PCM) without significantly increasing the quantization noise?",
+      "answers": {
+        "a": "Sampling frequency",
+        "b": "Bit rate",
+        "c": "Signal bandwidth",
+        "d": "Amplitude resolution"
+      },
+      "explanations": {
+        "a": "Incorrect. Sampling frequency affects time resolution, not quantization levels.",
+        "b": "Incorrect. Bit rate affects data rate but not directly the quantization noise.",
+        "c": "Incorrect. Bandwidth is not the limiting factor for quantization levels.",
+        "d": "Correct! Amplitude resolution determines the maximum number of quantization levels without increasing noise."
+      },
+      "correctAnswer": "d",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In PAM, what is the consequence of using non-linear devices during the modulation process?",
+      "answers": {
+        "a": "Distortion is introduced, affecting the integrity of the signal.",
+        "b": "The signal is compressed, reducing bandwidth.",
+        "c": "The pulse amplitude is stabilized.",
+        "d": "The modulating signal is unaffected."
+      },
+      "explanations": {
+        "a": "Correct! Non-linear devices introduce distortion in PAM.",
+        "b": "Incorrect. Compression is not a direct result of non-linear modulation.",
+        "c": "Incorrect. Non-linear devices do not stabilize pulse amplitude.",
+        "d": "Incorrect. Non-linearity does affect the modulating signal."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "Why is Pulse Width Modulation (PWM) preferred in power delivery systems over PAM?",
+      "answers": {
+        "a": "PWM signals are more energy-efficient for power delivery.",
+        "b": "PWM signals are easier to demodulate.",
+        "c": "PWM allows for higher data rates.",
+        "d": "PWM signals are less susceptible to distortion."
+      },
+      "explanations": {
+        "a": "Correct! PWM is more energy-efficient in power delivery systems.",
+        "b": "Incorrect. Ease of demodulation is not the primary reason.",
+        "c": "Incorrect. Data rates are not necessarily higher with PWM.",
+        "d": "Incorrect. Distortion is less relevant in this context."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In a noisy environment, which type of pulse modulation is most likely to suffer from inter-symbol interference (ISI)?",
+      "answers": {
+        "a": "PAM",
+        "b": "PWM",
+        "c": "PPM",
+        "d": "PCM"
+      },
+      "explanations": {
+        "a": "Correct! PAM is more prone to ISI, especially in noisy environments.",
+        "b": "Incorrect. PWM is less susceptible to ISI than PAM.",
+        "c": "Incorrect. PPM's position-based modulation is less affected by ISI.",
+        "d": "Incorrect. PCM uses digital encoding, which reduces ISI effects."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "How does the choice of sampling frequency affect the performance of a PCM system?",
+      "answers": {
+        "a": "Higher sampling frequency reduces quantization noise.",
+        "b": "Lower sampling frequency increases aliasing distortion.",
+        "c": "Higher sampling frequency reduces the required bit rate.",
+        "d": "Lower sampling frequency increases resolution."
+      },
+      "explanations": {
+        "a": "Incorrect. Quantization noise is not directly affected by sampling frequency.",
+        "b": "Correct! Lower sampling frequencies can cause aliasing, distorting the signal.",
+        "c": "Incorrect. Higher sampling frequencies increase bit rate requirements.",
+        "d": "Incorrect. Resolution is determined by the number of quantization levels, not sampling frequency."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "In PPM, why might a higher-order modulation scheme be preferred in high-bandwidth communication systems?",
+      "answers": {
+        "a": "It increases the amplitude resolution of the pulses.",
+        "b": "It allows for more data to be transmitted within the same bandwidth.",
+        "c": "It reduces the power consumption of the system.",
+        "d": "It decreases the system's susceptibility to noise."
+      },
+      "explanations": {
+        "a": "Incorrect. Amplitude resolution is not relevant in PPM.",
+        "b": "Correct! Higher-order modulation in PPM allows for more efficient use of bandwidth.",
+        "c": "Incorrect. Power consumption is not directly affected by modulation order.",
+        "d": "Incorrect. Higher-order modulation can actually increase susceptibility to noise."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
     }
   ]
 }

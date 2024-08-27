@@ -2,38 +2,175 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "What is the primary characteristic of a Pulse Amplitude Modulation (PAM) signal?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "The amplitude of the pulses varies according to the amplitude of the modulating signal.",
+        "b": "The width of the pulses varies according to the amplitude of the modulating signal.",
+        "c": "The position of the pulses varies according to the amplitude of the modulating signal.",
+        "d": "The frequency of the pulses varies according to the amplitude of the modulating signal."
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Correct! In PAM, the amplitude of the pulses is modulated.",
+        "b": "Incorrect. This describes PWM.",
+        "c": "Incorrect. This describes PPM.",
+        "d": "Incorrect. This describes Frequency Modulation (FM), not pulse modulation."
       },
       "correctAnswer": "a",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "In Pulse Width Modulation (PWM), what aspect of the pulse varies?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Amplitude",
+        "b": "Width",
+        "c": "Position",
+        "d": "Frequency"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. Amplitude modulation is characteristic of PAM.",
+        "b": "Correct! The width of the pulses varies in PWM.",
+        "c": "Incorrect. Pulse Position Modulation (PPM) varies the position.",
+        "d": "Incorrect. Frequency modulation is not a characteristic of PWM."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Which of the following is true for Pulse Position Modulation (PPM)?",
+      "answers": {
+        "a": "The amplitude of the pulses is varied.",
+        "b": "The position of the pulses is varied.",
+        "c": "The width of the pulses is varied.",
+        "d": "The frequency of the pulses is varied."
+      },
+      "explanations": {
+        "a": "Incorrect. Amplitude modulation is characteristic of PAM.",
+        "b": "Correct! The position of the pulses is modulated in PPM.",
+        "c": "Incorrect. Pulse Width Modulation (PWM) varies the width.",
+        "d": "Incorrect. Frequency modulation is not used in PPM."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In Pulse Code Modulation (PCM), which of the following steps occurs first?",
+      "answers": {
+        "a": "Quantization",
+        "b": "Sampling",
+        "c": "Encoding",
+        "d": "Modulation"
+      },
+      "explanations": {
+        "a": "Incorrect. Quantization follows sampling.",
+        "b": "Correct! Sampling is the first step in PCM.",
+        "c": "Incorrect. Encoding occurs after quantization.",
+        "d": "Incorrect. Modulation in PCM refers to the entire process."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What is a major advantage of Pulse Amplitude Modulation (PAM) over analog amplitude modulation?",
+      "answers": {
+        "a": "PAM signals require less bandwidth.",
+        "b": "PAM signals are more resistant to noise.",
+        "c": "PAM signals are easier to generate.",
+        "d": "PAM signals have higher fidelity."
+      },
+      "explanations": {
+        "a": "Incorrect. PAM generally requires more bandwidth.",
+        "b": "Correct! PAM is less susceptible to noise compared to analog amplitude modulation.",
+        "c": "Incorrect. Ease of generation is not a distinguishing factor.",
+        "d": "Incorrect. Fidelity is not inherently higher in PAM."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In PWM, how does an increase in the amplitude of the modulating signal affect the pulse width?",
+      "answers": {
+        "a": "It decreases the pulse width.",
+        "b": "It increases the pulse width.",
+        "c": "It has no effect on the pulse width.",
+        "d": "It increases the pulse amplitude."
+      },
+      "explanations": {
+        "a": "Incorrect. A decrease in amplitude would decrease the width.",
+        "b": "Correct! A higher amplitude increases the pulse width in PWM.",
+        "c": "Incorrect. The pulse width is directly related to the amplitude.",
+        "d": "Incorrect. PWM modulates width, not amplitude."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Which type of pulse modulation is least affected by timing jitter in the transmission system?",
+      "answers": {
+        "a": "PAM",
+        "b": "PWM",
+        "c": "PPM",
+        "d": "PCM"
+      },
+      "explanations": {
+        "a": "Incorrect. PAM is sensitive to timing jitter.",
+        "b": "Incorrect. PWM can be affected by timing jitter.",
+        "c": "Correct! PPM is more resistant to timing jitter.",
+        "d": "Incorrect. PCM's quantization process can be affected by timing errors."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What does the quantization step in Pulse Code Modulation (PCM) achieve?",
+      "answers": {
+        "a": "It converts the analog signal to a digital bit stream.",
+        "b": "It samples the analog signal at regular intervals.",
+        "c": "It maps the sampled values to the nearest available level.",
+        "d": "It modulates the digital signal for transmission."
+      },
+      "explanations": {
+        "a": "Incorrect. Conversion to a bit stream happens after quantization.",
+        "b": "Incorrect. Sampling occurs before quantization.",
+        "c": "Correct! Quantization maps sampled values to discrete levels.",
+        "d": "Incorrect. Modulation for transmission is the final step."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "How is the resolution of a Pulse Code Modulation (PCM) signal determined?",
+      "answers": {
+        "a": "By the sampling frequency.",
+        "b": "By the number of quantization levels.",
+        "c": "By the width of the pulses.",
+        "d": "By the bit rate of the encoded signal."
+      },
+      "explanations": {
+        "a": "Incorrect. Sampling frequency affects the bandwidth, not resolution.",
+        "b": "Correct! More quantization levels increase the resolution.",
+        "c": "Incorrect. Pulse width is relevant in PWM, not PCM.",
+        "d": "Incorrect. Bit rate is related but not directly determining resolution."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In Pulse Position Modulation (PPM), how does a higher frequency modulating signal affect the pulses?",
+      "answers": {
+        "a": "The pulses move closer together.",
+        "b": "The pulses move further apart.",
+        "c": "The pulse width decreases.",
+        "d": "The pulse amplitude increases."
+      },
+      "explanations": {
+        "a": "Correct! A higher frequency modulating signal causes the pulses to move closer together.",
+        "b": "Incorrect. The pulses move further apart with a lower frequency.",
+        "c": "Incorrect. Pulse width is not directly affected by the modulating frequency in PPM.",
+        "d": "Incorrect. Pulse amplitude does not vary in PPM."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
     }
-  ]
-}
+   ]
+  }
+  
