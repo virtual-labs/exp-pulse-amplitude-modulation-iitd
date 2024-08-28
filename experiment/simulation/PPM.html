@@ -1,194 +1,357 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <title>Virtual Labs</title>
-    <script>
-        function linspace(start, end, num) {
-            const step = (end - start) / (num - 1);
-            return Array.from({ length: num }, (_, index) => start + index * step);
-        }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Labs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
 
-        function destroyChart(canvasId) {
-            const canvas = document.getElementById(canvasId);
-            if (canvas) {
-                const context = canvas.getContext('2d');
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                const existingChart = Chart.getChart(canvas);
-                if (existingChart) {
-                    existingChart.destroy();
-                }
-            }
-        }
+<div id="container">
+  <h1>Instructions for Pulse Position Modulation (PPM)</h1>
+  <ul>
+    <li>Step 1: Click on 'Generate Message' button to generate the input message signal</li>
+    <li>Step 2: Then click on 'Generate PPM Pulse Train' button to generate the PPM Pulse Train signal</li>
+    <li>Step 3: You can change the message and Sampling signal frequencies from the input fields. The sampling frequency has to be much higher than the message frequency.</li>
+	<li>Step 4: Here, ppm Width Fraction is a fraction of the total interval, and Samples Per Pulse is the total number of samples that span one pulse interval. Pulse Width = round(ppm Width Fraction × Samples Per Pulse) (all in the terms of the number of samples)</li>
+    <li>Step 5: Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
+  </ul>
+  <br/>
 
-        function modulate(x, Fc, Fs, P1) {
-            var len = x.length;
-            var t = new Array(len);
-            var y = new Array(len);
-
-            for (var i = 0; i < len; i++) {
-                t[i] = i / Fs;
-
-                // Determine the index based on the current value of x and the time vector
-                var ind = Math.ceil((x[i] + t[i]) * Fs / Fc);
-
-                // Calculate pulse width based on P1 parameter
-                var pulseWidth = P1 * (1 / Fc);
-
-                // Set the PPM signal values
-                y[i] = (ind >= 1 && ind <= len && t[i] % (1 / Fc) <= pulseWidth) ? 1 : 0;
-            }
-
-            return { y: y, t: t };
-        }
-
-        async function generateMessage() {
-            destroyChart('messageChart');
-
-            const duration = 1;
-            const resolution = 10000;
-            const t = linspace(0, duration, resolution * duration);
-
-            const messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
-
-            if (isNaN(messageFrequency)) {
-                console.error('Invalid message frequency');
-                return;
-            }
-
-            const a = 0.5;
-            const messageSignal = linspace(0, duration, resolution * duration)
-                .map(t => a * Math.sin(2 * Math.PI * messageFrequency * t) + 0.5);
-
-            plotSignal('messageChart', t, messageSignal, 'Message Signal');
-            return messageSignal;
-        }
-
-        async function generateCarrier() {
-            destroyChart('carrierChart');
-
-            const duration = 1;
-            const resolution = 10000;
-            const t = linspace(0, duration, resolution * duration);
-
-            const carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
-
-            if (isNaN(carrierFrequency)) {
-                console.error('Invalid carrier frequency');
-                return;
-            }
-
-            const fc = carrierFrequency;
-            const a = 0.5;
-            const carrierSignal = linspace(0, duration, resolution * duration)
-                .map(t => a * Math.cos(2 * Math.PI * fc * t) + 0.5);
-
-            plotSignal('carrierChart', t, carrierSignal, 'Carrier Signal');
-            return carrierSignal;
-        }
-
-        async function generatePPM() {
-            destroyChart('ppmChart');
-
-            const duration = 1;
-            const resolution = 10000;
-            const t = linspace(0, duration, resolution * duration);
-
-            const fc = parseFloat(document.getElementById('carrierFrequency').value);
-            const { messageSignal, carrierSignal } = await generateSignal();
-
-            if (!messageSignal || !carrierSignal) {
-                console.error('Failed to generate signals');
-                return;
-            }
-
-            const ppmSignal = modulate(messageSignal, fc, 10000, 0.01);
-
-            plotSignal('ppmChart', t, ppmSignal.y, 'PPM Signal');
-        }
-
-        function generateSignal() {
-            return Promise.all([generateMessage(), generateCarrier()])
-                .then(([messageSignal, carrierSignal]) => ({ messageSignal, carrierSignal }))
-                .catch(error => console.error('Error generating signals:', error));
-        }
-
-        function plotSignal(canvasId, time, signal, label) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: time,
-                    datasets: [{
-                        label: label,
-                        data: signal,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false,
-                    }],
-                },
-                options: {
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                        },
-                        y: {
-                            min: -1,
-                            max: 1,
-                        },
-                    },
-                },
-            });
-        }
-    </script>
-  </head>
-  <body>
-    <!-- sidebar and body -->
-    <div class="flex min-h-[80vh]">
-      <div class=" px-6 pb-6 flex-1">
-        <div class="flex">
+  <!-- Sidebar and body -->
+  <div class="flex min-h-[80vh]">
+    <div class="px-6 pb-6 flex-1">
+      <div class="flex">
+        <div class="flex-1 flex basis-4/5 flex-col">
+          <div class="flex max-lg:flex-col mt-5 items-center gap-x-2 gap-y-2">
             <div class="flex-1">
-                <h2 class="text-center p-1 m-1">Message Signal</h2>
-                <div class="flex justify-center items-center gap-1">
-                <input class="border px-2 min-w-[252px] py-1 rounded-sm " type="number" id="messageFrequency" placeholder="Enter message frequency in Hz">
-                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="generateMessage()">Generate </button>
-                 </div>
-                 <div class="flex justify-center items-center">
-                <div class="w-[400px] h-[200px]">
-                    <canvas id="messageChart" class="mt-5"></canvas>
-                </div>
-                </div>
+              <div class="flex items-center gap-1">
+                <label for="messageFrequency" class="text-[#2c99ce] text-md font-medium">Message Frequency in Hz:</label>
+                <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="messageFrequency" value="2" onchange="updateFrequencies()" />
+              </div>
             </div>
             <div class="flex-1">
-                <h2 class="text-center p-1 m-1">Carrier Signal</h2>
-                <div class="flex justify-center items-center gap-1">
-                <input class="border px-2 w-60 py-1 rounded-sm " type="number" id="carrierFrequency" placeholder="Enter carrier frequency in Hz">
-                <button class="bg-blue-500 text-white rounded-md px-2  py-1" onclick="generateCarrier()">Generate </button>
-                </div>
-                <div class="flex justify-center items-center">
-                <div class="w-[400px] h-[200px] ">
-                    <canvas id="carrierChart" class="mt-5"></canvas>
-                </div>
-                </div>
+              <div class="flex items-center gap-1">
+                <label for="carrierFrequency" class="text-[#2c99ce] text-md font-medium">Sampling Frequency in Hz:</label>
+                <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="carrierFrequency" value="1000" onchange="updateFrequencies()" />
+              </div>
             </div>
+			
+			            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label for="samplesPerPulse" class="text-[#2c99ce] text-md font-medium">Samples Per Pulse:</label>
+                <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="samplesPerPulse" value="100" onchange="updateFrequencies()" />
+              </div>
+            </div>
+			
+			            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label for="ppmWidthFraction" class="text-[#2c99ce] text-md font-medium">Pulse Width Fraction:</label>
+                <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="ppmWidthFraction" value="0.1" onchange="updateFrequencies()" />
+              </div>
+            </div>
+			
+          </div>
         </div>
-        <div class=" mt-4 border-t-2">
-            <div class="flex flex-col">
-            <h2 class="text-center p-1 text-lg">PPM Signal</h2>
-                <div class="flex justify-center">
-                    <button class="bg-blue-500 text-white rounded-md px-2 py-1" class="button" onclick="generatePPM()">Generate PPM Signal</button>
-                </div>
-                <div class="flex justify-center items-center">
-                    <div class="w-[600px] h-[300px] mb-5 ">
-                        <canvas id="ppmChart" class="w-[650px] h-[280px]"></canvas>
-                    </div>  
-                </div>
+      </div>
+      <div class="mt-4 border-t-2">
+        <div class="flex gap-2">
+          <div class="w-[50%] flex flex-col items-center">
+            <div class="relative my-4 w-[659px] h-[233px]">
+              <!-- Buttons -->
+              <div class="absolute top-[110px]">
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotOriginalSignal()">Generate Message</button>
+              </div>
+              <div class="absolute top-[234px] left-[115px]">
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMPulse()">Generate PPM Pulse Train</button>
+              </div>
+              <div class="absolute top-[242px] right-[95px] flex flex-col gap-2">
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMModulatedSignal()">Generate PPM Signal</button>
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()">Perform PPM Demodulation</button>
+              </div>
+              <img src=".././images/PPM_Mod.png" alt="PPM_Mod" class="w-[100%] h-[100%]" />
             </div>
+          </div>
+
+          <div class="flex flex-col justify-center items-center">
+            <div class="w-[600px] h-[300px] mb-5">
+              <canvas id="ppmSignalCanvas" class="w-[650px] h-[280px]"></canvas>
+            </div>
+            <div class="w-[600px] h-[300px] mb-5">
+              <canvas id="ppmPulseCanvas" class="w-[650px] h-[280px]"></canvas>
+            </div>
+            <div class="w-[600px] h-[300px] mb-5">
+              <canvas id="originalSignalCanvas" class="w-[650px] h-[280px]"></canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+
+  <br/><br/><hr/>
+
+  <div id="container">
+    <h1>Instructions for Pulse Position Demodulation</h1>
+    <ul>
+      <li>Step 1: To demodulate a Pulse Position Modulated (PPM) signal, a reference pulse generator creates a timing pulse train, which is used to synchronize with the PPM signal. An RS flip-flop ensures accurate pulse generation, while a PWM demodulator measures the width of the PPM pulses and converts this width into a corresponding signal representing the original message</li>
+      <li>Step 2: You can demodulate the PPM Signal by clicking on the 'Demodulate PPM Signal' button</li>
+    </ul>
+  </div>
+
+  <!-- Sidebar and body -->
+  <div class="flex min-h-[80vh]">
+    <div class="px-6 pb-6 flex-1">
+      <div class="flex">
+        <div class="flex-1 flex basis-4/5 flex-col">
+          <div class="flex max-lg:flex-col mt-5 items-center gap-x-2 gap-y-2">
+            <!-- Input fields -->
+          </div>
+        </div>
+        <div class="flex-1 flex items-center gap-2 py-2 flex-col basis-1/5">
+        </div>
+      </div>
+      <div class="mt-4 border-t-2">
+        <div class="flex gap-2">
+          <div class="w-[50%] flex flex-col items-center">
+            <div class="relative my-4 w-[659px] h-[233px]">
+              <!-- Buttons -->
+              <div class="absolute top-[170px] right-[-15px]">
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()" id="modtodemod">Demodulate PPM Signal</button>
+              </div>
+              <img src=".././images/PPM_Demod.png" alt="PPM_Demodulation" class="w-[100%] h-[100%]" />
+            </div>
+          </div>
+
+          <div class="flex justify-center flex-wrap items-center">
+            <div class="w-[600px] h-[300px] mb-5">
+              <canvas id="demodulatedSignalCanvas" class="w-[650px] h-[280px]"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+    // Function to check frequencies and samples per pulse
+    function checkFrequencies() {
+        // Get values from input fields
+        let samplingFrequency = parseFloat(document.getElementById('carrierFrequency').value); // Still using carrierFrequency ID
+        let messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
+        let samplesPerPulse = parseFloat(document.getElementById('samplesPerPulse').value);
+        
+        // Check if sampling frequency is greater than message frequency
+        if (samplingFrequency <= messageFrequency) {
+            alert("Sampling frequency should be much higher than message frequency.");
+            return; // Exit the function if the condition is not met
+        }
+        
+        // Check if sampling frequency is greater than samples per pulse
+        if (samplingFrequency <= samplesPerPulse) {
+            alert("Sampling frequency should be much higher than Samples Per Pulse.");
+            return; // Exit the function if the condition is not met
+        }
+        
+        console.log("Sampling frequency is greater than message frequency and samples per pulse.");
+    }
+
+    // Function to attach event listeners to all buttons
+    function attachEventListeners() {
+        let buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', checkFrequencies);
+        });
+    }
+
+    // Attach event listeners when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', attachEventListeners);
+</script>
+
+	
+  <script>
+    // Variables to store parameters
+    let Fs, T, fMessage, duration = 1, samplesPerPulse = 100, ppmWidthFraction = 0.1;
+    let t, analogSignal, ppmSignal, ppmPulseTrain, demodulatedSignal;
+    
+    // Global variables to hold the chart instances
+    let originalSignalChart = null;
+    let ppmPulseChart = null;
+    let ppmSignalChart = null;
+    let demodulatedSignalChart = null;
+
+    // Function to update frequencies based on user input
+    function updateFrequencies() {
+      Fs = parseFloat(document.getElementById('carrierFrequency').value);  // Sampling frequency (Hz)
+      T = 1 / Fs;                                                          // Sampling period (s)
+      fMessage = parseFloat(document.getElementById('messageFrequency').value); // Message frequency (Hz)
+	  
+	    samplesPerPulse = parseInt(document.getElementById('samplesPerPulse').value); // Samples Per Pulse
+  ppmWidthFraction = parseFloat(document.getElementById('ppmWidthFraction').value); // Pulse Width Fraction
+      
+      // Recalculate the time vector and analog signal
+      t = Array.from({length: Fs * duration}, (_, i) => i * T);
+      analogSignal = t.map(ti => (Math.sin(2 * Math.PI * fMessage * ti) + 1) / 2);
+      
+      // Recalculate PPM modulation and demodulation
+      const result = ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction);
+      ppmSignal = result.ppmSignal;
+      ppmPulseTrain = result.ppmPulseTrain;
+      demodulatedSignal = ppmDemodulate(ppmSignal, samplesPerPulse, ppmWidthFraction);
+    }
+
+    // PPM Modulation Function
+    function ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction) {
+      const pulseWidth = Math.round(ppmWidthFraction * samplesPerPulse);
+      const ppmSignal = new Array(analogSignal.length * samplesPerPulse).fill(0);
+      const ppmPulseTrain = new Array(analogSignal.length * samplesPerPulse).fill(0);
+
+      analogSignal.forEach((amplitude, i) => {
+        const pulsePosition = Math.round(amplitude * (samplesPerPulse - pulseWidth));
+        const startIndex = i * samplesPerPulse + pulsePosition;
+        const endIndex = Math.min(startIndex + pulseWidth, (i + 1) * samplesPerPulse);
+        ppmSignal.fill(1, startIndex, endIndex); // Insert the pulse
+        ppmPulseTrain.fill(1, startIndex, endIndex);  // Track the pulse position for visualization
+      });
+
+      return {ppmSignal, ppmPulseTrain};
+    }
+
+    // PPM Demodulation Function
+    function ppmDemodulate(ppmSignal, samplesPerPulse, ppmWidthFraction) {
+      const pulseWidth = Math.round(ppmWidthFraction * samplesPerPulse);
+      const demodulatedSignal = new Array(ppmSignal.length / samplesPerPulse).fill(0);
+
+      demodulatedSignal.forEach((_, i) => {
+        const startIndex = i * samplesPerPulse;
+        const endIndex = (i + 1) * samplesPerPulse;
+        const segment = ppmSignal.slice(startIndex, endIndex);
+        const pulsePosition = segment.indexOf(1);
+        demodulatedSignal[i] = pulsePosition !== -1 ? pulsePosition / (samplesPerPulse - pulseWidth) : 0;
+      });
+
+      return demodulatedSignal;
+    }
+
+    // Function to plot signals using Chart.js
+    function plotSignal(canvasId, time, signal, title, chartInstance) {
+      // Destroy the existing chart instance if it exists
+      if (chartInstance) {
+        chartInstance.destroy();
+      }
+
+      const ctx = document.getElementById(canvasId).getContext('2d');
+      return new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: time,
+          datasets: [{
+            label: title,
+            data: signal,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            fill: false,
+            pointRadius: 0
+          }]
+        },
+        options: {
+          scales: {
+            x: {
+              type: 'linear',
+              position: 'bottom',
+              title: {
+                display: true,
+                text: 'Time (s)'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Amplitude'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Functions to plot specific signals on button click
+    function plotOriginalSignal() {
+      updateFrequencies();
+      originalSignalChart = plotSignal('originalSignalCanvas', t, analogSignal, 'Original Analog Signal (Sine Wave)', originalSignalChart);
+	  
+	  		    // Scroll to the message chart after it has been generated
+    document.getElementById("originalSignalCanvas").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+    }
+
+    function plotPPMPulse() {
+      updateFrequencies();
+      const timeForPulseTrain = Array.from({ length: samplesPerPulse * analogSignal.length }, (_, i) => i * T / samplesPerPulse);
+      ppmPulseChart = plotSignal('ppmPulseCanvas', timeForPulseTrain, ppmPulseTrain, 'PPM Pulse Train', ppmPulseChart);
+    }
+
+    function plotPPMModulatedSignal() {
+      updateFrequencies();
+      ppmSignalChart = plotSignal('ppmSignalCanvas', t, ppmSignal.slice(0, t.length), 'PPM Modulated Signal', ppmSignalChart);
+    }
+
+    function plotDemodulatedSignal() {
+      updateFrequencies();
+      demodulatedSignalChart = plotSignal('demodulatedSignalCanvas', t, demodulatedSignal, 'Demodulated Signal', demodulatedSignalChart);
+
+      // Scroll to the message chart after it has been generated
+      document.getElementById("modtodemod").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+  </script>
+  
+    <style>
+  .container {
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px 40px;
+    max-width: 1000px; /* Increased max-width to fit three plots side by side */
+    margin: 0 auto; /* Center the container */
+    text-align: center;
+}
+
+h1 {
+    color: #333;
+    font-size: 22px; /* Increased font size */
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #e0e7ff;
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px; /* Set font size for list items */
+}
+
+li::before {
+    content: "✔";
+    color: #4caf50;
+    margin-right: 10px;
+}
+
+  </style>
+  
+</body>
 </html>
