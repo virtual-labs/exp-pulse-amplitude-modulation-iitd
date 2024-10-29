@@ -10,7 +10,10 @@
         "d": "Improved time resolution"
       },
       "explanations": {
+        "a": "Incorrect. Noise",
         "b": "Correct! Increasing the bandwidth can increase inter-symbol interference.",
+        "c": "Incorrect. Pulse amplitude is not affected by bandwidth.",
+        "d": "Incorrect. Bandwidth affects frequency resolution, not time resolution."
       },
       "correctAnswer": "b",
       "difficulty": "hard"
