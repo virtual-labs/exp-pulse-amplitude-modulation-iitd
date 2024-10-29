@@ -10,7 +10,7 @@
         "d": "Improved time resolution"
       },
       "explanations": {
-        "a": "Incorrect. Noise",
+        "a": "Incorrect. Noise immunity is not directly affected by bandwidth.",
         "b": "Correct! Increasing the bandwidth can increase inter-symbol interference.",
         "c": "Incorrect. Pulse amplitude is not affected by bandwidth.",
         "d": "Incorrect. Bandwidth affects frequency resolution, not time resolution."
