@@ -106,16 +106,16 @@
             </div>
           </div>
 <div class="flex flex-col justify-center items-center">
-  <div class="w-[600px] h-[300px] mb-5">
-    <canvas id="pwmChart" class="w-[650px] h-[280px]"></canvas>
+  <div class="w-[600px] h-[400px] mb-5">
+    <div id="pwmChart" class="w-[600px] h-[400px]"></div>
   </div>
 
-  <div class="w-[600px] h-[300px] mb-5">
-    <canvas id="carrierChart" class="w-[650px] h-[280px]"></canvas>
+  <div class="w-[600px] h-[400px] mb-5">
+    <div id="carrierChart" class="w-[600px] h-[400px]"></div>
   </div>
 
-  <div class="w-[600px] h-[300px] mb-5">
-    <canvas id="messageChart" class="w-[650px] h-[280px]"></canvas>
+  <div class="w-[600px] h-[400px] mb-5">
+    <div id="messageChart" class="w-[600px] h-[400px]"></div>
   </div>
 </div>
 
@@ -164,7 +164,7 @@
 		    <div class="flex justify-center flex-wrap items-center">
               <div class="m-1">
                 <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
-                <div id="plot4" style="width: 400px; height: 400px;"></div>
+                <div id="plot4" style="width: 600px; height: 400px;"></div>
               </div>
             </div>
         </div>
@@ -233,7 +233,7 @@
       }
 
       async function generateMessage() {
-        destroyChart("messageChart");
+        //destroyChart("messageChart");
 
         const duration = 1;
         const resolution = 100*parseFloat(
@@ -255,7 +255,30 @@
           (t) => 1.01 * a * Math.sin(2 * Math.PI * messageFrequency * t + 0.5)
         );
 
-        plotSignal("messageChart", t, messageSignal, "Message Signal");
+        //plotSignal("messageChart", t, messageSignal, "Message Signal");
+			    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: t,
+        y: messageSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Message Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Message Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('messageChart', carrierPlotData, layout);
 		
 		    // Scroll to the message chart after it has been generated
     document.getElementById("messageChart").scrollIntoView({
@@ -263,11 +286,11 @@
       block: "center"
     });
 	
-        return messageSignal;
+     //   return messageSignal;
       }
 
       async function generateCarrier() {
-        destroyChart("carrierChart");
+        //destroyChart("carrierChart");
 
         const duration = 1;
         const resolution = 100*parseFloat(
@@ -290,15 +313,37 @@
           (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * t + 0.5))
         );
 
-        plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
-		
+        //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
+					    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: t,
+        y: carrierSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Square Carrier Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Square Carrier Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('carrierChart', carrierPlotData, layout);
 		    // Scroll to the carrier chart after it has been generated
     document.getElementById("carrierChart").scrollIntoView({
       behavior: "smooth",
       block: "center"
     });
 	
-        return carrierSignal;
+        //return carrierSignal;
       }
 
       async function generateSignals() {
@@ -308,8 +353,8 @@
       }
 
       async function performPWM() {
-        destroyChart("pwmChart");
-        destroyChart("modulatedChart");
+        //destroyChart("pwmChart");
+        //destroyChart("modulatedChart");
 
         const duration = 1;
         const resolution = 100*parseFloat(
@@ -317,19 +362,52 @@
     );
         const t = linspace(0, duration, resolution * duration);
 
-        const { messageSignal, carrierSignal } = await generateSignals();
+        //const { messageSignal, carrierSignal } = await generateSignals();
 
-        if (!messageSignal || !carrierSignal) {
-          console.error("Failed to generate signals");
-          return;
-        }
-
+        //if (!messageSignal || !carrierSignal) {
+         // console.error("Failed to generate signals");
+          //return;
+        //}
+		        const messageFrequency = parseFloat(
+          document.getElementById("messageFrequency").value
+        );
+		        const carrierFrequency = parseFloat(
+          document.getElementById("carrierFrequency").value
+        );
+        const messageSignal = linspace(0, duration, resolution * duration).map(
+          (t) => 1.01 * 1 * Math.sin(2 * Math.PI * messageFrequency * t + 0.5)
+        );
+		const carrierSignal = linspace(0, duration, resolution * duration).map(
+          (t) => 1 * Math.sign(Math.sin(2 * Math.PI * carrierFrequency * t + 0.5))
+        );
         const pwmSignal = messageSignal.map((msg, index) =>
           msg >= carrierSignal[index] ? 1 : 0
         );
 
-        plotSignal("pwmChart", t, pwmSignal, "PWM Signal");
-		
+        //plotSignal("pwmChart", t, pwmSignal, "PWM Signal");
+							    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: t,
+        y: pwmSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'PWM Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'PWM Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('pwmChart', carrierPlotData, layout);
 		
 				    // Scroll to the pwm chart after it has been generated
     document.getElementById("pwmChart").scrollIntoView({

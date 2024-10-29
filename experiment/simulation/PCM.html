@@ -32,7 +32,13 @@
               </div>
             </div>
 			
-
+            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label for="samplingFrequency">Sampling Frequency (Hz):</label>
+                <input class="border border-black px-2 py-1 rounded-sm" type="number" id="samplingFrequency" min="1" value="1000" />
+              </div>
+            </div>
+			
             <div class="flex-1">
               <div class="flex items-center gap-1">
                 <label for="numLevelsInput">Quantization Levels:</label>
@@ -93,24 +99,28 @@
           </div>
 		  
         <!-- Charts -->
-        <div class="chart-container">
+<div class="flex flex-col justify-center items-center" style="position: relative; overflow: auto;">
 
-            <div class="chart-box">
+            <div>
 
-                <canvas id="pcmEncodedSignalChart"></canvas>
+                <div id="pcmEncodedSignalChart"></div>
             </div>
 			
-			            <div class="chart-box">
+			            <div>
 
-                <canvas id="quantizedSignalChart"></canvas>
+                <div id="quantizedSignalChart"></div>
             </div>
 			
-			            <div class="chart-box">
+			            <div>
 
-                <canvas id="originalSineWaveChart"></canvas>
+                <div id="originalSineWaveChart"></div>
             </div>
 
         </div>
+
+  <div class="absolute top-[350px] right-[100px] flex flex-col gap-2">
+Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readonly><br><br>
+</div>
 
         </div>
       </div>
@@ -157,7 +167,7 @@
         <div class="chart-container">
 		            <div class="chart-box">
 
-                <canvas id="demodulatedSignalChart"></canvas>
+                <div id="demodulatedSignalChart"></div>
             </div>
 			</div>
 		
@@ -165,19 +175,18 @@
       </div>
     </div>
   </div>
-
-<!--	
+	
 	     <script>
         function checkFrequencies() {
             // Get values from input fields
-            let carrierFrequency = parseFloat(document.getElementById('carrier_frequency').value);
-            let bit_rate = parseFloat(document.getElementById('bit_rate').value);
+            let carrierFrequency = parseFloat(document.getElementById('samplingFrequency').value);
+            let bit_rate = parseFloat(document.getElementById('frequencyInput').value);
             
             // Check the frequencies
             if (carrierFrequency <= bit_rate) {
-                alert("Carrier frequency should be much higher than bit rate.");
+                alert("Sampling frequency should be much higher than message frequency.");
             } else {
-                console.log("Carrier frequency should be much high than bit rate.");
+                console.log("Sampling frequency should be much high than message frequency.");
             }
         }
 
@@ -193,7 +202,37 @@
         document.addEventListener('DOMContentLoaded', attachEventListeners);
 
     </script>
-	-->
+	
+	<script>
+        function checkpoweroftwo() {
+            // Get value from the input field
+            let PowerOfTwo = parseFloat(document.getElementById('numLevelsInput').value);
+            
+            // Check if PowerOfTwo is a power of 2
+            if (isPowerOfTwo(PowerOfTwo)) {
+                console.log(``);
+            } else {
+                console.log(``);
+                alert(`The quantization levels are not power of 2!`); // Show alert if not a power of 2
+            }
+        }
+
+        // Function to check if a number is a power of 2
+        function isPowerOfTwo(n) {
+            return n > 0 && (n & (n - 1)) === 0;
+        }
+
+        // Function to attach event listeners to all buttons
+        function attachEventListeners() {
+            let buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', checkpoweroftwo); // Use the function reference
+            });
+        }
+
+        // Attach event listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', attachEventListeners);
+    </script>
 	
 <script>
     const charts = {};
@@ -221,13 +260,14 @@
 
     // Plot Original Sine Wave
     function plotOriginalSineWave() {
+	updateInputQSNR();
         const frequency = parseInt(document.getElementById('frequencyInput').value, 10);
         const samplingFrequency = 20 * frequency;
-        const samples = 20 * frequency;
+        const samples = parseInt(document.getElementById('samplingFrequency').value, 10);
         const amplitude = 8;
         const sineWave = generateSineWave(samples, frequency, amplitude);
         const timeArray = generateTimeArray(samples, samplingFrequency);
-
+/*
         const ctx = document.getElementById('originalSineWaveChart').getContext('2d');
         
         // Destroy previous chart if it exists
@@ -271,6 +311,38 @@
             block: "center"
         });
     }
+*/	
+	//////////////////////////////////////
+	    // Plotting with Plotly
+ const sineWavePlotData = [{
+    x: timeArray,
+    y: sineWave,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Original Sine Wave',
+    // line: { color: 'blue', width: 2 }
+}];
+
+const layout = {
+    title: 'Original Sine Wave',  // Use backticks for template literals
+    xaxis: {
+        title: 'Time (s)',
+    },
+    yaxis: {
+        title: 'Amplitude',
+        // range: [-10, 10]
+    }
+};
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('originalSineWaveChart', sineWavePlotData, layout);
+	        // Scroll to the chart after it has been generated
+        document.getElementById("originalSineWaveChart").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+}
+	//////////////////////////////////////
 
     // Quantize Signal
     function quantizeSignal(signal, numLevels) {
@@ -294,49 +366,42 @@
         const frequency = parseInt(document.getElementById('frequencyInput').value, 10);
         const numLevels = parseInt(document.getElementById('numLevelsInput').value, 10);
         const samplingFrequency = 20 * frequency;
-        const samples = 20 * frequency;
+        const samples = parseInt(document.getElementById('samplingFrequency').value, 10);
         const amplitude = 8;
         const sineWave = generateSineWave(samples, frequency, amplitude);
         const quantizedSignal = quantizeSignal(sineWave, numLevels);
         const timeArray = generateTimeArray(samples, samplingFrequency);
 
-        const ctx = document.getElementById('quantizedSignalChart').getContext('2d');
-        
-        // Destroy previous chart if it exists
-        if (charts.quantizedSignalChart) {
-            charts.quantizedSignalChart.destroy();
-        }
+    // Plotting with Plotly
+ const quantizedSignalPlotData = [{
+    x: timeArray,
+    y: quantizedSignal,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Quantized Signal',
+    // line: { color: 'blue', width: 2 }
+}];
 
-        // Create new chart
-        charts.quantizedSignalChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: timeArray, // Use time array for x-axis labels
-                datasets: [{
-                    label: `Quantized Signal (${numLevels} levels)`,
-                    borderColor: 'red',
-                    data: quantizedSignal,
-                    fill: false,
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Time (s)'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Signal Value'
-                        }
-                    }
-                }
-            }
-        });
+const layout = {
+    title: `Quantized Signal (${numLevels} levels)`,  // Use backticks for template literals
+    xaxis: {
+        title: 'Time (s)',
+    },
+    yaxis: {
+        title: 'Amplitude',
+        //range: [-10, 10]
     }
+};
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('quantizedSignalChart', quantizedSignalPlotData, layout);
+	        // Scroll to the chart after it has been generated
+        document.getElementById("quantizedSignalChart").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+}
+
 
     // Convert Decimal to Binary
     function decimalToBinary(decimal, numBits) {
@@ -350,7 +415,7 @@
         const frequency = parseInt(document.getElementById('frequencyInput').value, 10);
         const numLevels = parseInt(document.getElementById('numLevelsInput').value, 10);
         const samplingFrequency = 20 * frequency;
-        const samples = 20 * frequency;
+        const samples = parseInt(document.getElementById('samplingFrequency').value, 10);
         const amplitude = 8;
         const sineWave = generateSineWave(samples, frequency, amplitude);
         const quantizedSignal = quantizeSignal(sineWave, numLevels);
@@ -365,43 +430,35 @@
         const binaryInd = ind.map(value => decimalToBinary(value, numBits));
         const binaryArray = binaryInd.join('').split('').map(b => parseInt(b, 2));
 
-        const ctx = document.getElementById('pcmEncodedSignalChart').getContext('2d');
-        
-        // Destroy previous chart if it exists
-        if (charts.pcmEncodedSignalChart) {
-            charts.pcmEncodedSignalChart.destroy();
-        }
+    // Plotting with Plotly
+ const encodedSignalPlotData = [{
+    x: Array.from({ length: binaryArray.length }, (_, index) => `${index + 1}`),
+    y: binaryArray,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'PCM Encoded Signal',
+    // line: { color: 'blue', width: 2 }
+}];
 
-        // Create new chart
-        charts.pcmEncodedSignalChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: Array.from({ length: binaryArray.length }, (_, index) => `Sample ${index + 1}`),
-                datasets: [{
-                    label: 'PCM Encoded Signal',
-                    borderColor: 'orange',
-                    data: binaryArray,
-                    fill: false,
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Sample Index'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Encoded Value'
-                        }
-                    }
-                }
-            }
-        });
+const layout = {
+    title: 'PCM Encoded Signal',  // Use backticks for template literals
+    xaxis: {
+        title: 'Sample Index',
+    },
+    yaxis: {
+        title: 'Encoded Value',
+        //range: [-10, 10]
     }
+};
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('pcmEncodedSignalChart', encodedSignalPlotData, layout);
+	        // Scroll to the chart after it has been generated
+        document.getElementById("pcmEncodedSignalChart").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+}
 
     // Apply Moving Average Filter
     function applyMovingAverage(signal, windowSize) {
@@ -421,7 +478,7 @@
         const frequency = parseInt(document.getElementById('frequencyInput').value, 10);
         const numLevels = parseInt(document.getElementById('numLevelsInput').value, 10);
         const samplingFrequency = 20 * frequency;
-        const samples = 20 * frequency;
+        const samples = 100; //parseInt(document.getElementById('samplingFrequency').value, 10);
         const amplitude = 8;
         const sineWave = generateSineWave(samples, frequency, amplitude);
         const quantizedSignal = quantizeSignal(sineWave, numLevels);
@@ -435,7 +492,7 @@
         const demodulatedSignal = ind.map(element => element * del + vmin + (del / 2));
         const windowSize = 5; // Adjust window size as needed
         const filteredSignal = applyMovingAverage(demodulatedSignal, windowSize);
-
+/*
         const ctx = document.getElementById('demodulatedSignalChart').getContext('2d');
         
         // Destroy previous chart if it exists
@@ -479,10 +536,51 @@
             block: "center"
         });
     }
+	*/
+	////////////////////////////////////////
+	    // Plotting with Plotly
+ const demodulatedSignalPlotData = [{
+    x: generateTimeArray(samples, samplingFrequency),
+    y: filteredSignal,
+    type: 'scatter',
+    mode: 'lines',
+    name: 'Demodulated Signal',
+    // line: { color: 'blue', width: 2 }
+}];
+
+const layout = {
+    title: 'Demodulated Signal',  // Use backticks for template literals
+    xaxis: {
+        title: 'Time (s)',
+    },
+    yaxis: {
+        title: 'Amplitude',
+        //range: [-10, 10]
+    }
+};
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('demodulatedSignalChart', demodulatedSignalPlotData, layout);
+	        // Scroll to the chart after it has been generated
+        document.getElementById("demodulatedSignalChart").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+}
+	////////////////////////////////////////
 </script>
 
+<script>
+        function updateInputQSNR() {
+            let inputAValue = parseFloat(document.getElementById('numLevelsInput').value);
+            // Set Input B to be twice the value of Input A
+            let inputBValue = 32/(((16/inputAValue)**2)/12);
+            document.getElementById('inputB').value = inputBValue;
+        }
 
-	
+        // Attach event listener to Input A for 'input' event (triggers on change)
+        document.getElementById('numLevelsInput').addEventListener('input', updateInputQSNR);
+</script>	
 	
   <style>
   .container {
@@ -490,7 +588,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 20px 40px;
-    max-width: 1000px; /* Increased max-width to fit three plots side by side */
+    max-width: 1000px; /*Increased max-width to fit three plots side by side */
     margin: 0 auto; /* Center the container */
     text-align: center;
 }
