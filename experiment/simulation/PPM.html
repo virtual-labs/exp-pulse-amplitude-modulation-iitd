@@ -77,14 +77,14 @@
           </div>
 
           <div class="flex flex-col justify-center items-center">
-            <div class="w-[600px] h-[300px] mb-5">
-              <canvas id="ppmSignalCanvas" class="w-[650px] h-[280px]"></canvas>
+            <div class="w-[600px] h-[400px] mb-5">
+              <div id="ppmSignalCanvas" class="w-[650px] h-[400px]"></div>
             </div>
-            <div class="w-[600px] h-[300px] mb-5">
-              <canvas id="ppmPulseCanvas" class="w-[650px] h-[280px]"></canvas>
+            <div class="w-[600px] h-[400px] mb-5">
+              <div id="ppmPulseCanvas" class="w-[650px] h-[400px]"></div>
             </div>
-            <div class="w-[600px] h-[300px] mb-5">
-              <canvas id="originalSignalCanvas" class="w-[650px] h-[280px]"></canvas>
+            <div class="w-[600px] h-[400px] mb-5">
+              <div id="originalSignalCanvas" class="w-[650px] h-[400px]"></div>
             </div>
           </div>
         </div>
@@ -127,8 +127,8 @@
           </div>
 
           <div class="flex justify-center flex-wrap items-center">
-            <div class="w-[600px] h-[300px] mb-5">
-              <canvas id="demodulatedSignalCanvas" class="w-[650px] h-[280px]"></canvas>
+            <div class="w-[600px] h-[400px] mb-5">
+              <div id="demodulatedSignalCanvas" class="w-[650px] h-[400px]"></div>
             </div>
           </div>
         </div>
@@ -235,7 +235,7 @@
 
       return demodulatedSignal;
     }
-
+/*
     // Function to plot signals using Chart.js
     function plotSignal(canvasId, time, signal, title, chartInstance) {
       // Destroy the existing chart instance if it exists
@@ -278,40 +278,158 @@
         }
       });
     }
-
+*/
     // Functions to plot specific signals on button click
     function plotOriginalSignal() {
       updateFrequencies();
-      originalSignalChart = plotSignal('originalSignalCanvas', t, analogSignal, 'Original Analog Signal (Sine Wave)', originalSignalChart);
-	  
-	  		    // Scroll to the message chart after it has been generated
+      //originalSignalChart = plotSignal('originalSignalCanvas', t, analogSignal, 'Original Analog Signal (Sine Wave)', originalSignalChart);
+let time = Array.from({length: Fs}, (_, i) => i/Fs);
+	  //let anlogSignal = ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction);
+	  //////////////////////////////////
+	    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: time,
+        y: analogSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Original Analog Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Original Analog Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('originalSignalCanvas', carrierPlotData, layout);
+
+    // Scroll to the carrier chart after it has been generated
     document.getElementById("originalSignalCanvas").scrollIntoView({
       behavior: "smooth",
       block: "center"
     });
-    }
+  }
 
     function plotPPMPulse() {
       updateFrequencies();
       const timeForPulseTrain = Array.from({ length: samplesPerPulse * analogSignal.length }, (_, i) => i * T / samplesPerPulse);
-      ppmPulseChart = plotSignal('ppmPulseCanvas', timeForPulseTrain, ppmPulseTrain, 'PPM Pulse Train', ppmPulseChart);
-    }
+      //ppmPulseChart = plotSignal('ppmPulseCanvas', timeForPulseTrain, ppmPulseTrain, 'PPM Pulse Train', ppmPulseChart);
+    //}
+	  let ppmSignal = ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction);
+	  //////////////////////////////////
+	    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: timeForPulseTrain,
+        y: ppmSignal.ppmPulseTrain,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'PPM Pulse Train',
+        //line: { color: 'blue', width: 2 }
+    }];
 
+    const layout = {
+        title: 'PPM Pulse Train',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('ppmPulseCanvas', carrierPlotData, layout);
+
+    // Scroll to the carrier chart after it has been generated
+    document.getElementById("ppmPulseCanvas").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+  
     function plotPPMModulatedSignal() {
       updateFrequencies();
-      ppmSignalChart = plotSignal('ppmSignalCanvas', t, ppmSignal.slice(0, t.length), 'PPM Modulated Signal', ppmSignalChart);
-    }
+      //demodulatedSignalChart = plotSignal('demodulatedSignalCanvas', t, demodulatedSignal, 'Demodulated Signal', demodulatedSignalChart);
+      let time = Array.from({length: Fs}, (_, i) => i/Fs);
+	  let ppmSignal = ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction);
+	  //////////////////////////////////
+	    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: time,
+        y: ppmSignal.ppmSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'PPM Modulated Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'PPM Modulated Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('ppmSignalCanvas', carrierPlotData, layout);
+
+    // Scroll to the carrier chart after it has been generated
+    document.getElementById("ppmSignalCanvas").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
 
     function plotDemodulatedSignal() {
       updateFrequencies();
-      demodulatedSignalChart = plotSignal('demodulatedSignalCanvas', t, demodulatedSignal, 'Demodulated Signal', demodulatedSignalChart);
+      //demodulatedSignalChart = plotSignal('demodulatedSignalCanvas', t, demodulatedSignal, 'Demodulated Signal', demodulatedSignalChart);
+      let time = Array.from({length: Fs}, (_, i) => i/Fs);
+	  let demodulatedSignal = ppmDemodulate(ppmSignal, samplesPerPulse, ppmWidthFraction);
+	  //////////////////////////////////
+	    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: time,
+        y: demodulatedSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Demodulated Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
 
-      // Scroll to the message chart after it has been generated
-      document.getElementById("modtodemod").scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
-    }
+    const layout = {
+        title: 'Demodulated Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            //range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('demodulatedSignalCanvas', carrierPlotData, layout);
+
+    // Scroll to the carrier chart after it has been generated
+    document.getElementById("demodulatedSignalCanvas").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+//////////////////////////////////
+		  
   </script>
   
     <style>
