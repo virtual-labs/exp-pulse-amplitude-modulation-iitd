@@ -5,7 +5,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Virtual Labs</title>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -105,17 +104,15 @@
               />
             </div>
           </div>
-<div class="flex flex-col justify-center items-center">
-  <div class="w-[600px] h-[300px] mb-5">
-    <canvas id="pamChart" class="w-[650px] h-[280px]"></canvas>
+<div class="flex flex-col justify-center items-center" style="position: relative; overflow: auto;">
+  <div class="w-[600px] h-[450px] mb-5">
+    <div id="messageChart" class="w-[650px] h-[450px]"></div>
   </div>
-
-  <div class="w-[600px] h-[300px] mb-5">
-    <canvas id="carrierChart" class="w-[650px] h-[280px]"></canvas>
+    <div class="w-[600px] h-[450px] mb-5">
+    <div id="carrierChart" class="w-[650px] h-[450px]"></div>
   </div>
-
-  <div class="w-[600px] h-[300px] mb-5">
-    <canvas id="messageChart" class="w-[650px] h-[280px]"></canvas>
+  <div class="w-[600px] h-[450px] mb-5">
+    <div id="pamChart" class="w-[650px] h-[450px]"></div>
   </div>
 </div>
 
@@ -203,59 +200,65 @@
  
  
  <script>
-  function linspace(start, end, num) {
+ let messageSignal = [];
+ let carrierSignal = [];
+function linspace(start, end, num) {
     const step = (end - start) / (num - 1);
     return Array.from({ length: num }, (_, index) => start + index * step);
-  }
+}
 
-  function destroyChart(canvasId) {
-    const canvas = document.getElementById(canvasId);
-    if (canvas) {
-      const context = canvas.getContext("2d");
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      const existingChart = Chart.getChart(canvas);
-      if (existingChart) {
-        existingChart.destroy();
-      }
-    }
-  }
+function generateMessage() {
+    const duration = 1; // Duration of the signal in seconds
+    const resolution = 100 * parseFloat(document.getElementById("carrierFrequency").value); // Resolution based on carrier frequency
+    const numSamples = resolution * duration; // Total number of samples
 
-  async function generateMessage() {
-    destroyChart("messageChart");
+    // Generate time values only once
+    const time = linspace(0, duration, numSamples);
 
-    const duration = 1;
-    const resolution = 100*parseFloat(
-      document.getElementById("carrierFrequency").value
-    );
-    const t = linspace(0, duration, resolution * duration);
+    const messageFrequency = parseFloat(document.getElementById("messageFrequency").value); // Get message frequency from input
 
-    const messageFrequency = parseFloat(
-      document.getElementById("messageFrequency").value
-    );
-
-    if (isNaN(messageFrequency)) {
-      console.error("Invalid message frequency");
-      return;
+    // Validate the message frequency
+    if (isNaN(messageFrequency) || messageFrequency <= 0) {
+        console.error("Invalid message frequency");
+        return;
     }
 
-    const a = 1;
-    const messageSignal = linspace(0, duration, resolution * duration).map(
-      (t) => a * Math.sin(2 * Math.PI * messageFrequency * t)
-    );
+    const a = 1; // Amplitude of the message signal
+    // Generate the message signal using the same time array
+    messageSignal = time.map(t => a * Math.sin(2 * Math.PI * messageFrequency * t));
 
-    plotSignal("messageChart", t, messageSignal, "Message Signal");
+    // Plotting with Plotly
+    const messagePlotData = [{
+        x: time,
+        y: messageSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Message Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Message Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('messageChart', messagePlotData, layout);
 
     // Scroll to the message chart after it has been generated
-    document.getElementById("carrierChart").scrollIntoView({
-      behavior: "smooth",
-      block: "center"
+    document.getElementById("messageChart").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
     });
+}
 
-    return messageSignal;
-  }
-
-  async function generateCarrier() {
-    destroyChart("carrierChart");
+function generateCarrier() {
 
     const duration = 1;
     const resolution = 100*parseFloat(
@@ -274,29 +277,44 @@
 
     const fc = carrierFrequency;
     const a = 1;
-    const carrierSignal = linspace(0, duration, resolution * duration).map(
+    carrierSignal = linspace(0, duration, resolution * duration).map(
       (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * t))
     );
 
-    plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
+    //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
+	    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: t,
+        y: carrierSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Carrier Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Carrier Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('carrierChart', carrierPlotData, layout);
 
     // Scroll to the carrier chart after it has been generated
     document.getElementById("carrierChart").scrollIntoView({
       behavior: "smooth",
       block: "center"
     });
-
-    return carrierSignal;
   }
+  
 
-  async function generateSignals() {
-    const messageSignal = await generateMessage();
-    const carrierSignal = await generateCarrier();
-    return { messageSignal, carrierSignal };
-  }
-
-  async function performPAM() {
-    destroyChart("pamChart");
+function performPAM() {
 
     const duration = 1;
     const resolution = 100*parseFloat(
@@ -304,19 +322,35 @@
     );
     const t = linspace(0, duration, resolution * duration);
 
-    const { messageSignal, carrierSignal } = await generateSignals();
-
-    if (!messageSignal || !carrierSignal) {
-      console.error("Failed to generate signals");
-      return;
-    }
-
 const pamSignal = messageSignal.map((msg, index) => {
   return carrierSignal[index] > 0 ? msg * carrierSignal[index] : 0;
+
 });
 
+//plotSignal("pamChart", t, pamSignal, "PAM Signal");
+	    // Plotting with Plotly
+    const pamPlotData = [{
+        x: t,
+        y: pamSignal,
+        type: 'scatter',
+        mode: 'lines',
+        name: 'PAM Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
 
-    plotSignal("pamChart", t, pamSignal, "PAM Signal");
+    const layout = {
+        title: 'PAM Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('pamChart', pamPlotData, layout);
 
     // Scroll to the PAM chart after it has been generated
     document.getElementById("pamChart").scrollIntoView({
@@ -325,37 +359,6 @@ const pamSignal = messageSignal.map((msg, index) => {
     });
   }
 
-  function plotSignal(canvasId, time, signal, label) {
-    const ctx = document.getElementById(canvasId).getContext("2d");
-    new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: time,
-        datasets: [
-          {
-            label: label,
-            data: signal,
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
-            fill: false,
-          },
-        ],
-      },
-      options: {
-        scales: {
-          x: {
-            type: "linear",
-            position: "bottom",
-          },
-          y: {
-            min: -1,
-            max: 1,
-          },
-        },
-      },
-    });
-
-  }
 </script>
 
      <script>
@@ -391,8 +394,11 @@ const pamSignal = messageSignal.map((msg, index) => {
 
             // Demodulation
             const d = t.map((time, index) => s[index] * c[index]);
-            const original_t_signal = lowPassFilter(d, messageFreq, samplingFreq, filterOrder);
+            const original_t_signal1 = lowPassFilter(d, messageFreq, samplingFreq, filterOrder);
+            const minVal = Math.min(...original_t_signal1);
+            const maxVal = Math.max(...original_t_signal1);
 
+            const original_t_signal = original_t_signal1.map(value => (2 * (value - minVal) / (maxVal - minVal)) - 1);
             // Plot Demodulated Signal
             const t1 = Array.from({length: original_t_signal.length}, (_, i) => i / (original_t_signal.length - 1));
             const demodulatedPlotData = [{
@@ -450,7 +456,10 @@ li::before {
     color: #4caf50;
     margin-right: 10px;
 }
-
+        /* Hide scrollbar for Chrome, Safari, and Opera */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
   </style>
   
 </body>
