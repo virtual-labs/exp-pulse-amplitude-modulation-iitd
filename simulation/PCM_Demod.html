@@ -1,0 +1,258 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Virtual Labs</title>
+  </head>
+  <body>
+    <!-- sidebar and body -->
+    <div class="flex min-h-[80vh]">
+      <div class="px-6 pb-6 flex-1">
+        <!--  -->
+        <div class="flex flex-col">
+          <h2 class=" text-[#2c99ce] font-medium p-1 m-1">Message Signal</h2>
+          <div class="flex max-lg:flex-col  gap-x-8 gap-y-2">
+            <div class="">
+              <div class="flex items-center gap-1">
+                <label for="frequencyInput"
+                  >Enter the message signal frequency in Hz:</label
+                >
+                <input
+                  class="border border-black px-2 py-1 rounded-sm"
+                  type="number"
+                  id="frequencyInput"
+                  min="1" value="5"
+                />
+              </div>
+            </div>
+            <div class="">
+              <div class="flex items-center gap-1">
+                <label for="samplingInput"
+                  >Enter the sampling frequency in Hz:</label
+                >
+                <input
+                  class="max-lg:ml-10 border border-black px-2 py-1 rounded-sm"
+                  type="number"
+                  id="samplingInput"
+                  min="1" value="100"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="flex-1">
+            <h2 class=" text-[#2c99ce] font-medium p-1 m-1">Quantized Signal</h2>
+            <div class="">
+              <label for="numLevelsInput"
+                >Enter the number of quantization levels:</label
+              >
+              <input
+                class="border px-2 border-black py-1 rounded-sm"
+                type="number"
+                id="numLevelsInput"
+                min="1" value="4"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 border-t-2">
+          <div class="flex flex-col">
+            <h2 class="text-center p-1 text-lg text-[#2c99ce]">PCM </h2>
+            <div class="flex justify-center">
+              <button
+                class="bg-blue-500 text-white rounded-md px-2 py-1"
+                class="button"
+                onclick="updateChart()"
+              >
+                Generate PCM
+              </button>
+            </div>
+            <div class="flex justify-center items-center">
+              <div class="mb-5">
+                <canvas id="combinedChart" class="w-[1000px] h-[400px]"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+    </div>
+    <script>
+        // Function to convert decimal to fixed-length binary
+        function decimalToBinary(decimal, numBits) {
+            const binary = decimal.toString(2);
+            const padding = '0'.repeat(Math.max(0, numBits - binary.length));
+            return padding + binary;
+        }
+    
+        // Function to quantize a signal
+        function quantizeSignal(signal, numLevels) {
+            const vmax = 8;
+            const vmin = -vmax;
+            const del = (vmax - vmin) / numLevels;
+    
+            const part = Array.from({ length: numLevels + 1 }, (_, i) => vmin + i * del);
+            const code = Array.from({ length: numLevels }, (_, i) => vmin + (i + 0.5) * del);
+    
+            const quantizedSignal = signal.map(value => {
+                const index = part.findIndex(partition => value <= partition);
+                return code[Math.max(0, index - 1)];
+            });
+    
+            return quantizedSignal;
+        }
+    
+        // Generate a sine wave as the input signal
+        function generateSineWave(samples, frequency, amplitude) {
+            const sineWave = [];
+            for (let i = 0; i < samples; i++) {
+                const time = i / (samples - 1);
+                const value = amplitude * Math.sin(2 * Math.PI * frequency * time);
+                sineWave.push(value);
+            }
+            return sineWave;
+        }
+    
+        // Function to update the chart
+        async function updateChart() {
+            const frequencyInput = document.getElementById('frequencyInput');
+            const numLevelsInput = document.getElementById('numLevelsInput');
+            const samplingInput = document.getElementById('samplingInput');
+    
+            const frequency = parseInt(frequencyInput.value, 10);
+            const numLevels = parseInt(numLevelsInput.value, 10);
+            const samples = parseInt(samplingInput.value, 10);
+            const amplitude = 8;
+    
+            // Generate a sine wave with user-input frequency
+            const sineWave = generateSineWave(samples, frequency, amplitude);
+    
+            // Quantize the sine wave with user-input number of levels
+            const quantizedSignal = quantizeSignal(sineWave, numLevels);
+    
+            // Extract 'ind' and 'q' from the quantizedSignal
+            const vmax = 8;
+            const vmin = -vmax;
+            const del = (vmax - vmin) / numLevels;
+    
+            const part = Array.from({ length: numLevels + 1 }, (_, i) => vmin + i * del);
+            const code = Array.from({ length: numLevels }, (_, i) => vmin + (i + 0.5) * del);
+            const ind = quantizedSignal.map(value => part.findIndex(partition => value <= partition) - 1);
+            const numBits = 2; // Change this value as needed
+            const binaryInd1 = ind.map(value => decimalToBinary(value, numBits));
+            const binaryRowWithoutCommas1 = binaryInd1.join('');
+            const binaryRowWithCommas1 = binaryRowWithoutCommas1.split('').join(', ');
+            const binaryArray1 = binaryRowWithCommas1.split(', ');
+    
+            const q = quantizedSignal.map(value => code[Math.max(0, part.findIndex(partition => value <= partition) - 1)]);
+            
+            const d = ind.map((element) => element * del + vmin + (del/2));
+    
+            // Apply low-pass filter (moving average)
+            const windowSize = 5; // Adjust window size as needed
+            const filteredD = applyMovingAverage(d, windowSize);
+    
+            // Update the combined chart
+            combinedChart.data.labels = Array.from({ length: samples }, (_, index) => `Sample ${index + 1}`);
+            combinedChart.data.datasets[0].label = 'Original Sine Wave';
+            combinedChart.data.datasets[0].borderColor = 'blue';
+            combinedChart.data.datasets[0].data = sineWave;
+    
+            combinedChart.data.datasets[1].label = `Quantized Signal (${numLevels} levels)`;
+            combinedChart.data.datasets[1].borderColor = 'red';
+            combinedChart.data.datasets[1].data = quantizedSignal;
+    
+            combinedChart.data.datasets[2].label = 'PCM Encoded Signal';
+            combinedChart.data.datasets[2].borderColor = 'green';
+            combinedChart.data.datasets[2].data = binaryArray1;
+    
+            combinedChart.data.datasets[3] = {
+                label: 'demodulated signal',
+                borderColor: 'orange',
+                data: filteredD,
+                fill: false
+            };
+    
+            combinedChart.update();
+    
+            console.log('ind:', ind);
+            console.log('q:', q);
+            console.log('d:', d);
+            console.log('Filtered d:', filteredD);
+        }
+    
+        // Function to apply moving average filter
+        function applyMovingAverage(signal, windowSize) {
+            const filteredSignal = [];
+            for (let i = 0; i < signal.length; i++) {
+                let sum = 0;
+                for (let j = Math.max(0, i - windowSize + 1); j <= i; j++) {
+                    sum += signal[j];
+                }
+                filteredSignal.push(sum / Math.min(i + 1, windowSize));
+            }
+            return filteredSignal;
+        }
+    
+        function clearChart(chart) {
+            if (chart) {
+                chart.data.labels = [];
+                chart.data.datasets.forEach(dataset => {
+                    dataset.data = [];
+                });
+                chart.update();
+            }
+        }
+    
+        // Initial chart setup
+        const combinedCtx = document.getElementById('combinedChart').getContext('2d');
+    
+        const combinedChart = new Chart(combinedCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Original Sine Wave',
+                        borderColor: 'blue',
+                        data: [],
+                        fill: false,
+                    },
+                    {
+                        label: 'Quantized Signal',
+                        borderColor: 'red',
+                        data: [],
+                        fill: false,
+                    },
+                    {
+                        label: 'PCM Encoded Signal',
+                        borderColor: 'green',
+                        data: [],
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sample Index'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Signal Value'
+                        }
+                    }
+                }
+            }
+        });
+    
+        // Initial chart setup
+        updateChart();
+      </script>
+  </body>
+</html>
