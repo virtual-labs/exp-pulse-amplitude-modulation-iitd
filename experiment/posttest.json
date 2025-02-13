@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "In Pulse Amplitude Modulation (PAM), what is the effect of increasing the bandwidth of the transmitted signal?",
+      "question": "1. In Pulse Amplitude Modulation (PAM), what is the effect of increasing the bandwidth of the transmitted signal?",
       "answers": {
         "a": "Increased noise immunity",
         "b": "Increased inter-symbol interference",
@@ -19,7 +19,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "Which of the following is a primary disadvantage of using Pulse Width Modulation (PWM) in high-frequency applications?",
+      "question": "2. Which of the following is a primary disadvantage of using Pulse Width Modulation (PWM) in high-frequency applications?",
       "answers": {
         "a": "Increased power consumption",
         "b": "Increased sensitivity to noise",
@@ -36,7 +36,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "How does quantization noise in Pulse Code Modulation (PCM) affect the signal-to-noise ratio (SNR)?",
+      "question": "3. How does quantization noise in Pulse Code Modulation (PCM) affect the signal-to-noise ratio (SNR)?",
       "answers": {
         "a": "It improves the SNR.",
         "b": "It degrades the SNR.",
@@ -53,7 +53,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "In a Pulse Position Modulation (PPM) system, how does the introduction of timing jitter impact the accuracy of the demodulated signal?",
+      "question": "4. In a Pulse Position Modulation (PPM) system, how does the introduction of timing jitter impact the accuracy of the demodulated signal?",
       "answers": {
         "a": "It has no impact on the signal.",
         "b": "It increases the signal amplitude.",
@@ -70,7 +70,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "Which factor limits the maximum number of quantization levels in Pulse Code Modulation (PCM) without significantly increasing the quantization noise?",
+      "question": "5. Which factor limits the maximum number of quantization levels in Pulse Code Modulation (PCM) without significantly increasing the quantization noise?",
       "answers": {
         "a": "Sampling frequency",
         "b": "Bit rate",
@@ -87,7 +87,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "In PAM, what is the consequence of using non-linear devices during the modulation process?",
+      "question": "6. In PAM, what is the consequence of using non-linear devices during the modulation process?",
       "answers": {
         "a": "Distortion is introduced, affecting the integrity of the signal.",
         "b": "The signal is compressed, reducing bandwidth.",
@@ -104,7 +104,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "Why is Pulse Width Modulation (PWM) preferred in power delivery systems over PAM?",
+      "question": "7. Why is Pulse Width Modulation (PWM) preferred in power delivery systems over PAM?",
       "answers": {
         "a": "PWM signals are more energy-efficient for power delivery.",
         "b": "PWM signals are easier to demodulate.",
@@ -121,7 +121,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "In a noisy environment, which type of pulse modulation is most likely to suffer from inter-symbol interference (ISI)?",
+      "question": "8. In a noisy environment, which type of pulse modulation is most likely to suffer from inter-symbol interference (ISI)?",
       "answers": {
         "a": "PAM",
         "b": "PWM",
@@ -138,7 +138,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "How does the choice of sampling frequency affect the performance of a PCM system?",
+      "question": "9. How does the choice of sampling frequency affect the performance of a PCM system?",
       "answers": {
         "a": "Higher sampling frequency reduces quantization noise.",
         "b": "Lower sampling frequency increases aliasing distortion.",
@@ -155,7 +155,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "In PPM, why might a higher-order modulation scheme be preferred in high-bandwidth communication systems?",
+      "question": "10. In PPM, why might a higher-order modulation scheme be preferred in high-bandwidth communication systems?",
       "answers": {
         "a": "It increases the amplitude resolution of the pulses.",
         "b": "It allows for more data to be transmitted within the same bandwidth.",
