@@ -2,7 +2,7 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "What is the primary characteristic of a Pulse Amplitude Modulation (PAM) signal?",
+      "question": "1. What is the primary characteristic of a Pulse Amplitude Modulation (PAM) signal?",
       "answers": {
         "a": "The amplitude of the pulses varies according to the amplitude of the modulating signal.",
         "b": "The width of the pulses varies according to the amplitude of the modulating signal.",
@@ -19,7 +19,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "In Pulse Width Modulation (PWM), what aspect of the pulse varies?",
+      "question": "2. In Pulse Width Modulation (PWM), what aspect of the pulse varies?",
       "answers": {
         "a": "Amplitude",
         "b": "Width",
@@ -36,7 +36,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "Which of the following is true for Pulse Position Modulation (PPM)?",
+      "question": "3. Which of the following is true for Pulse Position Modulation (PPM)?",
       "answers": {
         "a": "The amplitude of the pulses is varied.",
         "b": "The position of the pulses is varied.",
@@ -53,7 +53,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "In Pulse Code Modulation (PCM), which of the following steps occurs first?",
+      "question": "4. In Pulse Code Modulation (PCM), which of the following steps occurs first?",
       "answers": {
         "a": "Quantization",
         "b": "Sampling",
@@ -70,7 +70,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What is a major advantage of Pulse Amplitude Modulation (PAM) over analog amplitude modulation?",
+      "question": "5. What is a major advantage of Pulse Amplitude Modulation (PAM) over analog amplitude modulation?",
       "answers": {
         "a": "PAM signals require less bandwidth.",
         "b": "PAM signals are more resistant to noise.",
@@ -87,7 +87,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "In PWM, how does an increase in the amplitude of the modulating signal affect the pulse width?",
+      "question": "6. In PWM, how does an increase in the amplitude of the modulating signal affect the pulse width?",
       "answers": {
         "a": "It decreases the pulse width.",
         "b": "It increases the pulse width.",
@@ -104,7 +104,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "Which type of pulse modulation is least affected by timing jitter in the transmission system?",
+      "question": "7. Which type of pulse modulation is least affected by timing jitter in the transmission system?",
       "answers": {
         "a": "PAM",
         "b": "PWM",
@@ -121,7 +121,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What does the quantization step in Pulse Code Modulation (PCM) achieve?",
+      "question": "8. What does the quantization step in Pulse Code Modulation (PCM) achieve?",
       "answers": {
         "a": "It converts the analog signal to a digital bit stream.",
         "b": "It samples the analog signal at regular intervals.",
@@ -138,7 +138,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "How is the resolution of a Pulse Code Modulation (PCM) signal determined?",
+      "question": "9. How is the resolution of a Pulse Code Modulation (PCM) signal determined?",
       "answers": {
         "a": "By the sampling frequency.",
         "b": "By the number of quantization levels.",
@@ -155,7 +155,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "In Pulse Position Modulation (PPM), how does a higher frequency modulating signal affect the pulses?",
+      "question": "10. In Pulse Position Modulation (PPM), how does a higher frequency modulating signal affect the pulses?",
       "answers": {
         "a": "The pulses move closer together.",
         "b": "The pulses move further apart.",
@@ -171,6 +171,5 @@
       "correctAnswer": "a",
       "difficulty": "intermediate"
     }
-   ]
-  }
-  
+  ]
+}
