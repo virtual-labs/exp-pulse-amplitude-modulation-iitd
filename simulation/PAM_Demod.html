@@ -1,0 +1,184 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <title>Virtual Labs</title>
+  </head>
+  <body>
+    <!-- sidebar and body -->
+    <div class="flex min-h-[80vh]">
+      <div class="px-6 pb-6 flex-1">
+        <!--  -->
+        <div class="flex flex-col gap-y-5 mt-4">
+          <!-- <h2 class=" text-[#2c99ce] font-medium p-1 m-1">Message Signal</h2> -->
+          <div class="flex max-lg:flex-col   gap-y-2">
+            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label for="messageFreq"
+                class="text-[#2c99ce]"
+                  >Message Signal Frequency in Hz:</label
+                >
+                <input
+                  class="border border-black px-2 py-1 rounded-sm"
+                  type="number"
+                  id="messageFreq"
+                  value="10"
+                />
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label for="carrierFreq"
+                class="text-[#2c99ce]"
+                  >Carrier Signal Frequency in Hz:</label
+                >
+                <input
+                  class="max-lg:ml-10 border border-black px-2 py-1 rounded-sm"
+                  type="number"
+                  id="carrierFreq"
+                  value="1000"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="flex max-lg:flex-col gap-y-2">
+            <div class=" flex-1">
+              <div class="flex items-center gap-1">
+                <label for="samplingFreq"
+                class="text-[#2c99ce]"
+                >Sampling frequency in Hz:</label
+                >
+                <input
+                class="max-lg:ml-10 border border-black px-2 py-1 rounded-sm"
+                type="number"
+                id="samplingFreq"
+                value="10000"
+                />
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label for="filterOrder" class="text-[#2c99ce]"
+                  >Filter Order:</label 
+                >
+                <input
+                  class="border border-black px-2 py-1 rounded-sm"
+                  type="number"
+                  id="filterOrder"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 border-t-2">
+          <div class="flex flex-col">
+            <div class="flex justify-center my-3">
+              <button
+                class="bg-blue-500 text-white rounded-md px-2 py-1"
+                class="button"
+                onclick="plotDemodulatedSignal()"
+              >
+              Plot Demodulated Signal
+              </button>
+            </div>
+            <div class="flex justify-center flex-wrap items-center">
+              <div class="m-1">
+                <!-- <h2 class="text-center font-medium text-[#2c99ce]">Message Signal</h2> -->
+                <div id="message-signal" style="width: 400px; height: 400px;"></div>
+              </div>
+              <div class="m-1">
+                <!-- <h2 class="text-center font-medium text-[#2c99ce]">Modulated Signal</h2> -->
+            <div id="modulated-signal" style="width: 400px; height: 400px;"></div>
+              </div>
+              <div class="m-1">
+                <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
+                <div id="demodulated-signal" style="width: 400px; height: 400px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+      </div>
+    </div>
+    <script>
+        function lowPassFilter(signal, cutoffFreq, fs, filterOrder) {
+		    const fm = parseFloat(document.getElementById("messageFreq").value);
+            const filterLength = filterOrder*fm + 1;
+            const filter = Array.from({length: filterLength}, () => 1 / filterLength);
+            const filteredSignal = [];
+
+            for (let i = 0; i < signal.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < filter.length && i - j >= 0; j++) {
+                    sum += signal[i - j] * filter[j];
+                }
+                filteredSignal.push(sum);
+            }
+
+            return filteredSignal;
+        }
+
+        function plotDemodulatedSignal() {
+            const messageFreq = parseFloat(document.getElementById("messageFreq").value);
+            const carrierFreq = parseFloat(document.getElementById("carrierFreq").value);
+            const samplingFreq = parseFloat(document.getElementById("samplingFreq").value);
+            const filterOrder = parseFloat(document.getElementById("filterOrder").value) || Math.floor(samplingFreq / messageFreq);
+
+            const t = Array.from({length: samplingFreq}, (_, i) => i / samplingFreq);
+            const m = t.map(time => Math.cos(2 * Math.PI * messageFreq * time));
+            const c = t.map(time => 0.5 * Math.sign(Math.sin(2 * Math.PI * carrierFreq * time)) + 0.5);
+            const s = t.map((time, index) => m[index] * c[index]);
+
+            // Plot Message Signal
+            const messagePlotData = [{
+                x: t,
+                y: m,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Message Signal'
+            }];
+            Plotly.newPlot('message-signal', messagePlotData, {
+                title: 'Message Signal',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Amplitude' }
+            });
+			
+			            // Plot modulated Signal
+            const modulatedPlotData = [{
+                x: t,
+                y: s,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Modulated Signal'
+            }];
+            Plotly.newPlot('modulated-signal', modulatedPlotData, {
+                title: 'Modulated Signal',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Amplitude' }
+            });
+
+            // Demodulation
+            const d = t.map((time, index) => s[index] * c[index]);
+            const original_t_signal = lowPassFilter(d, messageFreq, samplingFreq, filterOrder);
+
+            // Plot Demodulated Signal
+            const t1 = Array.from({length: original_t_signal.length}, (_, i) => i / (original_t_signal.length - 1));
+            const demodulatedPlotData = [{
+                x: t1,
+                y: original_t_signal,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Demodulated Signal'
+            }];
+            Plotly.newPlot('demodulated-signal', demodulatedPlotData, {
+                title: 'Demodulated Signal',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Amplitude' }
+            });
+        }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+**The aim of this experiment is to demonstrate and understand the principles of various pulse modulation techniques—PAM, PWM, PPM, and PCM with their demodulation, analyzing how each method encodes and recovers information from signals**
