@@ -179,6 +179,8 @@
             // Check the frequencies
             if (carrierFrequency <= messageFrequency) {
                 alert("Carrier frequency should be greater than message frequency.");
+				            // Perform a hard refresh after the alert is dismissed
+            window.location.reload(true);  // Hard refresh the page
             } else {
                 console.log("Carrier frequency is greater than message frequency.");
             }
