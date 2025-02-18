@@ -185,6 +185,7 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
             // Check the frequencies
             if (carrierFrequency <= bit_rate) {
                 alert("Sampling frequency should be much higher than message frequency.");
+				window.location.reload(true); 
             } else {
                 console.log("Sampling frequency should be much high than message frequency.");
             }
@@ -203,36 +204,38 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
 
     </script>
 	
-	<script>
-        function checkpoweroftwo() {
-            // Get value from the input field
-            let PowerOfTwo = parseFloat(document.getElementById('numLevelsInput').value);
-            
-            // Check if PowerOfTwo is a power of 2
-            if (isPowerOfTwo(PowerOfTwo)) {
-                console.log(``);
-            } else {
-                console.log(``);
-                alert(`The quantization levels are not power of 2!`); // Show alert if not a power of 2
-            }
+<script>
+    function checkpoweroftwo() {
+        // Get value from the input field
+        let PowerOfTwo = parseFloat(document.getElementById('numLevelsInput').value);
+        
+        // Check if PowerOfTwo is a power of 2
+        if (isPowerOfTwo(PowerOfTwo)) {
+            console.log(`The quantization levels are a power of 2.`);
+        } else {
+            console.log(`The quantization levels are not a power of 2!`);
+            alert(`The quantization levels are not power of 2!`); // Show alert
+            location.reload(true); // Hard refresh after clicking OK
         }
+    }
 
-        // Function to check if a number is a power of 2
-        function isPowerOfTwo(n) {
-            return n > 0 && (n & (n - 1)) === 0;
-        }
+    // Function to check if a number is a power of 2
+    function isPowerOfTwo(n) {
+        return n > 0 && (n & (n - 1)) === 0;
+    }
 
-        // Function to attach event listeners to all buttons
-        function attachEventListeners() {
-            let buttons = document.querySelectorAll('button');
-            buttons.forEach(button => {
-                button.addEventListener('click', checkpoweroftwo); // Use the function reference
-            });
-        }
+    // Function to attach event listeners to all buttons
+    function attachEventListeners() {
+        let buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', checkpoweroftwo); // Use the function reference
+        });
+    }
 
-        // Attach event listeners when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', attachEventListeners);
-    </script>
+    // Attach event listeners when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', attachEventListeners);
+</script>
+
 	
 <script>
     const charts = {};
