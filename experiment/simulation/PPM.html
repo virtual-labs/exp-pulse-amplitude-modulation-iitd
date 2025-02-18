@@ -147,13 +147,15 @@
         // Check if sampling frequency is greater than message frequency
         if (samplingFrequency <= messageFrequency) {
             alert("Sampling frequency should be much higher than message frequency.");
-            return; // Exit the function if the condition is not met
+            location.reload(true); // Hard refresh after OK
+            return;
         }
         
         // Check if sampling frequency is greater than samples per pulse
         if (samplingFrequency <= samplesPerPulse) {
             alert("Sampling frequency should be much higher than Samples Per Pulse.");
-            return; // Exit the function if the condition is not met
+            location.reload(true); // Hard refresh after OK
+            return;
         }
         
         console.log("Sampling frequency is greater than message frequency and samples per pulse.");
@@ -170,6 +172,7 @@
     // Attach event listeners when the DOM is fully loaded
     document.addEventListener('DOMContentLoaded', attachEventListeners);
 </script>
+
 
 	
   <script>
