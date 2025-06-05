@@ -89,8 +89,11 @@
   >
     Generate PAM Signal
   </button>
+  <button 
+  class="bg-blue-500 text-white py-1 px-3 text-sm rounded-md hover:scale-105"
+  onclick="frequencySpectrums()">Show Frequency Spectrums</button>
   <button
-    class="bg-blue-500 text-white rounded-md px-2 py-1"
+    class="bg-gray-500 text-white rounded-md px-2 py-1"
     onclick="plotDemodulatedSignal()"
   >
     Perform PAM Demodulation
@@ -120,7 +123,13 @@
       </div>
     </div>
   </div>
-  
+
+  <br/><br/>
+  <div class="plot-container1">
+    <div id="plot-message" class="plot1"></div>
+    <div id="plot-dsb" class="plot1"></div>
+    <div id="plot-demodulated" class="plot1"></div>
+</div>
   <br/><br/><hr/>
   
   <div id = "container">
@@ -128,6 +137,7 @@
     <ul>
 	    <li>Step 1: The reconstruction filter is used to recover the original message signal from the sampled PAM signal (typically by multiplying with the carrier and then low-pass filtering)</li>
 		<li>Step 2: You can Demodulate the PAM Signal clicking on the 'Demodulate PAM Signal' button</li>
+    <li>A reconstruction filter is a low-pass filter (LPF) with cutoff at or just above the message frequency which passes only the baseband and blocks higher-frequency copies</li>
     </ul>
 </div>	
   
@@ -151,6 +161,14 @@
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- buttons -->
               <div class="absolute top-[170px] right-[-15px]">
+                <p class="font-medium">Cut-off Frequency (Hz)</p>
+                <input
+                  class="border px-1 w-[152px] py-1 rounded-sm border-black"
+                  type="number"
+                  id="cutoffFrequency"
+                  min="1"
+                  value="2"
+                />
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()" id = "modtodemod">Demodulate PAM Signal</button>
 				
               </div>
@@ -231,8 +249,8 @@ function generateMessage() {
 
     // Plotting with Plotly
     const messagePlotData = [{
-        x: time,
-        y: messageSignal,
+        x: time.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: messageSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
         name: 'Message Signal',
@@ -286,8 +304,8 @@ function generateCarrier() {
     //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: t,
-        y: carrierSignal,
+        x: t.slice(1,parseInt(3/carrierFrequency*resolution)),
+        y: carrierSignal.slice(1,parseInt(3/carrierFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
         name: 'Carrier Signal',
@@ -322,6 +340,9 @@ function performPAM() {
     const resolution = 100*parseFloat(
       document.getElementById("carrierFrequency").value
     );
+    const messageFrequency = parseFloat(
+      document.getElementById("messageFrequency").value
+    );
     const t = linspace(0, duration, resolution * duration);
 
 const pamSignal = messageSignal.map((msg, index) => {
@@ -332,8 +353,8 @@ const pamSignal = messageSignal.map((msg, index) => {
 //plotSignal("pamChart", t, pamSignal, "PAM Signal");
 	    // Plotting with Plotly
     const pamPlotData = [{
-        x: t,
-        y: pamSignal,
+        x: t.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: pamSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
         name: 'PAM Signal',
@@ -365,7 +386,7 @@ const pamSignal = messageSignal.map((msg, index) => {
 
      <script>
         function lowPassFilter(signal, cutoffFreq, fs, filterOrder) {
-		    const fm = parseFloat(document.getElementById("messageFrequency").value);
+		    const fm = parseFloat(document.getElementById("cutoffFrequency").value);
             const filterLength = filterOrder*fm + 1;
             const filter = Array.from({length: filterLength}, () => 1 / filterLength);
             const filteredSignal = [];
@@ -385,6 +406,8 @@ const pamSignal = messageSignal.map((msg, index) => {
             const messageFreq = parseFloat(document.getElementById("messageFrequency").value);
             const carrierFreq = parseFloat(document.getElementById("carrierFrequency").value);
             const samplingFreq = 100*parseFloat(document.getElementById("carrierFrequency").value);
+            const cutoffFrequency = parseFloat(document.getElementById("cutoffFrequency").value);
+
             const filterOrder = Math.floor(samplingFreq / messageFreq);
 
             const t = Array.from({length: samplingFreq}, (_, i) => i / samplingFreq);
@@ -396,7 +419,7 @@ const pamSignal = messageSignal.map((msg, index) => {
 
             // Demodulation
             const d = t.map((time, index) => s[index] * c[index]);
-            const original_t_signal1 = lowPassFilter(d, messageFreq, samplingFreq, filterOrder);
+            const original_t_signal1 = lowPassFilter(d, cutoffFrequency, samplingFreq, filterOrder);
             const minVal = Math.min(...original_t_signal1);
             const maxVal = Math.max(...original_t_signal1);
 
@@ -419,6 +442,100 @@ const pamSignal = messageSignal.map((msg, index) => {
 						            // Scroll to the plot area
             document.getElementById('modtodemod').scrollIntoView({ behavior: 'smooth' });
         }
+
+
+        function frequencySpectrums() {
+    const carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
+    const messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
+    const gain = 1;
+
+    // Multiple frequency components
+    const lowerSidebandFrequencies = [
+        carrierFrequency - messageFrequency,
+        3*carrierFrequency - messageFrequency,
+        5*carrierFrequency - messageFrequency
+    ];
+    const upperSidebandFrequencies = [
+        carrierFrequency + messageFrequency,
+        3*carrierFrequency + messageFrequency,
+        5*carrierFrequency + messageFrequency
+    ];
+
+    // Corresponding magnitudes for each frequency (in dB)
+    const lowerMagnitudes = [
+        [0],    // For lowerSidebandFrequencies[0]
+        [-9.5],
+        [-14]         // For lowerSidebandFrequencies[1]
+    ];
+    const upperMagnitudes = [
+        [0],         // For upperSidebandFrequencies[0]
+        [-9.5],
+        [-14]    // For upperSidebandFrequencies[1]
+    ];
+
+    const layoutDSB = {
+        title: 'PAM Spectrum',
+        xaxis: {
+            title: 'Frequency (Hz)',
+            showgrid: true,
+            zeroline: false,
+            range: [
+                Math.min(...lowerSidebandFrequencies) - 10,
+                Math.max(...upperSidebandFrequencies) + 10
+            ]
+        },
+        yaxis: {
+            title: 'Normalized PSD (dB/Hz)',
+            showgrid: true,
+            zeroline: false,
+        },
+        showlegend: false
+    };
+
+    const traces = [];
+
+    // Lower sideband traces
+    lowerSidebandFrequencies.forEach((freq, i) => {
+        lowerMagnitudes[i].forEach((mag, j) => {
+            traces.push({
+                x: [freq, freq],
+                y: [-30, mag],
+                mode: 'lines',
+                type: 'scatter',
+                line: {
+                    width: 3,
+                    color: 'blue'
+                },
+                //name: `LSB f=${freq}Hz m${j + 1}`
+                name: ``
+            });
+        });
+    });
+
+    // Upper sideband traces
+    upperSidebandFrequencies.forEach((freq, i) => {
+        upperMagnitudes[i].forEach((mag, j) => {
+            traces.push({
+                x: [freq, freq],
+                y: [-30, mag],
+                mode: 'lines',
+                type: 'scatter',
+                line: {
+                    width: 3,
+                    color: 'red'
+                },
+                //name: `USB f=${freq}Hz m${j + 1}`
+                name: ``
+            });
+        });
+    });
+
+    Plotly.newPlot('plot-dsb', traces, layoutDSB);
+
+    document.querySelector('.plot-container1').scrollIntoView({ behavior: 'smooth' });
+}
+
+    </script>
     </script>
 	
 	
