@@ -83,7 +83,7 @@
   
   <div class="absolute top-[180px] right-[30px] flex flex-col gap-2">
   <button
-    class="bg-blue-500 text-white rounded-md px-2 py-1"
+    class="bg-gray-500 text-white rounded-md px-2 py-1"
     onclick="plotDemodulatedSignal()"
   >
     Perform PCM Demodulation
@@ -119,7 +119,7 @@
         </div>
 
   <div class="absolute top-[350px] right-[100px] flex flex-col gap-2">
-Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readonly><br><br>
+Quantization SNR (dB)<br/><input type="number" id="inputB" value="13.80" readonly><br><br>
 </div>
 
         </div>
@@ -156,11 +156,19 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- buttons -->
-              <div class="absolute top-[170px] right-[20px]">
+              <div class="absolute top-[190px] right-[20px]">
+                <p class="font-medium">Cut-off Frequency (Hz)</p>
+                <input
+                  class="border px-1 w-[152px] py-1 rounded-sm border-black"
+                  type="number"
+                  id="cutoffFrequency"
+                  min="1"
+                  value="10"
+                />
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()" id = "modtodemod">Demodulate PCM Signal</button>
 				
               </div>
-              <img src=".././images/PCM_Demod.png" alt="PCM_Demodulation" class="w-[100%] h-[100%]" />
+              <img src=".././images/PCM_Demod.png" alt="PCM_Demodulation" class="w-[40em] h-[18em]" />
             </div>
           </div>
 		  
@@ -174,6 +182,67 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
         </div>
       </div>
     </div>
+  </div>
+
+  <hr/>
+  <br/><br/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 700px;
+      margin: 20px 0;
+    }
+    th, td {
+      border: 1px solid #666;
+      padding: 8px 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #eee;
+    }
+    caption {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+    label, input, button {
+      font-size: 1em;
+      margin-right: 10px;
+    }
+  </style>
+  <div class="App bg-transparent flex flex-col items-center p-4">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">PCM Quantization Table</h1>
+  <p>Enter the number of quantization <strong>levels</strong></p>
+
+  <label for="levelsInput">Levels (L):</label>
+  <input type="number" id="levelsInput" min="2" step="1" value = "4" class="border border-blue-500 p-2 rounded-md focus:ring-2 focus:ring-blue-500" required/>
+  <br/>
+  <button onclick="addRow()" class="bg-blue-500 text-white p-2 rounded-md">Calculate</button>
+  <div id = "div">
+  <table id="quantTable">
+    <caption>Quantization Levels vs Bit Depth</caption>
+    <thead>
+      <tr>
+        <th>Bits</th>
+        <th>Levels (L = 2^bits)</th>
+        <th>Step Size (Δ)</th>
+        <th>(Quantization Index = 0) Amplitude</th>
+        <th>(Quantization Index = Mid) Amplitude</th>
+        <th>(Quantization Index = Max) Amplitude</th>
+        <th>Quantization SNR (dB)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Rows appended here -->
+    </tbody>
+  </table>
+  </div>
+  <button onclick="printDiv('div')" class="bg-blue-500 text-white p-2 rounded-md">Print</button>
   </div>
 	
 	     <script>
@@ -250,7 +319,6 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
         }
         return sineWave;
     }
-
     // Generate Time Array
     function generateTimeArray(samples, samplingFrequency) {
         const timeArray = [];
@@ -261,6 +329,8 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
         return timeArray;
     }
 
+
+
     // Plot Original Sine Wave
     function plotOriginalSineWave() {
 	updateInputQSNR();
@@ -268,55 +338,23 @@ Quantization SNR (linear)<br/><input type="number" id="inputB" value="24" readon
         const samplingFrequency = 20 * frequency;
         const samples = parseInt(document.getElementById('samplingFrequency').value, 10);
         const amplitude = 8;
-        const sineWave = generateSineWave(samples, frequency, amplitude);
-        const timeArray = generateTimeArray(samples, samplingFrequency);
-/*
-        const ctx = document.getElementById('originalSineWaveChart').getContext('2d');
-        
-        // Destroy previous chart if it exists
-        if (charts.originalSineWaveChart) {
-            charts.originalSineWaveChart.destroy();
-        }
 
-        // Create new chart
-        charts.originalSineWaveChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: timeArray, // Use time array for x-axis labels
-                datasets: [{
-                    label: 'Original Sine Wave',
-                    borderColor: 'blue',
-                    data: sineWave,
-                    fill: false,
-                }]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Time (s)'
-                        }
-                    },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Signal Value'
-                        }
-                    }
-                }
-            }
-        });
-        
-        // Scroll to the chart after it has been generated
-        document.getElementById("originalSineWaveChart").scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-    }
-*/	
-	//////////////////////////////////////
-	    // Plotting with Plotly
+
+
+
+      const samplingFrequency1 = parseFloat(document.getElementById('samplingFrequency').value);
+      const duration = 3 / frequency; // For 3 cycles
+      const samples1 = Math.floor(samplingFrequency1 * duration); // Total samples for 3 cycles
+
+      const sineWave = [];
+      const timeArray = [];
+
+      for (let i = 0; i < samples1; i++) {
+        const time = i / samplingFrequency1; // Time in seconds
+        const value = amplitude * Math.sin(2 * Math.PI * frequency * time);
+        timeArray.push(time);
+        sineWave.push(value);
+      }
  const sineWavePlotData = [{
     x: timeArray,
     y: sineWave,
@@ -376,9 +414,10 @@ const layout = {
         const timeArray = generateTimeArray(samples, samplingFrequency);
 
     // Plotting with Plotly
+    const timeArrayxx = timeArray.map(val => val / (samples/samplingFrequency));
  const quantizedSignalPlotData = [{
-    x: timeArray,
-    y: quantizedSignal,
+    x: timeArrayxx.slice(1,parseInt(3/frequency*samples)),
+    y: quantizedSignal.slice(1,parseInt(3/frequency*samples)),
     type: 'scatter',
     mode: 'lines',
     name: 'Quantized Signal',
@@ -435,8 +474,10 @@ const layout = {
 
     // Plotting with Plotly
  const encodedSignalPlotData = [{
-    x: Array.from({ length: binaryArray.length }, (_, index) => `${index + 1}`),
-    y: binaryArray,
+  x: Array.from({ length: binaryArray.length }, (_, index) => index + 1)
+       .slice(0, Math.floor((3 / frequency) * samples))
+       .map(val => val / samples),
+    y: binaryArray.slice(1,parseInt(3/frequency*samples)),
     type: 'scatter',
     mode: 'lines',
     name: 'PCM Encoded Signal',
@@ -476,12 +517,29 @@ const layout = {
         return filteredSignal;
     }
 
+      // Moving average smoothing function
+function smooth(data, windowSize) {
+    const smoothed = [];
+    const half = Math.floor(windowSize / 2);
+    for (let i = 0; i < data.length; i++) {
+        let sum = 0;
+        let count = 0;
+        for (let j = i - half; j <= i + half; j++) {
+            if (j >= 0 && j < data.length && !isNaN(data[j])) {
+                sum += data[j];
+                count++;
+            }
+        }
+        smoothed[i] = count > 0 ? sum / count : data[i];
+    }
+    return smoothed;
+}
     // Plot Demodulated Signal
     function plotDemodulatedSignal() {
         const frequency = parseInt(document.getElementById('frequencyInput').value, 10);
         const numLevels = parseInt(document.getElementById('numLevelsInput').value, 10);
         const samplingFrequency = 20 * frequency;
-        const samples = 100; //parseInt(document.getElementById('samplingFrequency').value, 10);
+        const samples = 20 * frequency;//100; //parseInt(document.getElementById('samplingFrequency').value, 10);
         const amplitude = 8;
         const sineWave = generateSineWave(samples, frequency, amplitude);
         const quantizedSignal = quantizeSignal(sineWave, numLevels);
@@ -493,8 +551,10 @@ const layout = {
         const ind = quantizedSignal.map(value => part.findIndex(partition => value <= partition) - 1);
 
         const demodulatedSignal = ind.map(element => element * del + vmin + (del / 2));
-        const windowSize = 5; // Adjust window size as needed
-        const filteredSignal = applyMovingAverage(demodulatedSignal, windowSize);
+        const cutoffFreq = document.getElementById("cutoffFrequency").value;
+        const windowSize = Math.round(0.443 * samplingFrequency / cutoffFreq); // Adjust window size as needed
+        const filteredSignal0 = applyMovingAverage(demodulatedSignal, windowSize);
+        const filteredSignal = smooth(filteredSignal0, windowSize);
 /*
         const ctx = document.getElementById('demodulatedSignalChart').getContext('2d');
         
@@ -577,7 +637,9 @@ const layout = {
         function updateInputQSNR() {
             let inputAValue = parseFloat(document.getElementById('numLevelsInput').value);
             // Set Input B to be twice the value of Input A
-            let inputBValue = 32/(((16/inputAValue)**2)/12);
+            let inputBValue0 = 32/(((16/inputAValue)**2)/12);
+            let inputBValue = 10 * Math.log10(inputBValue0);
+            inputBValue = inputBValue.toFixed(2);
             document.getElementById('inputB').value = inputBValue;
         }
 
@@ -635,6 +697,78 @@ li::before {
 
 	
   </style>
+    <script>
+        const Vmin = -8;
+        const Vmax = 8;
+    
+        function addRow() {
+          const levelsInput = document.getElementById('levelsInput');
+          const levels = parseInt(levelsInput.value);
+    
+          if (isNaN(levels) || levels < 2) {
+            alert('Please enter a valid number of levels (at least 2).');
+            return;
+          }
+    
+          if ((levels & (levels - 1)) !== 0) {
+            alert('Levels must be a power of 2 (e.g., 2, 4, 8, 16...).');
+            return;
+          }
+    
+          const bits = Math.log2(levels);
+    
+          const delta = (Vmax - Vmin) / levels;
+          const index0 = 0;
+          const indexMid = Math.floor(levels / 2);
+          const indexMax = levels - 1;
+    
+          const amp0 = index0 * delta + Vmin + delta / 2;
+          const ampMid = indexMid * delta + Vmin + delta / 2;
+          const ampMax = indexMax * delta + Vmin + delta / 2;
+    
+          const quantSNR = 6.02 * bits + 1.76;
+    
+          const tbody = document.querySelector('#quantTable tbody');
+    
+          // Prevent duplicates
+          for (const row of tbody.rows) {
+            if (parseInt(row.cells[1].textContent) === levels) {
+              alert(`Levels = ${levels} already exists in the table.`);
+              return;
+            }
+          }
+    
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${bits}</td>
+            <td>${levels}</td>
+            <td>${delta.toFixed(5)}</td>
+            <td>${amp0.toFixed(5)}</td>
+            <td>${ampMid.toFixed(5)}</td>
+            <td>${ampMax.toFixed(5)}</td>
+            <td>${quantSNR.toFixed(2)}</td>
+          `;
+    
+          tbody.appendChild(row);
+    
+          // Sort rows by Levels (ascending)
+          const rowsArray = Array.from(tbody.rows);
+          rowsArray.sort((a, b) => parseInt(a.cells[1].textContent) - parseInt(b.cells[1].textContent));
+          rowsArray.forEach(r => tbody.appendChild(r));
+    
+          levelsInput.value = '';  // clear input
+        }
+      </script>
+      <script>
+        function printDiv(divId) {
+          let content = document.getElementById(divId).innerHTML;
+          let originalContent = document.body.innerHTML;
+        
+          document.body.innerHTML = content; // Replace the entire page with div content
+          window.print();
+          document.body.innerHTML = originalContent; // Restore original page content
+        }
+        </script>
   
 </body>
 </html>

@@ -62,17 +62,17 @@
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- Buttons -->
-              <div class="absolute top-[110px]">
+              <div class="absolute top-[90px] -left-[50px]">
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotOriginalSignal()">Generate Message</button>
               </div>
-              <div class="absolute top-[234px] left-[115px]">
+              <div class="absolute top-[320px] left-[100px]">
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMPulse()">Generate PPM Pulse Train</button>
               </div>
-              <div class="absolute top-[242px] right-[95px] flex flex-col gap-2">
+              <div class="absolute top-[320px] right-[95px] flex flex-col gap-2">
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMModulatedSignal()">Generate PPM Signal</button>
-                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()">Perform PPM Demodulation</button>
+                <button class="bg-gray-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()">Perform PPM Demodulation</button>
               </div>
-              <img src=".././images/PPM_Mod.png" alt="PPM_Mod" class="w-[100%] h-[100%]" />
+              <img src=".././images/PPM_Mod.png" alt="PPM_Mod" class="w-[50em] h-[25em]" />
             </div>
           </div>
 
@@ -119,10 +119,10 @@
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- Buttons -->
-              <div class="absolute top-[170px] right-[-15px]">
+              <div class="absolute top-[260px] right-[-15px]">
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()" id="modtodemod">Demodulate PPM Signal</button>
               </div>
-              <img src=".././images/PPM_Demod.png" alt="PPM_Demodulation" class="w-[100%] h-[100%]" />
+              <img src=".././images/PPM_Demod.png" alt="PPM_Demodulation" class="w-[50em] h-[23em]" />
             </div>
           </div>
 
@@ -207,6 +207,7 @@
     }
 
     // PPM Modulation Function
+    /*
     function ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction) {
       const pulseWidth = Math.round(ppmWidthFraction * samplesPerPulse);
       const ppmSignal = new Array(analogSignal.length * samplesPerPulse).fill(0);
@@ -222,6 +223,29 @@
 
       return {ppmSignal, ppmPulseTrain};
     }
+    */
+    function ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction) {
+  const pulseWidth = Math.round(ppmWidthFraction * samplesPerPulse);
+  const ppmSignal = new Array(analogSignal.length * samplesPerPulse).fill(0);
+  const ppmPulseTrain = new Array(analogSignal.length * samplesPerPulse).fill(0);
+
+  analogSignal.forEach((amplitude, i) => {
+    // Normalize amplitude to [0, 1] for PPM encoding
+    const normalizedAmplitude = (amplitude + 1) / 2;
+
+    const pulsePosition = Math.round(normalizedAmplitude * (samplesPerPulse - pulseWidth));
+    const startIndex = i * samplesPerPulse + pulsePosition;
+    const endIndex = Math.min(startIndex + pulseWidth, (i + 1) * samplesPerPulse);
+
+    if (startIndex < endIndex) {
+      ppmSignal.fill(1, startIndex, endIndex);
+      ppmPulseTrain.fill(1, startIndex, endIndex);
+    }
+  });
+
+  return { ppmSignal, ppmPulseTrain };
+}
+
 
     // PPM Demodulation Function
     function ppmDemodulate(ppmSignal, samplesPerPulse, ppmWidthFraction) {
@@ -291,8 +315,8 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  //////////////////////////////////
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: time,
-        y: analogSignal,
+        x: time.slice(1,parseInt(3/fMessage*Fs)),
+        y: analogSignal.slice(1,parseInt(3/fMessage*Fs)),
         type: 'scatter',
         mode: 'lines',
         name: 'Original Analog Signal',
@@ -329,8 +353,8 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  //////////////////////////////////
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: timeForPulseTrain,
-        y: ppmSignal.ppmPulseTrain,
+        x: timeForPulseTrain.slice(1,parseInt(3/fMessage*Fs)),
+        y: ppmSignal.ppmPulseTrain.slice(1,parseInt(3/fMessage*Fs)),
         type: 'scatter',
         mode: 'lines',
         name: 'PPM Pulse Train',
@@ -366,8 +390,8 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  //////////////////////////////////
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: time,
-        y: ppmSignal.ppmSignal,
+        x: time.slice(1,parseInt(3/fMessage*Fs)),
+        y: ppmSignal.ppmSignal.slice(1,parseInt(3/fMessage*Fs)),
         type: 'scatter',
         mode: 'lines',
         name: 'PPM Modulated Signal',

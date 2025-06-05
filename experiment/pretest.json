@@ -2,171 +2,171 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "1. What is the primary characteristic of a Pulse Amplitude Modulation (PAM) signal?",
+      "question": "1. Which statement best explains why Pulse Amplitude Modulation (PAM) is more susceptible to noise compared to digital modulation schemes?",
       "answers": {
-        "a": "The amplitude of the pulses varies according to the amplitude of the modulating signal.",
-        "b": "The width of the pulses varies according to the amplitude of the modulating signal.",
-        "c": "The position of the pulses varies according to the amplitude of the modulating signal.",
-        "d": "The frequency of the pulses varies according to the amplitude of the modulating signal."
+        "a": "Because it encodes information in continuous levels susceptible to amplitude distortion.",
+        "b": "Because it uses wide bandwidth.",
+        "c": "Because it relies on frequency variation, which is inherently noisy.",
+        "d": "Because timing synchronization is not used."
       },
       "explanations": {
-        "a": "Correct! In PAM, the amplitude of the pulses is modulated.",
-        "b": "Incorrect. This describes PWM.",
-        "c": "Incorrect. This describes PPM.",
-        "d": "Incorrect. This describes Frequency Modulation (FM), not pulse modulation."
+        "a": "Correct! PAM's analog-like amplitude levels are more vulnerable to noise.",
+        "b": "Incorrect. While PAM may require bandwidth, susceptibility is due to amplitude sensitivity.",
+        "c": "Incorrect. PAM does not use frequency modulation.",
+        "d": "Incorrect. Timing synchronization is required in most pulse techniques."
       },
       "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "2. In Pulse Width Modulation (PWM), what aspect of the pulse varies?",
+      "question": "2. In PWM systems, why can higher signal amplitudes lead to intersymbol interference if the system is not properly designed?",
       "answers": {
-        "a": "Amplitude",
-        "b": "Width",
-        "c": "Position",
-        "d": "Frequency"
+        "a": "Because increased pulse width can overlap adjacent symbols.",
+        "b": "Because amplitude fluctuations distort the pulse height.",
+        "c": "Because higher amplitudes cause frequency drift.",
+        "d": "Because signal reflection occurs at higher amplitudes."
       },
       "explanations": {
-        "a": "Incorrect. Amplitude modulation is characteristic of PAM.",
-        "b": "Correct! The width of the pulses varies in PWM.",
-        "c": "Incorrect. Pulse Position Modulation (PPM) varies the position.",
-        "d": "Incorrect. Frequency modulation is not a characteristic of PWM."
+        "a": "Correct! Wide pulses from high amplitudes may overlap, causing ISI.",
+        "b": "Incorrect. PWM varies width, not amplitude.",
+        "c": "Incorrect. Frequency drift is unrelated in PWM.",
+        "d": "Incorrect. Reflection is more a transmission line issue."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "3. Which of the following is true for Pulse Position Modulation (PPM)?",
+      "question": "3. Which property of Pulse Position Modulation (PPM) makes it advantageous in low-power optical communication systems?",
       "answers": {
-        "a": "The amplitude of the pulses is varied.",
-        "b": "The position of the pulses is varied.",
-        "c": "The width of the pulses is varied.",
-        "d": "The frequency of the pulses is varied."
+        "a": "It transmits energy in short bursts, allowing efficient power usage.",
+        "b": "It has a constant pulse width for all signal levels.",
+        "c": "It requires no synchronization.",
+        "d": "It encodes amplitude variations efficiently."
       },
       "explanations": {
-        "a": "Incorrect. Amplitude modulation is characteristic of PAM.",
-        "b": "Correct! The position of the pulses is modulated in PPM.",
-        "c": "Incorrect. Pulse Width Modulation (PWM) varies the width.",
-        "d": "Incorrect. Frequency modulation is not used in PPM."
+        "a": "Correct! Short pulses allow high peak power with low average energy.",
+        "b": "Incorrect. While pulse width is fixed, the advantage is energy use.",
+        "c": "Incorrect. PPM requires tight timing synchronization.",
+        "d": "Incorrect. PPM does not encode amplitude variations."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "4. In Pulse Code Modulation (PCM), which of the following steps occurs first?",
+      "question": "4. In the PCM system, why is oversampling generally avoided in practice?",
       "answers": {
-        "a": "Quantization",
-        "b": "Sampling",
-        "c": "Encoding",
-        "d": "Modulation"
+        "a": "It increases the data rate and storage without improving quality proportionally.",
+        "b": "It reduces the noise immunity of the quantizer.",
+        "c": "It causes aliasing in the signal.",
+        "d": "It leads to lower resolution of each sample."
       },
       "explanations": {
-        "a": "Incorrect. Quantization follows sampling.",
-        "b": "Correct! Sampling is the first step in PCM.",
-        "c": "Incorrect. Encoding occurs after quantization.",
-        "d": "Incorrect. Modulation in PCM refers to the entire process."
+        "a": "Correct! Oversampling raises data volume with minimal signal quality gain.",
+        "b": "Incorrect. Oversampling generally improves noise immunity.",
+        "c": "Incorrect. Oversampling prevents aliasing, not causes it.",
+        "d": "Incorrect. Resolution is based on quantization bits, not sample rate."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "5. What is a major advantage of Pulse Amplitude Modulation (PAM) over analog amplitude modulation?",
+      "question": "5. Why is PAM often used as an intermediate step in digital modulation schemes such as QAM or OFDM?",
       "answers": {
-        "a": "PAM signals require less bandwidth.",
-        "b": "PAM signals are more resistant to noise.",
-        "c": "PAM signals are easier to generate.",
-        "d": "PAM signals have higher fidelity."
+        "a": "Because it allows simple mapping from digital bits to amplitude levels.",
+        "b": "Because it uses time division to reduce bandwidth.",
+        "c": "Because it requires no synchronization.",
+        "d": "Because it is robust against phase distortion."
       },
       "explanations": {
-        "a": "Incorrect. PAM generally requires more bandwidth.",
-        "b": "Correct! PAM is less susceptible to noise compared to analog amplitude modulation.",
-        "c": "Incorrect. Ease of generation is not a distinguishing factor.",
-        "d": "Incorrect. Fidelity is not inherently higher in PAM."
+        "a": "Correct! PAM maps binary values to distinct amplitude levels efficiently.",
+        "b": "Incorrect. PAM does not inherently implement TDM.",
+        "c": "Incorrect. PAM requires synchronization for accurate decoding.",
+        "d": "Incorrect. PAM is sensitive to amplitude distortion, not phase."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "6. In PWM, how does an increase in the amplitude of the modulating signal affect the pulse width?",
+      "question": "6. In PWM, which factor makes it more robust than PAM under varying channel gain conditions?",
       "answers": {
-        "a": "It decreases the pulse width.",
-        "b": "It increases the pulse width.",
-        "c": "It has no effect on the pulse width.",
-        "d": "It increases the pulse amplitude."
+        "a": "Information is encoded in time (width), not amplitude.",
+        "b": "It uses orthogonal frequency tones.",
+        "c": "Its pulses are less frequent than in PAM.",
+        "d": "It automatically adjusts pulse spacing."
       },
       "explanations": {
-        "a": "Incorrect. A decrease in amplitude would decrease the width.",
-        "b": "Correct! A higher amplitude increases the pulse width in PWM.",
-        "c": "Incorrect. The pulse width is directly related to the amplitude.",
-        "d": "Incorrect. PWM modulates width, not amplitude."
+        "a": "Correct! Since information is in width, amplitude fading has less impact.",
+        "b": "Incorrect. This applies to techniques like OFDM.",
+        "c": "Incorrect. Pulse rate does not confer robustness.",
+        "d": "Incorrect. PWM pulse spacing is not adaptive."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "7. Which type of pulse modulation is least affected by timing jitter in the transmission system?",
+      "question": "7. What limits the number of quantization levels in a PCM system?",
       "answers": {
-        "a": "PAM",
-        "b": "PWM",
-        "c": "PPM",
-        "d": "PCM"
+        "a": "The number of bits allocated per sample.",
+        "b": "The sampling frequency.",
+        "c": "The channel bandwidth.",
+        "d": "The analog signal frequency."
       },
       "explanations": {
-        "a": "Incorrect. PAM is sensitive to timing jitter.",
-        "b": "Incorrect. PWM can be affected by timing jitter.",
-        "c": "Correct! PPM is more resistant to timing jitter.",
-        "d": "Incorrect. PCM's quantization process can be affected by timing errors."
+        "a": "Correct! Each bit doubles the number of quantization levels.",
+        "b": "Incorrect. Sampling frequency affects temporal resolution, not levels.",
+        "c": "Incorrect. Bandwidth affects bit rate, not quantization levels directly.",
+        "d": "Incorrect. Analog frequency affects sampling rate, not quantization."
       },
-      "correctAnswer": "c",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "8. What does the quantization step in Pulse Code Modulation (PCM) achieve?",
+      "question": "8. Why does quantization in PCM inherently introduce noise?",
       "answers": {
-        "a": "It converts the analog signal to a digital bit stream.",
-        "b": "It samples the analog signal at regular intervals.",
-        "c": "It maps the sampled values to the nearest available level.",
-        "d": "It modulates the digital signal for transmission."
+        "a": "Because it approximates real values with finite discrete levels.",
+        "b": "Because the signal is sampled at irregular intervals.",
+        "c": "Because pulses are affected by timing jitter.",
+        "d": "Because bandwidth limitation distorts the signal."
       },
       "explanations": {
-        "a": "Incorrect. Conversion to a bit stream happens after quantization.",
-        "b": "Incorrect. Sampling occurs before quantization.",
-        "c": "Correct! Quantization maps sampled values to discrete levels.",
-        "d": "Incorrect. Modulation for transmission is the final step."
+        "a": "Correct! Quantization error arises from level rounding.",
+        "b": "Incorrect. Irregular sampling may cause aliasing, not quantization noise.",
+        "c": "Incorrect. Timing jitter affects sampling, not quantization directly.",
+        "d": "Incorrect. Bandwidth limits distort, but not in quantization."
       },
-      "correctAnswer": "c",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "9. How is the resolution of a Pulse Code Modulation (PCM) signal determined?",
+      "question": "9. A PCM system uses an 8-bit quantizer and a sampling rate of 8 kHz. What is its resulting bit rate?",
       "answers": {
-        "a": "By the sampling frequency.",
-        "b": "By the number of quantization levels.",
-        "c": "By the width of the pulses.",
-        "d": "By the bit rate of the encoded signal."
+        "a": "64 kbps",
+        "b": "8 kbps",
+        "c": "16 kbps",
+        "d": "32 kbps"
       },
       "explanations": {
-        "a": "Incorrect. Sampling frequency affects the bandwidth, not resolution.",
-        "b": "Correct! More quantization levels increase the resolution.",
-        "c": "Incorrect. Pulse width is relevant in PWM, not PCM.",
-        "d": "Incorrect. Bit rate is related but not directly determining resolution."
+        "a": "Correct! 8 bits/sample × 8000 samples/sec = 64 kbps.",
+        "b": "Incorrect. This reflects sampling rate, not bit rate.",
+        "c": "Incorrect. That would require only 2 bits/sample.",
+        "d": "Incorrect. 32 kbps would come from 4 bits/sample."
       },
-      "correctAnswer": "b",
+      "correctAnswer": "a",
       "difficulty": "intermediate"
     },
     {
-      "question": "10. In Pulse Position Modulation (PPM), how does a higher frequency modulating signal affect the pulses?",
+      "question": "10. In PPM, what is the key disadvantage when comparing synchronization requirements to PAM or PWM?",
       "answers": {
-        "a": "The pulses move closer together.",
-        "b": "The pulses move further apart.",
-        "c": "The pulse width decreases.",
-        "d": "The pulse amplitude increases."
+        "a": "PPM requires precise timing alignment to decode correctly.",
+        "b": "PPM uses more bandwidth due to wider pulses.",
+        "c": "PPM encodes information in amplitude which is noise sensitive.",
+        "d": "PPM can only support binary encoding."
       },
       "explanations": {
-        "a": "Correct! A higher frequency modulating signal causes the pulses to move closer together.",
-        "b": "Incorrect. The pulses move further apart with a lower frequency.",
-        "c": "Incorrect. Pulse width is not directly affected by the modulating frequency in PPM.",
-        "d": "Incorrect. Pulse amplitude does not vary in PPM."
+        "a": "Correct! Even small timing errors affect PPM accuracy.",
+        "b": "Incorrect. PPM often uses narrow pulses.",
+        "c": "Incorrect. PPM does not encode amplitude.",
+        "d": "Incorrect. PPM can be extended to multilevel schemes."
       },
       "correctAnswer": "a",
       "difficulty": "intermediate"
