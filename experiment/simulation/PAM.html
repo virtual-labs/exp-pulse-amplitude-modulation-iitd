@@ -11,10 +11,10 @@
 <div id = "container">
     <h1>Instructions for Pulse Amplitude Modulation (PAM)</h1>
     <ul>
-        <li>Step 1: Click on 'Generate Message' button to generate input message signal</li>
-        <li>Step 2: Then click on 'Generate Carrier' button to generate carrier signal</li>
-		<li>Step 3: You can change the message and carrier signal frequencies from the input field. The carrier frequency has to be more than the message frequency</li>
-        <li>Step 4: Click on 'Generate PAM Signal' button to generate Pulse Amplitude Modulated (PAM) Signal</li>
+        <li class="step step1">Step 1: Click on 'Generate Message' button to generate input message signal</li>
+        <li class="step step2">Step 2: Then click on 'Generate Carrier' button to generate carrier signal</li>
+		<li class="step step3">Step 3: You can change the message and carrier signal frequencies from the input field. The carrier frequency has to be more than the message frequency</li>
+        <li class="step step4">Step 4: Click on 'Generate PAM Signal' button to generate Pulse Amplitude Modulated (PAM) Signal</li>
     </ul>
 <br/>
 
@@ -135,9 +135,9 @@
   <div id = "container">
     <h1>Instructions for Pulse Amplitude Demodulation</h1>
     <ul>
-	    <li>Step 1: The reconstruction filter is used to recover the original message signal from the sampled PAM signal (typically by multiplying with the carrier and then low-pass filtering)</li>
-		<li>Step 2: You can Demodulate the PAM Signal clicking on the 'Demodulate PAM Signal' button</li>
-    <li>A reconstruction filter is a low-pass filter (LPF) with cutoff at or just above the message frequency which passes only the baseband and blocks higher-frequency copies</li>
+	    <li class="step step1">Step 1: The reconstruction filter is used to recover the original message signal from the sampled PAM signal (typically by multiplying with the carrier and then low-pass filtering)</li>
+		<li class="step step2">Step 2: You can Demodulate the PAM Signal clicking on the 'Demodulate PAM Signal' button</li>
+    <li class="step step3">A reconstruction filter is a low-pass filter (LPF) with cutoff at or just above the message frequency which passes only the baseband and blocks higher-frequency copies</li>
     </ul>
 </div>	
   
@@ -540,40 +540,68 @@ const pamSignal = messageSignal.map((msg, index) => {
 	
 	
   <style>
-  .container {
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 20px 40px;
-    max-width: 1000px; /* Increased max-width to fit three plots side by side */
-    margin: 0 auto; /* Center the container */
-    text-align: center;
+        #container {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 25px 40px;
+  max-width: 100%;
+  margin: 20px auto;
+  text-align: left;
+  font-family: 'Segoe UI', sans-serif;
 }
 
 h1 {
-    color: #333;
-    font-size: 22px; /* Increased font size */
-    margin-bottom: 20px;
+  color: #1e3a8a;
+  font-size: 24px;
+  margin-bottom: 25px;
+  text-align: justify;
 }
 
 ul {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
-li {
-    background-color: #e0e7ff;
-    margin: 5px 0;
-    padding: 5px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 14px; /* Set font size for list items */
+li.step {
+  margin: 12px 0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-li::before {
-    content: "✔";
-    color: #4caf50;
-    margin-right: 10px;
+li.step::before {
+  content: "✔";
+  color: #10b981;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+li.step:hover {
+  transform: scale(1.02);
+  background-color: #f3f4f6;
+}
+
+/* Color code each step */
+.step1 {
+  background-color: #ffe0e0;
+  border-left: 5px solid #ef4444;
+}
+.step2 {
+  background-color: #e0f7ff;
+  border-left: 5px solid #0ea5e9;
+}
+.step3 {
+  background-color: #e0ffe5;
+  border-left: 5px solid #22c55e;
+}
+.step4 {
+  background-color: #f5e0ff;
+  border-left: 5px solid #a855f7;
 }
         /* Hide scrollbar for Chrome, Safari, and Opera */
         .hide-scrollbar::-webkit-scrollbar {
