@@ -12,9 +12,9 @@
 <div id = "container">
     <h1>Instructions for Pulse Code Modulation (PCM)</h1>
     <ul>
-        <li class="step step1">Step 1: Click on 'Generate Message' button to generate analog input message signal</li>
-		<li class="step step2">Step 2: You can change the message and carrier signal frequencies from the input field. The carrier frequency has to be more than the message frequency</li>
-        <li class="step step3">Step 3: Click on 'Generate PCM Signal' button to generate Pulse Code Modulated (PCM) Signal. Here signal vary from amplitude -8 to +8 and step size is 16 / 'Quantization Levels'</li>
+        <li class="step step1">Step 1: Click on 'Generate Message' button to generate analog input message signal. You can change the message frequency, Sampling signal frequency, and quantization levels from the input fields. The sampling frequency has to be much higher than the message frequency</li>
+        <li class="step step2">Step 2: Click on the 'Plot Quantized Signal' button to view the quantized message signal. The signal varies in amplitude from -8 to +8, with a step size of 16 divided by the number of 'Quantization Levels'</li>
+        <li class="step step3">Step 3: Click on 'Generate PCM Signal' button to generate Pulse Code Modulated (PCM) Signal</li>
     </ul>
 <br/>
 
@@ -82,12 +82,14 @@
   </div>
   
   <div class="absolute top-[180px] right-[30px] flex flex-col gap-2">
+  <!-------
   <button
     class="bg-gray-500 text-white rounded-md px-2 py-1"
     onclick="plotDemodulatedSignal()"
   >
     Perform PCM Demodulation
   </button>
+  ---------->
 </div>
 
               <img
