@@ -36,7 +36,7 @@
         >
           <ol class="mb-4 pl-4">
             <li>
-              <a href="./theory/PAM.html">
+              <a href="./PAM.html">
                 <div class="flex">
                   <span class="text-black mr-4">1.</span>
                   <p class="hover:text-[#3e6389] hover:underline">
@@ -46,7 +46,7 @@
               </a>
             </li>
             <li>
-              <a href="./theory/PWM.html">
+              <a href="./PWM.html">
                 <div class="flex">
                   <span class="text-black mr-4">2.</span>
                   <p class="hover:text-[#3e6389] hover:underline">
@@ -56,7 +56,7 @@
               </a>
             </li>
             <li>
-              <a href="./theory/PPM.html">
+              <a href="./PPM.html">
                 <div class="flex">
                   <span class="text-black mr-4">3.</span>
                   <p class="hover:text-[#3e6389] hover:underline">
@@ -66,7 +66,7 @@
               </a>
             </li>
             <li>
-              <a href="./theory/PCM.html">
+              <a href="./PCM.html">
                 <div class="flex">
                   <span class="text-black mr-4">4.</span>
                   <p class="hover:text-[#3e6389] hover:underline">
