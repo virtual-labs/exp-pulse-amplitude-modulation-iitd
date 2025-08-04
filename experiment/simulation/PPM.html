@@ -14,10 +14,9 @@
   <h1>Instructions for Pulse Position Modulation (PPM)</h1>
   <ul>
     <li class="step step1">Step 1: Click on 'Generate Message' button to generate the input message signal</li>
-    <li class="step step2">Step 2: Then click on 'Generate PPM Pulse Train' button to generate the PPM Pulse Train signal</li>
-    <li class="step step3">Step 3: You can change the message and Sampling signal frequencies from the input fields. The sampling frequency has to be much higher than the message frequency.</li>
-	<li class="step step4">Step 4: Here, ppm Width Fraction is a fraction of the total interval, and Samples Per Pulse is the total number of samples that span one pulse interval. Pulse Width = round(ppm Width Fraction × Samples Per Pulse) (all in the terms of the number of samples)</li>
-    <li class="step step1">Step 5: Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
+    <li class="step step2">Step 2: Then click on 'Generate PPM Pulse Train' button to generate the PPM Pulse Train signal. You can change the message and Sampling signal frequencies from the input fields. The sampling frequency has to be much higher than the message frequency</li>
+    <li class="step step3">Step 3: Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
+	<li class="step step4">Here, pulse Width Fraction is a fraction of the total interval, and Samples Per Pulse is the total number of samples that span one pulse interval. Pulse Width = round(ppm Width Fraction × Samples Per Pulse) (all in the terms of the number of samples)</li>
   </ul>
   <br/>
 
@@ -70,7 +69,9 @@
               </div>
               <div class="absolute top-[320px] right-[95px] flex flex-col gap-2">
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMModulatedSignal()">Generate PPM Signal</button>
+                <!---
                 <button class="bg-gray-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()">Perform PPM Demodulation</button>
+              ------>
               </div>
               <img src=".././images/PPM_Mod.png" alt="PPM_Mod" class="w-[50em] h-[25em]" />
             </div>
