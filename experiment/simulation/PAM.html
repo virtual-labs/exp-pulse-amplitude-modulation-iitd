@@ -11,10 +11,15 @@
 <div id = "container">
     <h1>Instructions for Pulse Amplitude Modulation (PAM)</h1>
     <ul>
-        <li class="step step1">Step 1: Click on 'Generate Message' button to generate input message signal</li>
-        <li class="step step2">Step 2: Then click on 'Generate Carrier' button to generate carrier signal. You can change the message and carrier signal frequencies from the input field. The carrier frequency has to be more than the message frequency</li>
-        <li class="step step3">Step 3: Click on 'Generate PAM Signal' button to generate Pulse Amplitude Modulated (PAM) Signal</li>
-        <li class="step step4">Step 4: Click the 'Show Frequency Spectrums' button to view the PAM spectrum</li>
+      <li class="step step4"><strong>Note:</strong> Use the input fields to enter the message frequency and the square pulse carrier frequency.</li>
+    
+      <li class="step step1"><strong>Step 1:</strong> Click the <em>"Generate Message"</em> button to generate the input message signal.</li>
+    
+      <li class="step step2"><strong>Step 2:</strong> Click the <em>"Generate Carrier"</em> button to generate the carrier signal. The carrier frequency must be greater than the message frequency. You can change the message and carrier frequencies using the input fields.</li>
+    
+      <li class="step step3"><strong>Step 3:</strong> Click the <em>"Generate PAM Signal"</em> button to generate the Pulse Amplitude Modulated (PAM) signal.</li>
+    
+      <li class="step step4"><strong>Step 4:</strong> Click the <em>"Show Frequency Spectrums"</em> button to view the spectrum of the PAM signal.</li>
     </ul>
 <br/>
 
@@ -37,6 +42,7 @@
                   type="number"
                   id="messageFrequency"
                   value="2"
+                  min = "1"
                 />
               </div>
             </div>
@@ -52,6 +58,7 @@
                   type="number"
                   id="carrierFrequency"
                   value="100"
+                  min = "1"
                 />
               </div>
             </div>
@@ -132,7 +139,9 @@
     <div id="plot-dsb" class="plot1"></div>
     <div id="plot-demodulated" class="plot1"></div>
 </div>
+<div id = "demodulation">
   <br/><br/><hr/>
+  
   
   <div id = "container">
     <h1>Instructions for Pulse Amplitude Demodulation</h1>
@@ -189,7 +198,7 @@
     </div>
   </div>
 
-	
+	</div>
     <script>
         function checkFrequencies() {
             // Get values from input fields
@@ -382,11 +391,10 @@ const pamSignal = messageSignal.map((msg, index) => {
       behavior: "smooth",
       block: "center"
     });
+    saveData();
   }
 
-</script>
 
-     <script>
         function lowPassFilter(signal, cutoffFreq, fs, filterOrder) {
 		    const fm = parseFloat(document.getElementById("cutoffFrequency").value);
             const filterLength = filterOrder*fm + 1;
@@ -537,11 +545,26 @@ const pamSignal = messageSignal.map((msg, index) => {
     document.querySelector('.plot-container1').scrollIntoView({ behavior: 'smooth' });
 }
 
+
+
+function saveData() {
+  const messageFreq = parseFloat(document.getElementById('messageFrequency').value);
+  const carrierFreq = parseFloat(document.getElementById('carrierFrequency').value);
+  const cutoffFrequency = parseFloat(document.getElementById('messageFrequency').value);
+
+  // Store as an object (use the variables you actually defined)
+  const myData = { messageFreq: messageFreq, carrierFreq: carrierFreq, cutoffFrequency: cutoffFrequency };
+
+  localStorage.setItem('sharedData', JSON.stringify(myData));
+}
     </script>
-    </script>
+
 	
 	
   <style>
+    #demodulation {
+      display: none;
+    }
         #container {
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

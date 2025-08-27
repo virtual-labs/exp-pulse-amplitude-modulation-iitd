@@ -10,14 +10,13 @@
 </head>
 <body>
 
+  <div id = "modulation">
 <div id="container">
   <h1>Instructions for Pulse Position Modulation (PPM)</h1>
   <ul>
-    <li class="step step4"><strong>Note:</strong> Use the input fields to enter the message frequency, sampling frequency, samples per pulse, and pulse width fraction.</li>
-
-    <li class="step step1"><strong>Step 1:</strong> Click on 'Generate Message' button to generate the input message signal. The sampling frequency has to be much higher than the message frequency. </li>
-    <li class="step step2"><strong>Step 2:</strong> Then click on 'Generate PPM Pulse Train' button to generate the PPM Pulse Train signal.</li>
-    <li class="step step3"><strong>Step 3:</strong> Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
+    <li class="step step1">Step 1: Click on 'Generate Message' button to generate the input message signal</li>
+    <li class="step step2">Step 2: Then click on 'Generate PPM Pulse Train' button to generate the PPM Pulse Train signal. You can change the message and Sampling signal frequencies from the input fields. The sampling frequency has to be much higher than the message frequency</li>
+    <li class="step step3">Step 3: Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
 	<li class="step step4">Here, pulse Width Fraction is a fraction of the total interval, and Samples Per Pulse is the total number of samples that span one pulse interval. Pulse Width = round(ppm Width Fraction × Samples Per Pulse) (all in the terms of the number of samples)</li>
   </ul>
   <br/>
@@ -80,15 +79,14 @@
           </div>
 
           <div class="flex flex-col justify-center items-center">
-
             <div class="w-[600px] h-[400px] mb-5">
-              <div id="originalSignalCanvas" class="w-[650px] h-[400px]"></div>
+              <div id="ppmSignalCanvas" class="w-[650px] h-[400px]"></div>
             </div>
             <div class="w-[600px] h-[400px] mb-5">
               <div id="ppmPulseCanvas" class="w-[650px] h-[400px]"></div>
             </div>
             <div class="w-[600px] h-[400px] mb-5">
-              <div id="ppmSignalCanvas" class="w-[650px] h-[400px]"></div>
+              <div id="originalSignalCanvas" class="w-[650px] h-[400px]"></div>
             </div>
           </div>
         </div>
@@ -96,14 +94,17 @@
     </div>
   </div>
 
-  <div id = "demodulation">
   <br/><br/><hr/>
+
+  </div></div>
 
   <div id="container">
     <h1>Instructions for Pulse Position Demodulation</h1>
     <ul>
       <li class="step step1">Step 1: To demodulate a Pulse Position Modulated (PPM) signal, a reference pulse generator creates a timing pulse train, which is used to synchronize with the PPM signal. An RS flip-flop ensures accurate pulse generation, while a PWM demodulator measures the width of the PPM pulses and converts this width into a corresponding signal representing the original message</li>
       <li class="step step2">Step 2: You can demodulate the PPM Signal by clicking on the 'Demodulate PPM Signal' button</li>
+      <li class="step step4"><strong>Tip:</strong> Pulse Position Modulation (PPM) settings auto-transfer to the Pulse Position Demodulation tab. No need to re-enter values. Keep both tabs open, or demodulate immediately after modulation.</li>
+
     </ul>
   </div>
 
@@ -141,7 +142,6 @@
     </div>
   </div>
 
-</div>
 <script>
     // Function to check frequencies and samples per pulse
     function checkFrequencies() {
@@ -423,7 +423,6 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
       behavior: "smooth",
       block: "center"
     });
-    saveData();
   }
 
     function plotDemodulatedSignal() {
@@ -463,24 +462,30 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
     });
   }
 //////////////////////////////////
-		 
 
-function saveData() {
-  const fMessage = parseFloat(document.getElementById('messageFrequency').value);
-  const Fs = parseFloat(document.getElementById('carrierFrequency').value);
-const samplesPerPulse = parseInt(document.getElementById('samplesPerPulse').value);
-const ppmWidthFraction = parseFloat(document.getElementById('ppmWidthFraction').value);
+function loadData() {
+  const data = localStorage.getItem('sharedData');
+  if (data) {
+    const parsed = JSON.parse(data);
 
-
-  // Store as an object (use the variables you actually defined)
-  const myData = { fMessage: fMessage, Fs: Fs, samplesPerPulse: samplesPerPulse, ppmWidthFraction: ppmWidthFraction };
-
-  localStorage.setItem('sharedData', JSON.stringify(myData));
+    // Update input fields in current tab
+    document.getElementById('messageFrequency').value = parsed.fMessage ?? '';
+    document.getElementById('carrierFrequency').value = parsed.Fs ?? '';
+    document.getElementById('samplesPerPulse').value = parsed.samplesPerPulse ?? '';
+    document.getElementById('ppmWidthFraction').value = parsed.ppmWidthFraction ?? '';
+    //document.getElementById('kf').value = parsed.fDev ?? '';
+  }
 }
+
+// Load immediately
+loadData();
+
+// Update if storage changes (works across tabs)
+window.addEventListener('storage', loadData);
   </script>
   
     <style>
-          #demodulation {
+          #modulation {
       display: none;
     }
         #container {
