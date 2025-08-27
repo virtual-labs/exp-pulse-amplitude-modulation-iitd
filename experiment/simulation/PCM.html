@@ -12,9 +12,11 @@
 <div id = "container">
     <h1>Instructions for Pulse Code Modulation (PCM)</h1>
     <ul>
-        <li class="step step1">Step 1: Click on 'Generate Message' button to generate analog input message signal. You can change the message frequency, Sampling signal frequency, and quantization levels from the input fields. The sampling frequency has to be much higher than the message frequency</li>
-        <li class="step step2">Step 2: Click on the 'Plot Quantized Signal' button to view the quantized message signal. The signal varies in amplitude from -8 to +8, with a step size of 16 divided by the number of 'Quantization Levels'</li>
-        <li class="step step3">Step 3: Click on 'Generate PCM Signal' button to generate Pulse Code Modulated (PCM) Signal</li>
+      <li class="step step4"><strong>Note:</strong> Use the input fields to enter the message frequency, sampling frequency, and quantization levels.</li>
+
+        <li class="step step1"><strong>Step 1:</strong> Click on 'Generate Message' button to generate analog input message signal. You can change the message frequency, Sampling signal frequency, and quantization levels from the input fields. The sampling frequency has to be much higher than the message frequency</li>
+        <li class="step step2"><strong>Step 2:</strong> Click on the 'Plot Quantized Signal' button to view the quantized message signal. The signal varies in amplitude from -8 to +8, with a step size of 16 divided by the number of 'Quantization Levels'</li>
+        <li class="step step3"><strong>Step 3:</strong> Click on 'Generate PCM Signal' button to generate Pulse Code Modulated (PCM) Signal</li>
     </ul>
 <br/>
 
@@ -120,7 +122,7 @@
 
         </div>
 
-  <div class="absolute top-[350px] right-[100px] flex flex-col gap-2">
+  <div class="absolute top-[550px] right-[100px] flex flex-col gap-2">
 Quantization SNR (dB)<br/><input type="number" id="inputB" value="13.80" readonly><br><br>
 </div>
 
@@ -129,6 +131,7 @@ Quantization SNR (dB)<br/><input type="number" id="inputB" value="13.80" readonl
     </div>
   </div>
   
+  <div id = "demodulation">
   <br/><br/><hr/>
   
   <div id = "container">
@@ -188,6 +191,8 @@ Quantization SNR (dB)<br/><input type="number" id="inputB" value="13.80" readonl
 
   <hr/>
   <br/><br/>
+
+  </div>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -504,6 +509,20 @@ const layout = {
             behavior: "smooth",
             block: "center"
         });
+
+saveData();
+}
+
+
+function saveData() {
+  const frequency = parseFloat(document.getElementById('frequencyInput').value);
+  const numLevels = parseFloat(document.getElementById('numLevelsInput').value);
+
+
+  // Store as an object (use the variables you actually defined)
+  const myData = { frequency: frequency, numLevels: numLevels };
+
+  localStorage.setItem('sharedData', JSON.stringify(myData));
 }
 
     // Apply Moving Average Filter
@@ -647,9 +666,13 @@ const layout = {
 
         // Attach event listener to Input A for 'input' event (triggers on change)
         document.getElementById('numLevelsInput').addEventListener('input', updateInputQSNR);
+
 </script>	
 	
   <style>
+        #demodulation {
+      display: none;
+    }
         #container {
   background-color: #fff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
