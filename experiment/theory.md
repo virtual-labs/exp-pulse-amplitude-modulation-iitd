@@ -65,16 +65,6 @@
                 </div>
               </a>
             </li>
-            <li>
-              <a href="./PCM.html">
-                <div class="flex">
-                  <span class="text-black mr-4">4.</span>
-                  <p class="hover:text-[#3e6389] hover:underline">
-                    Pulse Code Modulation(PCM)
-                  </p>
-                </div>
-              </a>
-            </li>
           </ol>
         </div>
       </div>
