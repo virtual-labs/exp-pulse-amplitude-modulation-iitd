@@ -160,6 +160,12 @@
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- buttons -->
+              <button
+              onclick="PWMInput();"
+              class="bg-blue-500 text-white py-1 px-3 mt-1 rounded-md hover:bg-[#0c9c0c] hover:scale-105"
+            >
+              PWM Input
+            </button>
               <div class="absolute top-[170px] right-[-15px]">
                 <p class="font-medium">Cut-off Frequency (Hz)</p>
                 <input
@@ -179,6 +185,7 @@
 		    <div class="flex justify-center flex-wrap items-center">
               <div class="m-1">
                 <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
+                <div id="PWMInput" style="width: 600px; height: 400px;"></div>
                 <div id="plot4" style="width: 600px; height: 400px;"></div>
               </div>
             </div>
@@ -551,6 +558,74 @@
 			
             return output.slice(0, signal.length);
         }
+
+        async function PWMInput() {
+  //destroyChart("pwmChart");
+  //destroyChart("modulatedChart");
+
+  const duration = 1;
+  const resolution = 100 * parseFloat(
+    document.getElementById("carrierFrequency").value
+  );
+  const t = linspace(0, duration, resolution * duration);
+
+  const fm = parseFloat(
+    document.getElementById("messageFrequency").value
+  );
+  const fs = parseFloat(
+    document.getElementById("carrierFrequency").value
+  );
+
+  if (isNaN(fm) || isNaN(fs)) {
+        alert("Perform Pulse Amplitude Modulation first!");
+        return;
+    }
+
+  const messageSignal = linspace(0, duration, resolution * duration).map(
+    (t) => 1.01 * Math.sin(2 * Math.PI * fm * t + 0.5)
+  );
+
+  const carrierSignal = linspace(0, duration, resolution * duration).map(
+    (t) => Math.sign(Math.sin(2 * Math.PI * fs * t + 0.5))
+  );
+
+  const pwmSignal = messageSignal.map((msg, index) =>
+    msg >= carrierSignal[index] ? 1 : 0
+  );
+
+  // Plotting with Plotly
+  const pwmPlotData = [{
+    x: t.slice(1, parseInt(3 / fm * resolution)),
+    y: pwmSignal.slice(1, parseInt(3 / fm * resolution)),
+    type: 'scatter',
+    mode: 'lines',
+    name: 'PWM Signal',
+    //line: { color: 'blue', width: 2 }
+  }];
+
+  const layout = {
+    title: 'PWM Signal',
+    xaxis: {
+      title: 'Time (s)',
+    },
+    yaxis: {
+      title: 'Amplitude',
+      //range: [-1, 1],
+    }
+  };
+
+  // Create or update the plot in the specified chart element
+  Plotly.newPlot('PWMInput', pwmPlotData, layout);
+
+  // Scroll to the pwm chart after it has been generated
+  document.getElementById("PWMInput").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+
+
 
         function loadData() {
   const data = localStorage.getItem('sharedData');
