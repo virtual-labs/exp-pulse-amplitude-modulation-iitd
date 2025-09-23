@@ -166,6 +166,12 @@
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- buttons -->
+              <button
+              onclick="PAMInput();"
+              class="bg-blue-500 text-white py-1 px-3 mt-1 rounded-md hover:bg-[#0c9c0c] hover:scale-105"
+            >
+              PAM Input
+            </button>
               <div class="absolute top-[170px] right-[-15px]">
                 <p class="font-medium">Cut-off Frequency (Hz)</p>
                 <input
@@ -185,7 +191,8 @@
 		    <div class="flex justify-center flex-wrap items-center">
               <div class="m-1">
                 <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
-                <div id="demodulated-signal" style="width: 400px; height: 400px;"></div>
+                <div id="PAMInput" style="width: 600px; height: 400px;"></div>
+                <div id="demodulated-signal" style="width: 600px; height: 400px;"></div>
               </div>
             </div>
         </div>
@@ -411,6 +418,11 @@ const pamSignal = messageSignal.map((msg, index) => {
             const samplingFreq = 100*parseFloat(document.getElementById("carrierFrequency").value);
             const cutoffFrequency = parseFloat(document.getElementById("cutoffFrequency").value);
 
+            if (isNaN(messageFreq) || isNaN(carrierFreq)) {
+        alert("Perform Pulse Amplitude Modulation first!");
+        return;
+    }
+
             const filterOrder = Math.floor(samplingFreq / messageFreq);
 
             const t = Array.from({length: samplingFreq}, (_, i) => i / samplingFreq);
@@ -538,6 +550,65 @@ const pamSignal = messageSignal.map((msg, index) => {
     document.querySelector('.plot-container1').scrollIntoView({ behavior: 'smooth' });
 }
 
+function PAMInput() {
+
+
+    const duration = 1;
+    const carrierFreq = parseFloat(
+  document.getElementById("carrierFrequency").value);
+const resolution = 100 * carrierFreq;
+const messageFreq = parseFloat(
+  document.getElementById("messageFrequency").value
+);
+
+if (isNaN(messageFreq) || isNaN(carrierFreq)) {
+        alert("Perform Pulse Amplitude Modulation first!");
+        return;
+    }
+const t = linspace(0, duration, resolution * duration);
+
+messageSignal = t.map(t => Math.sin(2 * Math.PI * messageFreq * t));
+
+carrierSignal = linspace(0, duration, resolution * duration).map(
+      (t) => Math.sign(Math.sin(2 * Math.PI * carrierFreq * t))
+    );
+const pamSignal = messageSignal.map((msg, index) => {
+  return carrierSignal[index] > 0 ? msg * carrierSignal[index] : 0;
+});
+
+// Plotting with Plotly
+const pamPlotData = [{
+  x: t.slice(1, parseInt(3 / messageFreq * resolution)),
+  y: pamSignal.slice(1, parseInt(3 / messageFreq * resolution)),
+  type: 'scatter',
+  mode: 'lines',
+  name: 'PAM Signal',
+  //line: { color: 'blue', width: 2 }
+}];
+
+const layout = {
+  title: 'PAM Signal',
+  xaxis: {
+    title: 'Time (s)',
+  },
+  yaxis: {
+    title: 'Amplitude',
+    range: [-1, 1],
+  }
+};
+
+// Create or update the plot in the specified chart element
+Plotly.newPlot('PAMInput', pamPlotData, layout);
+
+// Scroll to the PAM chart after it has been generated
+document.getElementById("PAMInput").scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
+
+
+    //plotImpulseResponses00();
+}
 
 
 function loadData() {
