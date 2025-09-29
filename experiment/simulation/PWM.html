@@ -336,7 +336,7 @@
       document.getElementById("carrierFrequency").value
     );
         const t = linspace(0, duration, resolution * duration);
-
+        const messageFrequency = parseFloat(document.getElementById("messageFrequency").value); 
         const carrierFrequency = parseFloat(
           document.getElementById("carrierFrequency").value
         );
@@ -355,8 +355,8 @@
         //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 					    // Plotting with Plotly
     const carrierPlotData = [{
-        x: t.slice(1,parseInt(3/carrierFrequency*resolution)),
-        y: carrierSignal.slice(1,parseInt(3/carrierFrequency*resolution)),
+        x: t.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: carrierSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
         name: 'Square Carrier Signal',
