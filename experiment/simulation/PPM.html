@@ -380,8 +380,8 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  //////////////////////////////////
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: timeForPulseTrain.slice(1,parseInt(3/fMessage*Fs)),
-        y: ppmSignal.ppmPulseTrain.slice(1,parseInt(3/fMessage*Fs)),
+        x: timeForPulseTrain.slice(1,parseInt(3/fMessage*Fs*samplesPerPulse)),
+        y: ppmSignal.ppmPulseTrain.slice(1,parseInt(3/fMessage*Fs*samplesPerPulse)),
         type: 'scatter',
         mode: 'lines',
         name: 'PPM Pulse Train',

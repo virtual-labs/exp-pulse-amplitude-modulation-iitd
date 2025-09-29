@@ -535,8 +535,8 @@
 
             // Plotting Demodulated Signal
             Plotly.newPlot('plot4', [{
-                x: t,
-                y: smoothedSignal,
+                x: t.slice(1,parseInt(3/fm*(resolution + 1))),
+                y: smoothedSignal.slice(1,parseInt(3/fm*(resolution + 1))),
                 type: 'scatter'
             }], {
                 title: 'Demodulated Signal'

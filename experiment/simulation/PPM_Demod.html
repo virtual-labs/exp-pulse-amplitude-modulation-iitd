@@ -444,8 +444,8 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  //////////////////////////////////
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: time,
-        y: demodulatedSignal,
+        x: time.slice(1,parseInt(3/fMessage*Fs)),
+        y: demodulatedSignal.slice(1,parseInt(3/fMessage*Fs)),
         type: 'scatter',
         mode: 'lines',
         name: 'Demodulated Signal',
