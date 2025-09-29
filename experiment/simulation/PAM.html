@@ -91,7 +91,7 @@
                   Generate Message
                 </button>
               </div>
-              <div class="absolute top-[234px] left-[90px]">
+              <div class="absolute top-[234px] left-[160px]">
                 <button
                   class="bg-blue-500 text-white rounded-md px-2 py-1"
                   class="button"
@@ -121,9 +121,9 @@
 </div>
 
               <img
-                src=".././images/pam.png"
+                src="./pam.png"
                 alt="PAM"
-                class="w-[100%] h-[100%]"
+                class="w-[80%] h-[100%]"
               />
             </div>
           </div>
@@ -318,7 +318,8 @@ function generateCarrier() {
       document.getElementById("carrierFrequency").value
     );;
     const t = linspace(0, duration, resolution * duration);
-
+    
+    const messageFrequency = parseFloat(document.getElementById("messageFrequency").value); 
     const carrierFrequency = parseFloat(
       document.getElementById("carrierFrequency").value
     );
@@ -337,8 +338,8 @@ function generateCarrier() {
     //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: t.slice(1,parseInt(3/carrierFrequency*resolution)),
-        y: carrierSignal.slice(1,parseInt(3/carrierFrequency*resolution)),
+        x: t.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: carrierSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
         name: 'Carrier Signal',

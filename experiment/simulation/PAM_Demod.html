@@ -442,8 +442,8 @@ const pamSignal = messageSignal.map((msg, index) => {
             // Plot Demodulated Signal
             const t1 = Array.from({length: original_t_signal.length}, (_, i) => i / (original_t_signal.length - 1));
             const demodulatedPlotData = [{
-                x: t1,
-                y: original_t_signal,
+                x: t1.slice(1,parseInt(3/messageFreq*original_t_signal.length)),
+                y: original_t_signal.slice(1,parseInt(3/messageFreq*original_t_signal.length)),
                 type: 'scatter',
                 mode: 'lines',
                 name: 'Demodulated Signal'
