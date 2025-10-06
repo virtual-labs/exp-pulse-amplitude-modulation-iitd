@@ -105,6 +105,13 @@
     Generate PWM Signal
   </button>
 
+  <button
+  class="bg-blue-500 text-white rounded-md px-2 py-1"
+  onclick="pwmSpectrums()"
+>
+  Show Frequency Spectrums
+</button>
+
   <!---
   <button
     class="bg-gray-500 text-white rounded-md px-2 py-1"
@@ -134,6 +141,10 @@
 
   <div class="w-[600px] h-[400px] mb-5">
     <div id="pwmChart" class="w-[600px] h-[400px]"></div>
+  </div>
+
+  <div class="plot-container2 w-[1000px] h-[400px] mb-5">
+    <div id="plot-pwm" class="w-[1000px] h-[400px]"></div>
   </div>
   
 </div>
@@ -487,6 +498,108 @@
           },
         });  
       }
+
+
+
+      function pwmSpectrums() {
+    const carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
+    const messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
+    const tau = 0.005; // Pulse width for PWM (seconds)
+
+    const maxHarmonic = 5;
+    const harmonics = Array.from({length: maxHarmonic+1}, (_, k) => k);
+
+    const impulses = [];
+    const allMagnitudes = [];
+
+    // Calculate PWM spectrum impulses
+    harmonics.forEach(k => {
+        for (let n = 0; n <= 1; n++) { // n=0,1 for simplicity (can extend)
+            const lsbFreq = k * carrierFrequency - n * messageFrequency;
+            const usbFreq = k * carrierFrequency + n * messageFrequency;
+
+            const lsbMag = Math.abs(sinc(lsbFreq * tau));
+            const usbMag = Math.abs(sinc(usbFreq * tau));
+
+            impulses.push({ freq: lsbFreq, mag: lsbMag, type: `LSB k=${k},n=${n}` });
+            impulses.push({ freq: usbFreq, mag: usbMag, type: `USB k=${k},n=${n}` });
+
+            allMagnitudes.push(lsbMag, usbMag);
+
+            // Negative frequencies
+            const negLsbFreq = -k * carrierFrequency + n * messageFrequency;
+            const negUsbFreq = -k * carrierFrequency - n * messageFrequency;
+
+            const negLsbMag = Math.abs(sinc(negLsbFreq * tau));
+            const negUsbMag = Math.abs(sinc(negUsbFreq * tau));
+
+            impulses.push({ freq: negLsbFreq, mag: negLsbMag, type: `LSB -k=${k},n=${n}` });
+            impulses.push({ freq: negUsbFreq, mag: negUsbMag, type: `USB -k=${k},n=${n}` });
+
+            allMagnitudes.push(negLsbMag, negUsbMag);
+        }
+    });
+
+    const maxMag = Math.max(...allMagnitudes);
+
+    impulses.forEach(imp => {
+        imp.mag = 20 * Math.log10(imp.mag / maxMag);
+    });
+
+    // Continuous envelope
+    const fEnvelope = [];
+    const envMagnitudes = [];
+    const fMax = (maxHarmonic+1) * carrierFrequency + messageFrequency + 50;
+    const df = 1;
+    for (let f = -fMax; f <= fMax; f += df) {
+        fEnvelope.push(f);
+        envMagnitudes.push(20 * Math.log10(Math.abs(sinc(f * tau)) / maxMag));
+    }
+
+    const layoutPWM = {
+        title: 'PWM Spectrum',
+        xaxis: { title: 'Frequency (Hz)', showgrid: true, zeroline: false },
+        yaxis: { title: 'Magnitude (dB)', showgrid: true, zeroline: false },
+        showlegend: true
+    };
+
+    const traces = [];
+
+    // Continuous envelope trace
+    traces.push({
+        x: fEnvelope,
+        y: envMagnitudes,
+        mode: 'lines',
+        type: 'scatter',
+        line: { width: 2, color: 'black', dash: 'dot' },
+        name: 'Sinc Envelope'
+    });
+
+    // Impulses
+    impulses.forEach(imp => {
+        let color = 'gray';
+        if (imp.type.includes("LSB")) color = 'blue';
+        if (imp.type.includes("USB")) color = 'red';
+
+        traces.push({
+            x: [imp.freq, imp.freq],
+            y: [-100, imp.mag],
+            mode: 'lines',
+            type: 'scatter',
+            line: { width: 2, color: color },
+            name: `${imp.type} ${imp.freq.toFixed(1)} Hz`
+        });
+    });
+
+    Plotly.newPlot('plot-pwm', traces, layoutPWM);
+    document.querySelector('.plot-container2').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Sinc function
+function sinc(x) {
+    if (x === 0) return 1;
+    return Math.sin(Math.PI * x) / (Math.PI * x);
+}
 
       function saveData() {
   const fm = parseFloat(document.getElementById('messageFrequency').value);
