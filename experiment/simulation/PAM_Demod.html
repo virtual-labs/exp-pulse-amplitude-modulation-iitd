@@ -192,6 +192,7 @@
               <div class="m-1">
                 <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
                 <div id="PAMInput" style="width: 600px; height: 400px;"></div>
+                <div id="plot-dsbpp" style="width: 600px; height: 400px;"></div>
                 <div id="demodulated-signal" style="width: 600px; height: 400px;"></div>
               </div>
             </div>
@@ -459,100 +460,102 @@ const pamSignal = messageSignal.map((msg, index) => {
         }
 
 
+ 
         function frequencySpectrums() {
-    const carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
-    const messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
-    const gain = 1;
+    const carrierFreq = parseFloat(document.getElementById('carrierFrequency').value);
+    const messageFreq = parseFloat(document.getElementById('messageFrequency').value);
 
-    // Multiple frequency components
-    const lowerSidebandFrequencies = [
-        carrierFrequency - messageFrequency,
-        3*carrierFrequency - messageFrequency,
-        5*carrierFrequency - messageFrequency
-    ];
-    const upperSidebandFrequencies = [
-        carrierFrequency + messageFrequency,
-        3*carrierFrequency + messageFrequency,
-        5*carrierFrequency + messageFrequency
-    ];
+    const carrierFrequency = carrierFreq;
+    const messageFrequency = messageFreq;
+    
+    const tau = 0.01; // Pulse width (seconds)
+    const Am = 1;
 
-    // Corresponding magnitudes for each frequency (in dB)
-    const lowerMagnitudes = [
-        [0],    // For lowerSidebandFrequencies[0]
-        [-9.5],
-        [-14]         // For lowerSidebandFrequencies[1]
-    ];
-    const upperMagnitudes = [
-        [0],         // For upperSidebandFrequencies[0]
-        [-9.5],
-        [-14]    // For upperSidebandFrequencies[1]
-    ];
+    const maxHarmonic = 5;
+    const harmonics = Array.from({length: maxHarmonic+1}, (_, k) => k);
+
+    const allFrequencies = [];
+    const allMagnitudes = [];
+
+    harmonics.forEach(k => {
+        // Positive sidebands
+        const lsbFreq = k * carrierFrequency - messageFrequency;
+        const usbFreq = k * carrierFrequency + messageFrequency;
+        allFrequencies.push(lsbFreq, usbFreq);
+
+        const lsbMag = Math.abs(sinc(lsbFreq * tau));
+        const usbMag = Math.abs(sinc(usbFreq * tau));
+        allMagnitudes.push(lsbMag, usbMag);
+
+        // Negative sidebands
+        const negLsbFreq = -k * carrierFrequency + messageFrequency;
+        const negUsbFreq = -k * carrierFrequency - messageFrequency;
+        allFrequencies.push(negLsbFreq, negUsbFreq);
+
+        const negLsbMag = Math.abs(sinc(negLsbFreq * tau));
+        const negUsbMag = Math.abs(sinc(negUsbFreq * tau));
+        allMagnitudes.push(negLsbMag, negUsbMag);
+    });
+
+    const maxMag = Math.max(...allMagnitudes);
+
+    // Convert to dB scale normalized
+    const allMagnitudesDb = allMagnitudes.map(m => 20 * Math.log10(m / maxMag));
+
+    // Continuous envelope for positive & negative frequencies
+    const fEnvelope = [];
+    const envMagnitudes = [];
+    const fMax = (maxHarmonic+1) * carrierFrequency + messageFrequency + 50;
+    const df = 1;
+    for (let f = -fMax; f <= fMax; f += df) {
+        fEnvelope.push(f);
+        envMagnitudes.push(20 * Math.log10(Math.abs(sinc(f * tau)) / maxMag));
+    }
 
     const layoutDSB = {
         title: 'PAM Spectrum',
-        xaxis: {
-            title: 'Frequency (Hz)',
-            showgrid: true,
-            zeroline: false,
-            range: [
-                Math.min(...lowerSidebandFrequencies) - 10,
-                Math.max(...upperSidebandFrequencies) + 10
-            ]
-        },
-        yaxis: {
-            title: 'Normalized PSD (dB/Hz)',
-            showgrid: true,
-            zeroline: false,
-        },
-        showlegend: false
+        xaxis: { title: 'Frequency (Hz)', showgrid: true, zeroline: false },
+        yaxis: { title: 'Magnitude (dB)', showgrid: true, zeroline: false },
+        showlegend: true
     };
 
     const traces = [];
 
-    // Lower sideband traces
-    lowerSidebandFrequencies.forEach((freq, i) => {
-        lowerMagnitudes[i].forEach((mag, j) => {
-            traces.push({
-                x: [freq, freq],
-                y: [-30, mag],
-                mode: 'lines',
-                type: 'scatter',
-                line: {
-                    width: 3,
-                    color: 'blue'
-                },
-                //name: `LSB f=${freq}Hz m${j + 1}`
-                name: ``
-            });
+    // Continuous envelope
+    traces.push({
+        x: fEnvelope,
+        y: envMagnitudes,
+        mode: 'lines',
+        type: 'scatter',
+        line: { width: 2, color: 'black', dash: 'dot' },
+        name: 'Sinc Envelope'
+    });
+
+    // Impulses
+    allFrequencies.forEach((freq, i) => {
+        traces.push({
+            x: [freq, freq],
+            y: [-100, allMagnitudesDb[i]],
+            mode: 'lines',
+            type: 'scatter',
+            line: { width: 3, color: freq < 0 ? 'green' : (i % 2 === 0 ? 'blue' : 'red') },
+            name: `f=${freq.toFixed(1)} Hz`
         });
     });
 
-    // Upper sideband traces
-    upperSidebandFrequencies.forEach((freq, i) => {
-        upperMagnitudes[i].forEach((mag, j) => {
-            traces.push({
-                x: [freq, freq],
-                y: [-30, mag],
-                mode: 'lines',
-                type: 'scatter',
-                line: {
-                    width: 3,
-                    color: 'red'
-                },
-                //name: `USB f=${freq}Hz m${j + 1}`
-                name: ``
-            });
-        });
-    });
-
-    Plotly.newPlot('plot-dsb', traces, layoutDSB);
-
+    Plotly.newPlot('plot-dsbpp', traces, layoutDSB);
     document.querySelector('.plot-container1').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Sinc function
+function sinc(x) {
+    if (x === 0) return 1;
+    return Math.sin(Math.PI * x) / (Math.PI * x);
 }
 
 function PAMInput() {
 
-
+  frequencySpectrums();
     const duration = 1;
     const carrierFreq = parseFloat(
   document.getElementById("carrierFrequency").value);
