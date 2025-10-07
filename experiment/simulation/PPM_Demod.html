@@ -493,6 +493,15 @@ function PPMInput() {
       let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  let ppmSignal = ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction);
 	  //////////////////////////////////
+
+    const messagePlotData = [{
+  x: time.slice(1,parseInt(3/fMessage*Fs)),
+  y: analogSignal.slice(1,parseInt(3/fMessage*Fs)),
+  type: 'scatter',
+  mode: 'lines',
+  name: 'Message Signal',
+  //line: { color: 'blue', width: 2 }
+}];
 	    // Plotting with Plotly
     const carrierPlotData = [{
         x: time.slice(1,parseInt(3/fMessage*Fs)),
@@ -514,8 +523,9 @@ function PPMInput() {
         }
     };
 
+    const data  = [...carrierPlotData, ...messagePlotData];
     // Create or update the plot in the specified chart element
-    Plotly.newPlot('PPMInput', carrierPlotData, layout);
+    Plotly.newPlot('PPMInput', data, layout);
 
     // Scroll to the carrier chart after it has been generated
     document.getElementById("PPMInput").scrollIntoView({
