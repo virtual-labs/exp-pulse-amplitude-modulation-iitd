@@ -595,6 +595,22 @@
     msg >= carrierSignal[index] ? 1 : 0
   );
 
+  const messageSignalNormalized = messageSignal.map((msg) => {
+  const minVal = Math.min(...messageSignal);  // Find the minimum value of the message signal
+  const maxVal = Math.max(...messageSignal);  // Find the maximum value of the message signal
+  return (msg - minVal) / (maxVal - minVal);  // Normalize each value to the range [0, 1]
+});
+
+// Plotting with Plotly
+const messagePlotData = [{
+  x: t.slice(1, parseInt(3 / fm * resolution)),
+  y: messageSignalNormalized.slice(1, parseInt(3 / fm * resolution)),
+  type: 'scatter',
+  mode: 'lines',
+  name: 'Message Signal',
+}];
+
+
   // Plotting with Plotly
   const pwmPlotData = [{
     x: t.slice(1, parseInt(3 / fm * resolution)),
@@ -606,7 +622,7 @@
   }];
 
   const layout = {
-    title: 'PWM Signal',
+    title: 'Superimposition of Message Signal and PWM Signal',
     xaxis: {
       title: 'Time (s)',
     },
@@ -616,8 +632,9 @@
     }
   };
 
+  const data  = [...pwmPlotData,...messagePlotData];
   // Create or update the plot in the specified chart element
-  Plotly.newPlot('PWMInput', pwmPlotData, layout);
+  Plotly.newPlot('PWMInput', data, layout);
 
   // Scroll to the pwm chart after it has been generated
   document.getElementById("PWMInput").scrollIntoView({
