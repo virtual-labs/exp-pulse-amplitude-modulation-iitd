@@ -34,26 +34,9 @@
       },
       "correctAnswer": "a",
       "difficulty": "hard"
-    },
-    {
-      "question": "3. In Pulse Code Modulation (PCM), how does increasing the number of bits per sample impact both the bandwidth requirement and the Signal-to-Quantization-Noise Ratio (SQNR)?",
-      "answers": {
-        "a": "Increases bandwidth linearly while SQNR improves logarithmically",
-        "b": "Reduces bandwidth but degrades SQNR exponentially",
-        "c": "Leaves bandwidth constant and improves SQNR linearly",
-        "d": "Increases bandwidth exponentially and reduces SQNR logarithmically"
-      },
-      "explanations": {
-        "a": "Correct! More bits per sample increase the bit rate (and thus bandwidth) linearly, while SQNR improves by about 6 dB per added bit (logarithmic improvement).",
-        "b": "Incorrect. Increasing bits increases bandwidth and improves SQNR; it does not reduce bandwidth or degrade SQNR.",
-        "c": "Incorrect. Bandwidth is not constant—it increases with bit rate.",
-        "d": "Incorrect. Bandwidth grows linearly, not exponentially, and SQNR improves—not degrades."
-      },
-      "correctAnswer": "a",
-      "difficulty": "hard"
     }, 
     {
-      "question": "4. In Pulse Position Modulation (PPM), how does timing jitter specifically impact the symbol detection process in a non-ideal receiver?",
+      "question": "3. In Pulse Position Modulation (PPM), how does timing jitter specifically impact the symbol detection process in a non-ideal receiver?",
       "answers": {
         "a": "It randomly shifts the phase of the detected pulses",
         "b": "It causes inter-symbol interference due to overlapping symbols",
@@ -69,25 +52,9 @@
       "correctAnswer": "c",
       "difficulty": "hard"
     },
+
     {
-      "question": "5. In PCM, why is there a practical limit to increasing quantization levels beyond a certain point, even if bit rate is not a constraint?",
-      "answers": {
-        "a": "Thermal noise sets a noise floor below which quantization gains are negligible",
-        "b": "Increasing levels increases distortion due to aliasing",
-        "c": "Too many levels cause amplifier saturation in the encoder",
-        "d": "The dynamic range of the source signal collapses with finer quantization"
-      },
-      "explanations": {
-        "a": "Correct! Beyond a certain point, improvements in quantization noise are masked by ambient noise levels.",
-        "b": "Incorrect. Aliasing is related to sampling, not quantization levels.",
-        "c": "Incorrect. Saturation may occur but is managed separately.",
-        "d": "Incorrect. Quantization resolution increases, but dynamic range doesn’t collapse."
-      },
-      "correctAnswer": "a",
-      "difficulty": "hard"
-    },
-    {
-      "question": "6. What is the primary non-ideality introduced by a nonlinear modulator in a PAM system from a frequency domain perspective?",
+      "question": "4. What is the primary non-ideality introduced by a nonlinear modulator in a PAM system from a frequency domain perspective?",
       "answers": {
         "a": "Spectral nulls at harmonics of the pulse frequency",
         "b": "Generation of intermodulation products and harmonic distortion",
@@ -104,7 +71,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "7. Why is Pulse Width Modulation (PWM) more suitable for motor control applications compared to PAM?",
+      "question": "5. Why is Pulse Width Modulation (PWM) more suitable for motor control applications compared to PAM?",
       "answers": {
         "a": "PWM minimizes power loss during switching and allows efficient average voltage control",
         "b": "PWM provides higher resolution of control at lower voltages",
@@ -121,41 +88,7 @@
       "difficulty": "hard"
     },
     {
-      "question": "8. In a noisy communication channel, which modulation scheme among PAM, PWM, PPM, and PCM is most susceptible to amplitude noise and why?",
-      "answers": {
-        "a": "PAM, because it directly encodes information in amplitude which is distorted by noise",
-        "b": "PPM, because pulse timing is affected by amplitude variations",
-        "c": "PCM, because noise causes quantization level hopping",
-        "d": "PWM, because duty cycle depends on signal amplitude"
-      },
-      "explanations": {
-        "a": "Correct! PAM is highly vulnerable to amplitude noise since amplitude carries information directly.",
-        "b": "Incorrect. PPM uses timing, not amplitude.",
-        "c": "Incorrect. PCM is digital and more robust against amplitude noise.",
-        "d": "Incorrect. Duty cycle is less sensitive to amplitude noise than PAM."
-      },
-      "correctAnswer": "a",
-      "difficulty": "hard"
-    },
-    {
-      "question": "9. In a PCM system, undersampling a band-limited signal results in which primary artifact, and how does it manifest in the frequency domain?",
-      "answers": {
-        "a": "Aliasing, where high-frequency components fold into the baseband",
-        "b": "Quantization distortion, leading to spectral harmonics",
-        "c": "Bandwidth broadening due to spectrum repetition",
-        "d": "Inter-symbol interference from overlapping samples"
-      },
-      "explanations": {
-        "a": "Correct! Undersampling causes aliasing—high-frequency components get misrepresented as lower ones.",
-        "b": "Incorrect. Quantization distortion occurs due to bit resolution, not sampling rate.",
-        "c": "Incorrect. Bandwidth does not broaden; aliasing compresses spectral view.",
-        "d": "Incorrect. ISI is related to pulse overlap, not sampling rate."
-      },
-      "correctAnswer": "a",
-      "difficulty": "hard"
-    },
-    {
-      "question": "10. In high-speed PPM systems, what is a key reason for preferring higher-order modulation despite its susceptibility to timing jitter?",
+      "question": "6. In high-speed PPM systems, what is a key reason for preferring higher-order modulation despite its susceptibility to timing jitter?",
       "answers": {
         "a": "It reduces symbol duration, increasing robustness to timing noise",
         "b": "It allows higher data throughput without increasing pulse rate",
