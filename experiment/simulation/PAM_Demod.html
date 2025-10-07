@@ -580,6 +580,16 @@ const pamSignal = messageSignal.map((msg, index) => {
 });
 
 // Plotting with Plotly
+const messagePlotData = [{
+  x: t.slice(1, parseInt(3 / messageFreq * resolution)),
+  y: messageSignal.slice(1, parseInt(3 / messageFreq * resolution)),
+  type: 'scatter',
+  mode: 'lines',
+  name: 'Message Signal',
+  //line: { color: 'blue', width: 2 }
+}];
+
+// Plotting with Plotly
 const pamPlotData = [{
   x: t.slice(1, parseInt(3 / messageFreq * resolution)),
   y: pamSignal.slice(1, parseInt(3 / messageFreq * resolution)),
@@ -590,7 +600,7 @@ const pamPlotData = [{
 }];
 
 const layout = {
-  title: 'PAM Signal',
+  title: 'Superimposition of Message Signal and PAM Signal',
   xaxis: {
     title: 'Time (s)',
   },
@@ -600,8 +610,9 @@ const layout = {
   }
 };
 
+const data  = [...pamPlotData,...messagePlotData];
 // Create or update the plot in the specified chart element
-Plotly.newPlot('PAMInput', pamPlotData, layout);
+Plotly.newPlot('PAMInput', data, layout);
 
 // Scroll to the PAM chart after it has been generated
 document.getElementById("PAMInput").scrollIntoView({
