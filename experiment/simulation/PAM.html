@@ -19,7 +19,6 @@
     
       <li class="step step3"><strong>Step 3:</strong> Click the <em>"Generate PAM Signal"</em> button to generate the Pulse Amplitude Modulated (PAM) signal.</li>
     
-      <li class="step step4"><strong>Step 4:</strong> Click the <em>"Show Frequency Spectrums"</em> button to view the spectrum of the PAM signal.</li>
     </ul>
 <br/>
 
@@ -108,7 +107,7 @@
     Generate PAM Signal
   </button>
   <button 
-  class="bg-blue-500 text-white py-1 px-3 text-sm rounded-md hover:scale-105"
+  class="hidden bg-blue-500 text-white py-1 px-3 text-sm rounded-md hover:scale-105"
   onclick="frequencySpectrums()">Show Frequency Spectrums</button>
   <!--
   <button
@@ -143,7 +142,15 @@
       </div>
     </div>
   </div>
-
+  <div align = "center">
+    <a href = ".\PAM_Demod.html">
+    <button
+    class="bg-blue-500 text-white py-1 px-3  rounded-md hover:scale-105"
+  >
+    Perform PAM Demodulation
+  </button>
+  </a>
+</div>
   <br/><br/>
   <div class="plot-container1">
     <div id="plot-message" class="plot1"></div>
@@ -211,15 +218,7 @@
 
 	</div>
 
-  <div align = "center">
-    <a href = ".\PAM_Demod.html">
-    <button
-    class="bg-blue-500 text-white py-1 px-3  rounded-md hover:scale-105"
-  >
-    Perform PAM Demodulation
-  </button>
-  </a>
-</div>
+
 
     <script>
         function checkFrequencies() {
