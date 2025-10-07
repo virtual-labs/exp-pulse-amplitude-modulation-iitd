@@ -53,24 +53,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "4. In the PCM system, why is oversampling generally avoided in practice?",
-      "answers": {
-        "a": "It increases the data rate and storage without improving quality proportionally.",
-        "b": "It reduces the noise immunity of the quantizer.",
-        "c": "It causes aliasing in the signal.",
-        "d": "It leads to lower resolution of each sample."
-      },
-      "explanations": {
-        "a": "Correct! Oversampling raises data volume with minimal signal quality gain.",
-        "b": "Incorrect. Oversampling generally improves noise immunity.",
-        "c": "Incorrect. Oversampling prevents aliasing, not causes it.",
-        "d": "Incorrect. Resolution is based on quantization bits, not sample rate."
-      },
-      "correctAnswer": "a",
-      "difficulty": "intermediate"
-    },
-    {
-      "question": "5. Why is PAM often used as an intermediate step in digital modulation schemes such as QAM or OFDM?",
+      "question": "4. Why is PAM often used as an intermediate step in digital modulation schemes such as QAM or OFDM?",
       "answers": {
         "a": "Because it allows simple mapping from digital bits to amplitude levels.",
         "b": "Because it uses time division to reduce bandwidth.",
@@ -87,7 +70,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "6. In PWM, which factor makes it more robust than PAM under varying channel gain conditions?",
+      "question": "5. In PWM, which factor makes it more robust than PAM under varying channel gain conditions?",
       "answers": {
         "a": "Information is encoded in time (width), not amplitude.",
         "b": "It uses orthogonal frequency tones.",
@@ -104,58 +87,7 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "7. What limits the number of quantization levels in a PCM system?",
-      "answers": {
-        "a": "The number of bits allocated per sample.",
-        "b": "The sampling frequency.",
-        "c": "The channel bandwidth.",
-        "d": "The analog signal frequency."
-      },
-      "explanations": {
-        "a": "Correct! Each bit doubles the number of quantization levels.",
-        "b": "Incorrect. Sampling frequency affects temporal resolution, not levels.",
-        "c": "Incorrect. Bandwidth affects bit rate, not quantization levels directly.",
-        "d": "Incorrect. Analog frequency affects sampling rate, not quantization."
-      },
-      "correctAnswer": "a",
-      "difficulty": "intermediate"
-    },
-    {
-      "question": "8. Why does quantization in PCM inherently introduce noise?",
-      "answers": {
-        "a": "Because it approximates real values with finite discrete levels.",
-        "b": "Because the signal is sampled at irregular intervals.",
-        "c": "Because pulses are affected by timing jitter.",
-        "d": "Because bandwidth limitation distorts the signal."
-      },
-      "explanations": {
-        "a": "Correct! Quantization error arises from level rounding.",
-        "b": "Incorrect. Irregular sampling may cause aliasing, not quantization noise.",
-        "c": "Incorrect. Timing jitter affects sampling, not quantization directly.",
-        "d": "Incorrect. Bandwidth limits distort, but not in quantization."
-      },
-      "correctAnswer": "a",
-      "difficulty": "intermediate"
-    },
-    {
-      "question": "9. A PCM system uses an 8-bit quantizer and a sampling rate of 8 kHz. What is its resulting bit rate?",
-      "answers": {
-        "a": "64 kbps",
-        "b": "8 kbps",
-        "c": "16 kbps",
-        "d": "32 kbps"
-      },
-      "explanations": {
-        "a": "Correct! 8 bits/sample × 8000 samples/sec = 64 kbps.",
-        "b": "Incorrect. This reflects sampling rate, not bit rate.",
-        "c": "Incorrect. That would require only 2 bits/sample.",
-        "d": "Incorrect. 32 kbps would come from 4 bits/sample."
-      },
-      "correctAnswer": "a",
-      "difficulty": "intermediate"
-    },
-    {
-      "question": "10. In PPM, what is the key disadvantage when comparing synchronization requirements to PAM or PWM?",
+      "question": "6. In PPM, what is the key disadvantage when comparing synchronization requirements to PAM or PWM?",
       "answers": {
         "a": "PPM requires precise timing alignment to decode correctly.",
         "b": "PPM uses more bandwidth due to wider pulses.",

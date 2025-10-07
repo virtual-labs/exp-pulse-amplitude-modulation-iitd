@@ -16,7 +16,7 @@
       the physical transfer of data (a digital bit stream or a digitized analogue signal) over a 
       point-to-point or point-to-multipoint communication channel. Reduced distortion and improvement 
       in signal to noise ratios is the great advantages of digital transmission over analog transmission. 
-      PAM, PWM , PPM and PCM etc., are used to transmit a signal digitally. 
+      PAM, PWM , and PPM etc., are used to transmit a signal digitally. 
       Pulse Amplitude Modulation (PAM) varies the amplitude of pulses based on the analog signal's 
       amplitude while keeping pulse width constant. 
       <br/>Pulse Width Modulation (PWM) alters pulse width 
@@ -24,8 +24,6 @@
       PWM is widely used in power control and digital systems for its efficiency. 
       Pulse Position Modulation (PPM) changes the position of pulses within a fixed interval according 
       to the signal’s amplitude, it encodes information in timing rather than amplitude.
-      Pulse Code Modulation (PCM) involves sampling an analog signal, quantizing these samples, 
-      and encoding them into binary form.
       For example, these pulse modulation techniques are used in optical fibers, wireless channels, 
       computer buses, etc.</p>
     </div></div>
