@@ -13,12 +13,10 @@
 <div id="container">
   <h1>Instructions for Pulse Position Modulation (PPM)</h1>
   <ul>
-    <li class="step step4"><strong>Note:</strong> Use the input fields to enter the message frequency, sampling frequency, samples per pulse, and pulse width fraction.</li>
+    <li class="step step4"><strong>Note:</strong> Use the input fields to enter the message frequency (Hz), Amplitude of Message Signal, Sample Rate (Δt), and Number of Samples.</li>
 
     <li class="step step1"><strong>Step 1:</strong> Click on 'Generate Message' button to generate the input message signal. The sampling frequency has to be much higher than the message frequency. </li>
-    <li class="step step2"><strong>Step 2:</strong> Then click on 'Generate PPM Pulse Train' button to generate the PPM Pulse Train signal.</li>
-    <li class="step step3"><strong>Step 3:</strong> Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
-	<li class="step step4">Here, pulse Width Fraction is a fraction of the total interval, and Samples Per Pulse is the total number of samples that span one pulse interval. Pulse Width = round(ppm Width Fraction × Samples Per Pulse) (all in the terms of the number of samples)</li>
+    <li class="step step3"><strong>Step 2:</strong> Click on 'Generate PPM Signal' button to generate Pulse Width Modulated (PPM) Signal</li>
   </ul>
   <br/>
 
@@ -34,28 +32,48 @@
                 <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="messageFrequency" value="2" onchange="updateFrequencies()" />
               </div>
             </div>
-            <div class="flex-1">
+
+            <div class="flex-1"> 
+              <div class="flex items-center gap-1">
+                              <label for="1" class="text-[#2c99ce] text-md font-medium">Amplitude of Message:</label>
+                              <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="amplitude" value="5" onchange="updateFrequencies()" />
+                            </div>
+              </div>
+              <div class="flex-1"> 
+                            <div class="flex items-center gap-1">
+                              <label for="2" class="text-[#2c99ce] text-md font-medium">Sample Rate (Δt):</label>
+                              <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="sampleRate" value="0.02" onchange="updateFrequencies()" />
+                            </div>
+              </div>
+                            <div class="flex-1">
+                            <div class="flex items-center gap-1">
+                              <label for="3" class="text-[#2c99ce] text-md font-medium">Number of Samples:</label>
+                              <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="numSample" value="100" onchange="updateFrequencies()" />
+                            </div>
+                          </div>
+
+            <div class="hidden flex-1">
               <div class="flex items-center gap-1">
                 <label for="carrierFrequency" class="text-[#2c99ce] text-md font-medium">Sampling Frequency in Hz:</label>
                 <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="carrierFrequency" value="1000" onchange="updateFrequencies()" />
               </div>
             </div>
 			
-			            <div class="flex-1">
+			            <div class="hidden flex-1">
               <div class="flex items-center gap-1">
                 <label for="samplesPerPulse" class="text-[#2c99ce] text-md font-medium">Samples Per Pulse:</label>
                 <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="samplesPerPulse" value="100" onchange="updateFrequencies()" />
               </div>
             </div>
 			
-			            <div class="flex-1">
+			            <div class="hidden flex-1">
               <div class="flex items-center gap-1">
                 <label for="ppmWidthFraction" class="text-[#2c99ce] text-md font-medium">Pulse Width Fraction:</label>
                 <input class="border w-36 border-black px-1 py-1 rounded-sm" type="number" id="ppmWidthFraction" value="0.1" onchange="updateFrequencies()" />
               </div>
             </div>
 
-            <div class="flex-1">
+            <div class="hidden flex-1">
               <div class="flex items-center gap-1">
                 <button 
                 class="bg-green-500 text-white rounded-md px-3 py-1 hover:scale-105 mt-3"
@@ -74,32 +92,32 @@
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- Buttons -->
-              <div class="absolute top-[90px] -left-[50px]">
-                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotOriginalSignal()">Generate Message</button>
+              <div class="absolute top-[90px] -left-[75px]">
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="sine()">Generate Message</button>
               </div>
-              <div class="absolute top-[320px] left-[100px]">
+              <div class="hidden absolute top-[320px] left-[100px]">
                 <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMPulse()">Generate PPM Pulse Train</button>
               </div>
               <div class="absolute top-[320px] right-[95px] flex flex-col gap-2">
-                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotPPMModulatedSignal()">Generate PPM Signal</button>
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="ppm()">Generate PPM Signal</button>
                 <!---
                 <button class="bg-gray-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()">Perform PPM Demodulation</button>
               ------>
               </div>
-              <img src=".././images/PPM_Mod.png" alt="PPM_Mod" class="w-[50em] h-[25em]" />
+              <img src="./PPM_Mod.png" alt="PPM_Mod" class="w-[40em] h-[22em]" />
             </div>
           </div>
 
           <div class="flex flex-col justify-center items-center">
 
             <div class="w-[600px] h-[400px] mb-5">
-              <div id="originalSignalCanvas" class="w-[650px] h-[400px]"></div>
+              <div id="sine-wave" class="w-[650px] h-[400px]"></div>
             </div>
-            <div class="w-[600px] h-[400px] mb-5">
+            <div class="hidden w-[600px] h-[400px] mb-5">
               <div id="ppmPulseCanvas" class="w-[650px] h-[400px]"></div>
             </div>
             <div class="w-[600px] h-[400px] mb-5">
-              <div id="ppmSignalCanvas" class="w-[650px] h-[400px]"></div>
+              <div id="ppm-wave" class="w-[650px] h-[400px]"></div>
             </div>
           </div>
         </div>
@@ -484,8 +502,78 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
     });
   }
 //////////////////////////////////
-		 
 
+let ppmTraces, layoutPPM;
+function sine() {
+    // Parameters for the sine wave and PPM
+    const A = parseFloat(document.getElementById('amplitude').value);          // Amplitude of the sine wave
+    const f = parseFloat(document.getElementById('messageFrequency').value);           // Frequency of the sine wave in Hz
+    const sampleRate = parseFloat(document.getElementById('sampleRate').value); // Sampling interval (Δt)
+    const numSamples = parseFloat(document.getElementById('numSample').value);  // Number of samples
+    t = Array.from({length: numSamples + 1}, (_, i) => i * sampleRate);  // Time vector (from 0 to numSamples * Δt)
+
+    // Generate the sinusoidal signal x(t) = A * sin(2 * pi * f * t)
+    const x_t = t.map(time => A * Math.sin(2 * Math.PI * f * time));
+
+    // Calculate the Pulse Position Modulation (PPM) positions
+    const ppm_positions = [];
+    const pulse_height = 1; // Constant pulse height (amplitude)
+
+    for (let i = 0; i <= numSamples; i++) {
+      const pulseShift = Math.max(0, x_t[i]);  // Only shift for positive amplitude
+      ppm_positions.push(t[i] + sampleRate * pulseShift); // Pulse position calculation
+    }
+
+    // Plotting the sine wave
+    const sineTrace = {
+      x: t,
+      y: x_t,
+      type: 'scatter',
+      mode: 'lines',
+      line: {color: 'blue', width: 2},
+      name: 'Sine Wave (x(t) = 5 sin(2π ⋅ 1 ⋅ t))'
+    };
+
+    // Plotting the PPM pulses as vertical lines
+    ppmTraces = ppm_positions.map(position => ({
+      x: [position, position],      // x-coordinates of the vertical line (constant)
+      y: [0, pulse_height],         // y-coordinates (vertical line from 0 to pulse height)
+      type: 'scatter',
+      mode: 'lines',
+      line: {color: 'red', width: 2},  // Pulse color and line width
+    }));
+
+    // Layout for the first plot (Sine wave)
+    const layoutSine = {
+      title: 'Message Signal',
+      xaxis: {title: 'Time (s)', showgrid: true},
+      yaxis: {title: 'Amplitude', showgrid: true},
+      showlegend: false
+    };
+
+    // Layout for the second plot (PPM)
+    layoutPPM = {
+      title: 'Pulse Position Modulation (PPM)',
+      xaxis: {title: 'Time (s)', showgrid: true},
+      yaxis: {title: 'Pulse Amplitude', showgrid: true},
+      showlegend: false
+    };
+
+    // Plot the Sine Wave
+    Plotly.newPlot('sine-wave', [sineTrace], layoutSine);
+
+    // Plot the PPM Pulses as vertical lines (impulses)
+
+  }
+
+  function ppm() {
+    Plotly.newPlot('ppm-wave', ppmTraces, layoutPPM);
+    document.getElementById("ppm-wave").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  saveData();
+  }
 function saveData() {
   const fMessage = parseFloat(document.getElementById('messageFrequency').value);
   const Fs = parseFloat(document.getElementById('carrierFrequency').value);
