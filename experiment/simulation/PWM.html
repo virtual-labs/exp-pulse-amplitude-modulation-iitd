@@ -484,6 +484,7 @@
         }
 
         // Function to plot the SPWM signal using Plotly
+        let pwmTrace;
         function plotSPWM() {
             const { time, signal, carrier, pwm } = generateSPWM();
 		        const messageFrequency = parseFloat(
@@ -508,7 +509,7 @@ const totalSamplesForThreeCycles = Math.floor(3 * (5000 / messageFrequency));
                 line: { color: 'green' }
             };
 
-            const pwmTrace = {
+            pwmTrace = {
                 x: time.slice(1, totalSamplesForThreeCycles),
                 y: pwm.slice(1, totalSamplesForThreeCycles),
                 mode: 'lines',
@@ -673,7 +674,7 @@ function sinc(x) {
   const fs = parseFloat(document.getElementById('carrierFrequency').value);
 
   // Store as an object (use the variables you actually defined)
-  const myData = { fm: fm, fs: fs };
+  const myData = { fm: fm, fs: fs, pwmTrace: pwmTrace };
 
   localStorage.setItem('sharedData', JSON.stringify(myData));
 } 

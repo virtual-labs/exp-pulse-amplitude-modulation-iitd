@@ -559,6 +559,28 @@
             return output.slice(0, signal.length);
         }
 
+        function generateSPWM() {
+            let fc = parseFloat(document.getElementById("carrierFrequency").value);; // Frequency of the carrier (PWM frequency)
+            let fm = parseFloat(document.getElementById("messageFrequency").value);; // Frequency of the sinusoidal input (reference signal)
+            const fs = fc;
+            const f_signal = fm;
+            const sampleRate = 5000; // Number of samples per period
+            const duration = 1; // Duration of the signal in seconds
+            const time = Array.from({ length: sampleRate * duration }, (_, i) => i / sampleRate);
+
+            // Generate the square carrier wave (alternates between 1 and -1)
+            //const carrier = time.map(t => Math.sign(Math.sin(2 * Math.PI * fs * t))); // Square wave carrier
+            const carrier = time.map(t => 2 * Math.abs(2 * (t * fs % 1) - 1) - 1); 
+            // Generate the sinusoidal reference signal (low frequency)
+            const signal = time.map(t => Math.sin(2 * Math.PI * f_signal * t)); // Sinusoidal reference signal
+
+            // Generating PWM signal (SPWM) by comparing the sinusoidal signal with the carrier wave
+            const pwm = time.map((t, idx) => signal[idx] > carrier[idx] ? 1 : -1);
+
+            return { time, signal, carrier, pwm };
+        }
+
+
         async function PWMInput() {
           //pwmSpectrumsxx();
   //destroyChart("pwmChart");
@@ -594,16 +616,43 @@
     msg >= carrierSignal[index] ? 1 : 0
   );
 
-  const messageSignalNormalized = messageSignal.map((msg) => {
-  const minVal = Math.min(...messageSignal);  // Find the minimum value of the message signal
-  const maxVal = Math.max(...messageSignal);  // Find the maximum value of the message signal
-  return (msg - minVal) / (maxVal - minVal);  // Normalize each value to the range [0, 1]
-});
 
+/////////
+           const { time, signal, carrier, pwm } = generateSPWM();
+		        const messageFrequency = parseFloat(
+          document.getElementById("messageFrequency").value
+        );
+
+const totalSamplesForThreeCycles = Math.floor(3 * (5000 / messageFrequency));
+            // Data for Plotly
+            const signalTrace = {
+                x: time.slice(1, totalSamplesForThreeCycles),
+                y: signal.slice(1, totalSamplesForThreeCycles),
+                mode: 'lines',
+                name: 'Sinusoidal Reference Signal',
+                line: { color: 'blue' }
+            };
+
+            const carrierTrace = {
+                x: time,
+                y: carrier,
+                mode: 'lines',
+                name: 'Carrier Signal (Square)',
+                line: { color: 'green' }
+            };
+
+            const pwmTrace = {
+                x: time.slice(1, totalSamplesForThreeCycles),
+                y: pwm.slice(1, totalSamplesForThreeCycles),
+                mode: 'lines',
+                name: 'PWM Signal (SPWM)',
+                line: { color: 'red' }
+            };
+/////
 // Plotting with Plotly
 const messagePlotData = [{
   x: t.slice(1, parseInt(3 / fm * resolution)),
-  y: messageSignalNormalized.slice(1, parseInt(3 / fm * resolution)),
+  y: messageSignal.slice(1, parseInt(3 / fm * resolution)),
   type: 'scatter',
   mode: 'lines',
   name: 'Message Signal',
@@ -631,7 +680,7 @@ const messagePlotData = [{
     }
   };
 
-  const data  = [...pwmPlotData,...messagePlotData];
+  const data  = [pwmTrace,...messagePlotData];
   // Create or update the plot in the specified chart element
   Plotly.newPlot('PWMInput', data, layout);
 
@@ -753,6 +802,7 @@ function sinc(x) {
     // Update input fields in current tab
     document.getElementById('messageFrequency').value = parsed.fm ?? '';
     document.getElementById('carrierFrequency').value = parsed.fs ?? '';
+    const pwmTrace = parsed.pwmTrace ?? '';
     //document.getElementById('kf').value = parsed.fDev ?? '';
   }
 }

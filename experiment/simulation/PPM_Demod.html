@@ -444,8 +444,8 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
 	  //////////////////////////////////
 	    // Plotting with Plotly
     const carrierPlotData = [{
-        x: time.slice(1,parseInt(3/fMessage*Fs)),
-        y: demodulatedSignal.slice(1,parseInt(3/fMessage*Fs)),
+        x: time, //.slice(1,parseInt(3/fMessage*Fs)),
+        y: demodulatedSignal, //.slice(1,parseInt(3/fMessage*Fs)),
         type: 'scatter',
         mode: 'lines',
         name: 'Demodulated Signal',
@@ -487,45 +487,10 @@ function PPMInput() {
         alert("Perform Pulse Amplitude Modulation first!");
         return;
     }
-      // Recalculate the time vector and analog signal
-      t = Array.from({length: Fs * duration}, (_, i) => i * T);
-      analogSignal = t.map(ti => (Math.sin(2 * Math.PI * fMessage * ti) + 1) / 2);  
-      let time = Array.from({length: Fs}, (_, i) => i/Fs);
-	  let ppmSignal = ppmModulate(analogSignal, samplesPerPulse, ppmWidthFraction);
-	  //////////////////////////////////
-
-    const messagePlotData = [{
-  x: time.slice(1,parseInt(3/fMessage*Fs)),
-  y: analogSignal.slice(1,parseInt(3/fMessage*Fs)),
-  type: 'scatter',
-  mode: 'lines',
-  name: 'Message Signal',
-  //line: { color: 'blue', width: 2 }
-}];
-	    // Plotting with Plotly
-    const carrierPlotData = [{
-        x: time.slice(1,parseInt(3/fMessage*Fs)),
-        y: ppmSignal.ppmSignal.slice(1,parseInt(3/fMessage*Fs)),
-        type: 'scatter',
-        mode: 'lines',
-        name: 'PPM Modulated Signal',
-        //line: { color: 'blue', width: 2 }
-    }];
-
-    const layout = {
-        title: 'PPM Modulated Signal',
-        xaxis: {
-            title: 'Time (s)',
-        },
-        yaxis: {
-            title: 'Amplitude',
-            //range: [-1, 1],
-        }
-    };
-
-    const data  = [...carrierPlotData, ...messagePlotData];
+  
+    const data  = [sineTrace, ...ppmTraces];
     // Create or update the plot in the specified chart element
-    Plotly.newPlot('PPMInput', data, layout);
+    Plotly.newPlot('PPMInput', data, layoutPPM);
 
     // Scroll to the carrier chart after it has been generated
     document.getElementById("PPMInput").scrollIntoView({
@@ -546,6 +511,9 @@ function loadData() {
     document.getElementById('samplesPerPulse').value = parsed.samplesPerPulse ?? '';
     document.getElementById('ppmWidthFraction').value = parsed.ppmWidthFraction ?? '';
     //document.getElementById('kf').value = parsed.fDev ?? '';
+    ppmTraces = parsed.ppmTraces ?? '';
+    layoutPPM = parsed.layoutPPM ?? '';
+    sineTrace = parsed.sineTrace ?? '';
   }
 }
 
