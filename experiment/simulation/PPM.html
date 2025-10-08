@@ -503,7 +503,7 @@ let time = Array.from({length: Fs}, (_, i) => i/Fs);
   }
 //////////////////////////////////
 
-let ppmTraces, layoutPPM;
+let sineTrace, ppmTraces, layoutPPM;
 function sine() {
     // Parameters for the sine wave and PPM
     const A = parseFloat(document.getElementById('amplitude').value);          // Amplitude of the sine wave
@@ -525,7 +525,7 @@ function sine() {
     }
 
     // Plotting the sine wave
-    const sineTrace = {
+    sineTrace = {
       x: t,
       y: x_t,
       type: 'scatter',
@@ -563,7 +563,7 @@ function sine() {
     Plotly.newPlot('sine-wave', [sineTrace], layoutSine);
 
     // Plot the PPM Pulses as vertical lines (impulses)
-
+    saveData();
   }
 
   function ppm() {
@@ -572,7 +572,7 @@ function sine() {
       behavior: "smooth",
       block: "center"
     });
-  saveData();
+
   }
 function saveData() {
   const fMessage = parseFloat(document.getElementById('messageFrequency').value);
@@ -582,7 +582,7 @@ const ppmWidthFraction = parseFloat(document.getElementById('ppmWidthFraction').
 
 
   // Store as an object (use the variables you actually defined)
-  const myData = { fMessage: fMessage, Fs: Fs, samplesPerPulse: samplesPerPulse, ppmWidthFraction: ppmWidthFraction };
+  const myData = { fMessage: fMessage, Fs: Fs, samplesPerPulse: samplesPerPulse, ppmWidthFraction: ppmWidthFraction, ppmTraces: ppmTraces, layoutPPM: layoutPPM, sineTrace: sineTrace};
 
   localStorage.setItem('sharedData', JSON.stringify(myData));
 }
