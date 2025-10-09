@@ -34,14 +34,5 @@
             <li><strong>Demodulate PPM Signal:</strong> Click the <button>Demodulate PPM Signal</button> button to recover the original message signal from the modulated PPM signal.</li>
         </ol>
     </div>
-    <div class="procedure">
-        <h2>PCM (Pulse Code Modulation)</h2>
-        <ol>
-            <li><strong>Generate Message Signal:</strong> Input the <code>message frequency,</code> <code>sampling frequency</code> and <code>quantization levels</code> into the provided fields. Click the <button>Generate Message</button> button to create the message signal.</li>
-            <li><strong>Plot Quantized Message Signal:</strong> Click the <button>Plot Quantized Signal</button> button to visualize the quantized version of the message signal.</li>
-            <li><strong>Generate PCM Signal:</strong> Click the <button>Generate PCM Signal</button> button to produce the PCM signal.</li>
-            <li><strong>Demodulate PCM Signal:</strong> Click the <button>Demodulate PCM Signal</button> button to recover the original message signal from the modulated PCM signal.</li>
-        </ol>
-    </div>
 </body>
 </html>
