@@ -9,14 +9,17 @@
 </head>
 <body>
 
-  <div id = "modulation">
 <div id = "container">
     <h1>Instructions for Pulse Width Modulation (PWM)</h1>
     <ul>
-        <li class="step step1">Step 1: Click on 'Generate Message' button to generate input message signal</li>
-        <li class="step step2">Step 2: Then click on 'Generate Carrier' button to generate carrier signal. You can change the message and carrier signal frequencies from the input field. The carrier frequency has to be more than the message frequency</li>
-        <li class="step step3">Step 3: Click on 'Generate PWM Signal' button to generate Pulse Width Modulated (PWM) Signal</li>
-      </ul>
+      <li class="step step4"><strong>Note:</strong> Use the input fields to enter the message frequency and the square wave carrier frequency.</li>
+    
+      <li class="step step1"><strong>Step 1:</strong> Click the <em>"Generate Message"</em> button to generate the input message signal.</li>
+    
+      <li class="step step2"><strong>Step 2:</strong> Click the <em>"Generate Carrier"</em> button to generate the carrier signal. The carrier frequency must be higher than the message frequency. You can change both the message and carrier frequencies using the input fields.</li>
+    
+      <li class="step step3"><strong>Step 3:</strong> Click the <em>"Generate PWM Signal"</em> button to generate the Pulse Width Modulated (PWM) signal.</li>
+    </ul>
 <br/>
 
   <!-- sidebar and body -->
@@ -46,14 +49,25 @@
                 <label
                   for="carrierFrequency"
                   class="text-[#2c99ce] text-md font-medium"
-                  >Square Carrier Frequency in Hz:</label
+                  >Carrier Frequency in Hz:</label
                 >
                 <input
                   class="border w-36 border-black px-1 py-1 rounded-sm"
                   type="number"
                   id="carrierFrequency"
-                  value="100"
+                  value="10"
                 />
+              </div>
+            </div>
+
+            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <button 
+                class="bg-green-500 text-white rounded-md px-3 py-1 hover:scale-105 mt-3"
+                onclick="location.reload();"
+              >
+                Reset Simulator
+              </button>
               </div>
             </div>
 
@@ -86,10 +100,17 @@
 <div class="absolute top-[162px] right-[15px] flex flex-col gap-2">
   <button
     class="bg-blue-500 text-white rounded-md px-2 py-1"
-    onclick="performPWM()"
+    onclick="plotSPWM()"
   >
     Generate PWM Signal
   </button>
+
+  <button
+  class="hidden bg-blue-500 text-white rounded-md px-2 py-1"
+  onclick="pwmSpectrums()"
+>
+  Show Frequency Spectrums
+</button>
 
   <!---
   <button
@@ -102,15 +123,16 @@
 </div>
 
               <img
-                src=".././images/PWM_PPM.png"
+                src="./PWM_PPM.png"
                 alt="PWM"
                 class="w-[100%] h-[100%]"
               />
             </div>
           </div>
 <div class="flex flex-col justify-center items-center">
+
   <div class="w-[600px] h-[400px] mb-5">
-    <div id="pwmChart" class="w-[600px] h-[400px]"></div>
+    <div id="messageChart" class="w-[600px] h-[400px]"></div>
   </div>
 
   <div class="w-[600px] h-[400px] mb-5">
@@ -118,8 +140,9 @@
   </div>
 
   <div class="w-[600px] h-[400px] mb-5">
-    <div id="messageChart" class="w-[600px] h-[400px]"></div>
+    <div id="pwmChart" class="w-[600px] h-[400px]"></div>
   </div>
+  
 </div>
 
         </div>
@@ -127,18 +150,15 @@
     </div>
   </div>
   
+  <div id = "demodulation">
   <br/><br/><hr/>
-
-</div></div></div>
   
   <div id = "container">
     <h1>Instructions for Pulse Width Demodulation</h1>
     <ul>
 	    <li class="step step1">Step 1: Ramp generator produces a ramp signal that either increases or decreases linearly. And Converts pulse width information into a varying voltage. Adder combines the ramp and PWM signals into a composite signal carrying the original information and then low-pass filtering</li>
 		<li class="step step2">Step 2: You can Demodulate the PWM Signal clicking on the 'Demodulate PWM Signal' button</li>
-    <li class="step step4"><strong>Tip:</strong> Pulse Width Modulation (PWM) settings auto-transfer to the Pulse Width Demodulation tab. No need to re-enter values. Keep both tabs open, or demodulate immediately after modulation.</li>
-
-  </ul>
+    </ul>
 </div>	
   
   <!-- sidebar and body -->
@@ -160,12 +180,6 @@
           <div class="w-[50%] flex flex-col items-center">
             <div class="relative my-4 w-[659px] h-[233px]">
               <!-- buttons -->
-              <button
-              onclick="PWMInput(pwmTrace, signalTrace, layout)"
-              class="bg-blue-500 text-white py-1 px-3 mt-1 rounded-md hover:bg-[#0c9c0c] hover:scale-105"
-            >
-              PWM Input
-            </button>
               <div class="absolute top-[170px] right-[-15px]">
                 <p class="font-medium">Cut-off Frequency (Hz)</p>
                 <input
@@ -185,7 +199,6 @@
 		    <div class="flex justify-center flex-wrap items-center">
               <div class="m-1">
                 <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
-                <div id="PWMInput" style="width: 600px; height: 400px;"></div>
                 <div id="plot4" style="width: 600px; height: 400px;"></div>
               </div>
             </div>
@@ -194,7 +207,17 @@
     </div>
   </div>
 
-	
+	</div>
+
+  <div align = "center">
+    <a href = ".\PWM_Demod.html">
+    <button
+    class="bg-blue-500 text-white py-1 px-3  rounded-md hover:scale-105"
+  >
+    Perform PWM Demodulation
+  </button>
+  </a>
+</div>
     <script>
         function checkFrequencies() {
             // Get values from input fields
@@ -275,8 +298,7 @@
 
         const a = 1;
         const messageSignal = linspace(0, duration, resolution * duration).map(
-          (t) => 1.01 * a * Math.sin(2 * Math.PI * messageFrequency * t + 0.5)
-        );
+          (t) => Math.sin(2 * Math.PI * messageFrequency * t));
 
         //plotSignal("messageChart", t, messageSignal, "Message Signal");
 			    // Plotting with Plotly
@@ -320,7 +342,7 @@
       document.getElementById("carrierFrequency").value
     );
         const t = linspace(0, duration, resolution * duration);
-
+        const messageFrequency = parseFloat(document.getElementById("messageFrequency").value); 
         const carrierFrequency = parseFloat(
           document.getElementById("carrierFrequency").value
         );
@@ -332,23 +354,31 @@
 
         const fc = carrierFrequency;
         const a = 1;
-        const carrierSignal = linspace(0, duration, resolution * duration).map(
-          (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * t + 0.5))
-        );
+        /*
+        const carrierSquare = time.map(t => {
+      const carrierPhase = (t * fs) % 1; // Phase from 0 to 1
+      return (carrierPhase < 0.5) ? 1 : 0; // 50% duty cycle square wave
+  });
+      */ 
+      const carrierSignal = linspace(0, duration, resolution * duration).map(t => {
+  const carrierPhase = (t * fc) % 1; // Phase from 0 to 1
+  return (carrierPhase < 0.5) ? 1 : 0; // 50% duty cycle square wave
+});
 
+        //const carrier = time.map(t => 1.05 * (1 - Math.abs(2 * ((t * fs) % 1) - 1)));
         //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 					    // Plotting with Plotly
     const carrierPlotData = [{
-        x: t.slice(1,parseInt(3/carrierFrequency*resolution)),
-        y: carrierSignal.slice(1,parseInt(3/carrierFrequency*resolution)),
+        x: t.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: carrierSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
-        name: 'Square Carrier Signal',
+        name: 'Triangular Carrier Signal',
         //line: { color: 'blue', width: 2 }
     }];
 
     const layout = {
-        title: 'Square Carrier Signal',
+        title: 'Carrier Signal (Square-Wave)',
         xaxis: {
             title: 'Time (s)',
         },
@@ -438,8 +468,126 @@
       block: "center"
     });
 	
+    saveData();
       }
 
+        function generateSPWM() {
+          const fs = parseFloat(document.getElementById("carrierFrequency").value); // Carrier frequency
+  const f_signal = parseFloat(document.getElementById("messageFrequency").value); // Message frequency
+  const sampleRate = 50000; // Samples per second (higher for better resolution)
+  const duration = 1; // 1 second
+  const time = Array.from({ length: sampleRate * duration }, (_, i) => i / sampleRate);
+
+  // Calculate samples per carrier cycle (this defines the carrier period in samples)
+  const samplesPerCarrierPeriod = Math.floor(sampleRate / fs);
+
+  // Generate sine signal (message)
+  const signal = time.map(t => Math.sin(2 * Math.PI * f_signal * t));
+
+  // Normalize sine for duty cycle (0 to 1)
+  // This will be used to determine the pulse width within each carrier period
+  const normalizedSignal = signal.map(v => {
+    let duty = (v + 1) / 2; // Scales -1 to 1 to 0 to 1
+    // Clamp duty cycle to [0,1] - essential to prevent pulse width > carrier period
+    if (duty > 1) {
+      // console.warn(`Duty cycle > 1 at value ${duty}, clamping to 1.`); // Should not happen with sin()
+      duty = 1;
+    } else if (duty < 0) {
+      duty = 0;
+    }
+    return duty;
+  });
+
+  // PWM output array
+  const pwm = new Array(time.length).fill(0);
+
+  // Generate PWM based on square carrier periods
+  for (let i = 0; i < time.length; i += samplesPerCarrierPeriod) {
+    const startIndex = i; // Start of the current carrier period
+    
+    // Acquire message amplitude (normalized duty cycle) at the start of this period
+    // This is the key part of your requirement: "acquire message amplitude at starting at pulse"
+    const dutyCycle = normalizedSignal[startIndex]; 
+
+    // Calculate 'on' duration (pulse width) in samples for this period
+    // This will never be greater than samplesPerCarrierPeriod if dutyCycle is [0,1]
+    const onSamples = Math.floor(samplesPerCarrierPeriod * dutyCycle);
+
+    // Generate the pulse for the current carrier period
+    for (let j = 0; j < samplesPerCarrierPeriod; j++) {
+      const currentIndex = startIndex + j;
+      if (currentIndex < time.length) { // Ensure we don't go out of bounds
+        if (j < onSamples) {
+          pwm[currentIndex] = 1; // Pulse is ON
+        } else {
+          pwm[currentIndex] = 0; // Pulse is OFF
+        }
+      }
+    }
+  }
+
+  // Generate a square carrier for visualization only, consistent with the period
+  const carrierSquare = time.map(t => {
+      const carrierPhase = (t * fs) % 1; // Phase from 0 to 1
+      return (carrierPhase < 0.5) ? 1 : 0; // 50% duty cycle square wave
+  });
+
+
+  return { time, signal, carrierSquare, pwm };
+}
+
+let signalTrace, pwmTrace, layout;
+function plotSPWM() {
+  const { time, signal, carrierSquare, pwm } = generateSPWM();
+
+  const messageFrequency = parseFloat(document.getElementById("messageFrequency").value);
+  // Plot a few cycles of the message signal for clear visualization
+  const totalSamplesForThreeMessageCycles = Math.floor(3 * (50000 / messageFrequency)); 
+
+  signalTrace = {
+    x: time.slice(0, totalSamplesForThreeMessageCycles),
+    y: signal.slice(0, totalSamplesForThreeMessageCycles),
+    mode: 'lines',
+    name: 'Message Signal',
+    line: { color: 'blue' }
+  };
+
+  // Display the square carrier signal for reference
+  const carrierTrace = {
+    x: time.slice(0, totalSamplesForThreeMessageCycles),
+    y: carrierSquare.slice(0, totalSamplesForThreeMessageCycles),
+    mode: 'lines',
+    name: 'PWM Signal',
+    line: { color: 'green', dash: 'dot' }
+  };
+
+  pwmTrace = {
+    x: time.slice(0, totalSamplesForThreeMessageCycles),
+    y: pwm.slice(0, totalSamplesForThreeMessageCycles),
+    mode: 'lines',
+    name: 'PWM Signal',
+    line: { color: 'red', shape: 'hv' } // 'hv' for better square wave representation
+  };
+
+  layout = {
+    title: 'PWM Signal',
+    xaxis: { title: 'Time (s)' },
+    yaxis: { title: 'Amplitude' },
+    legend: { orientation: 'h' },
+    //height: 600
+  };
+
+       Plotly.newPlot('pwmChart', [pwmTrace] ,layout);
+            // Plotly.newPlot('pwmChart', [pwmTrace] ,layout);
+       
+  // Scroll to the pwm chart after it has been generated
+            document.getElementById("pwmChart").scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+saveData();
+        }
+		
       function plotSignal(canvasId, time, signal, label) {
         const ctx = document.getElementById(canvasId).getContext("2d");
         new Chart(ctx, {
@@ -468,137 +616,14 @@
               },
             },
           },
-        });
+        });  
       }
 
-        function runDemodSimulation() {
-            const fs = parseFloat(document.getElementById('carrierFrequency').value); // Frequency of the square signal
-            const fm = parseFloat(document.getElementById('messageFrequency').value);   // Frequency of the message signal
-            const a = 1;   // Amplitude
-
-            // Time vector
-			const resolution = 100*parseFloat(
-      document.getElementById("carrierFrequency").value
-    );
-            const t = Array.from({ length: (resolution + 1) }, (_, i) => i * (1/resolution));
-            
-            // Generating a square wave
-            const squareWave = t.map(ti => a * 2* (Math.sign(Math.sin(2 * Math.PI * fs * ti)) + 1) / 2 - 1);
-            
-            // Generating message wave
-            const msg = t.map(ti => a * Math.sin(2 * Math.PI * fm * ti));
-            
-            // PWM generation
-            const pwm = msg.map((val, i) => val >= squareWave[i] ? 1 : 0);
-
- 
-
-            // Demodulation
-            const demodulatedSignal = new Array(msg.length).fill(0);
-            let i = 0;
-            while (i < pwm.length - 1) {
-                if (pwm[i] === 1) {
-                    // Positive pulse width measurement
-                    let j = i + 1;
-                    while (pwm[j] === 1 && j < pwm.length) {
-                        j++;
-                    }
-                    const mean = msg.slice(i, j).reduce((a, b) => a + b) / (j - i);
-                    for (let k = i; k < j; k++) {
-                        demodulatedSignal[k] = mean;
-                    }
-                    i = j; // Move to the next segment
-                } else {
-                    // Negative pulse width measurement
-                    let j = i + 1;
-                    while (pwm[j] === 0 && j < pwm.length) {
-                        j++;
-                    }
-                    const mean = msg.slice(i, j).reduce((a, b) => a + b) / (j - i);
-                    for (let k = i; k < j; k++) {
-                        demodulatedSignal[k] = mean;
-                    }
-                    i = j; // Move to the next segment
-                }
-            }
-
-            // Apply low-pass filter (simple moving average for demo purposes)
-            const cutoffFreq = document.getElementById("cutoffFrequency").value; // or any desired cutoff in Hz
-            const filterSize = Math.max(1, Math.floor(0.443 * resolution / cutoffFreq));
-            const filter = Array(filterSize).fill(1 / filterSize);
-            const filteredSignal = convolve(demodulatedSignal, filter);
-
-            // Apply smoothing filter (simple moving average for smoothing)
-            const smoothingFilterSize = Math.max(1, Math.floor(0.443 * resolution / (2 * cutoffFreq))); // Adjust filter size as needed
-            const smoothingFilter = Array(smoothingFilterSize).fill(1 / smoothingFilterSize);
-            const smoothedSignal = convolve(filteredSignal, smoothingFilter);
-
-            // Plotting Demodulated Signal
-            Plotly.newPlot('plot4', [{
-                x: t.slice(1,parseInt(3/fm*(resolution + 1))),
-                y: smoothedSignal.slice(1,parseInt(3/fm*(resolution + 1))),
-                type: 'scatter'
-            }], {
-                title: 'Demodulated Signal'
-            });
-        }
-
-        function convolve(signal, filter) {
-            const output = new Array(signal.length + filter.length - 1).fill(0);
-            for (let i = 0; i < signal.length; i++) {
-                for (let j = 0; j < filter.length; j++) {
-                    if (i + j < output.length) {
-                        output[i + j] += signal[i] * filter[j];
-                    }
-                }
-            }
-			
-									            // Scroll to the plot area
-            document.getElementById('modtodemod').scrollIntoView({ behavior: 'smooth' });
-			
-            return output.slice(0, signal.length);
-        }
-
-        function generateSPWM() {
-            let fc = parseFloat(document.getElementById("carrierFrequency").value);; // Frequency of the carrier (PWM frequency)
-            let fm = parseFloat(document.getElementById("messageFrequency").value);; // Frequency of the sinusoidal input (reference signal)
-            const fs = fc;
-            const f_signal = fm;
-            const sampleRate = 5000; // Number of samples per period
-            const duration = 1; // Duration of the signal in seconds
-            const time = Array.from({ length: sampleRate * duration }, (_, i) => i / sampleRate);
-
-            // Generate the square carrier wave (alternates between 1 and -1)
-            //const carrier = time.map(t => Math.sign(Math.sin(2 * Math.PI * fs * t))); // Square wave carrier
-            const carrier = time.map(t => 2 * Math.abs(2 * (t * fs % 1) - 1) - 1); 
-            // Generate the sinusoidal reference signal (low frequency)
-            const signal = time.map(t => Math.sin(2 * Math.PI * f_signal * t)); // Sinusoidal reference signal
-
-            // Generating PWM signal (SPWM) by comparing the sinusoidal signal with the carrier wave
-            const pwm = time.map((t, idx) => signal[idx] > carrier[idx] ? 1 : -1);
-
-            return { time, signal, carrier, pwm };
-        }
 
 
-        async function PWMInput(pwmTrace, signalTrace, layout) {
-
-  const data  = [pwmTrace,signalTrace];
-  // Create or update the plot in the specified chart element
-  Plotly.newPlot('PWMInput', data, layout);
-
-  // Scroll to the pwm chart after it has been generated
-  document.getElementById("PWMInput").scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-}
-
-function pwmSpectrumsxx() {
-    const fc = parseFloat(document.getElementById('carrierFrequency').value);
-    const fm = parseFloat(document.getElementById('messageFrequency').value);
-    const carrierFrequency = fc;
-    const messageFrequency = fm; 
+      function pwmSpectrums() {
+    const carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
+    const messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
     const tau = 0.005; // Pulse width for PWM (seconds)
 
     const maxHarmonic = 5;
@@ -687,7 +712,7 @@ function pwmSpectrumsxx() {
     });
 
     Plotly.newPlot('plot-pwm', traces, layoutPWM);
-   //document.querySelector('.plot-container2').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('.plot-container2').scrollIntoView({ behavior: 'smooth' });
 }
 
 // Sinc function
@@ -696,38 +721,108 @@ function sinc(x) {
     return Math.sin(Math.PI * x) / (Math.PI * x);
 }
 
-let pwmTrace, signalTrace, layout;
-function loadData() {
-  const data = localStorage.getItem('sharedData');
-  if (!data) return;
+      function saveData() {
+  const fm = parseFloat(document.getElementById('messageFrequency').value);
+  const fs = parseFloat(document.getElementById('carrierFrequency').value);
 
-  const parsed = JSON.parse(data);
+  // Store as an object (use the variables you actually defined)
+  const myData = { fm: fm, fs: fs, signalTrace: signalTrace,pwmTrace: pwmTrace, layout: layout };
 
-  // Update input fields
-  document.getElementById('messageFrequency').value = parsed.fm ?? '';
-  document.getElementById('carrierFrequency').value = parsed.fs ?? '';
+  localStorage.setItem('sharedData', JSON.stringify(myData));
+} 
 
-  pwmTrace = parsed.pwmTrace;
-  signalTrace = parsed.signalTrace;
-  layout = parsed.layout ?? {
-    title: 'PWM Signal',
-    xaxis: { title: 'Time (s)' },
-    yaxis: { title: 'Amplitude' },
-    height: 500
-  };
-}
+        function runDemodSimulation() {
+            const fs = parseFloat(document.getElementById('carrierFrequency').value); // Frequency of the square signal
+            const fm = parseFloat(document.getElementById('messageFrequency').value);   // Frequency of the message signal
+            const a = 1;   // Amplitude
 
+            // Time vector
+			const resolution = 100*parseFloat(
+      document.getElementById("carrierFrequency").value
+    );
+            const t = Array.from({ length: (resolution + 1) }, (_, i) => i * (1/resolution));
+            
+            // Generating a square wave
+            const squareWave = t.map(ti => a * 2* (Math.sign(Math.sin(2 * Math.PI * fs * ti)) + 1) / 2 - 1);
+            
+            // Generating message wave
+            const msg = t.map(ti => a * Math.sin(2 * Math.PI * fm * ti));
+            
+            // PWM generation
+            const pwm = msg.map((val, i) => val >= squareWave[i] ? 1 : 0);
 
-// Load immediately
-loadData();
+ 
 
-// Update if storage changes (works across tabs)
-window.addEventListener('storage', loadData);    
+            // Demodulation
+            const demodulatedSignal = new Array(msg.length).fill(0);
+            let i = 0;
+            while (i < pwm.length - 1) {
+                if (pwm[i] === 1) {
+                    // Positive pulse width measurement
+                    let j = i + 1;
+                    while (pwm[j] === 1 && j < pwm.length) {
+                        j++;
+                    }
+                    const mean = msg.slice(i, j).reduce((a, b) => a + b) / (j - i);
+                    for (let k = i; k < j; k++) {
+                        demodulatedSignal[k] = mean;
+                    }
+                    i = j; // Move to the next segment
+                } else {
+                    // Negative pulse width measurement
+                    let j = i + 1;
+                    while (pwm[j] === 0 && j < pwm.length) {
+                        j++;
+                    }
+                    const mean = msg.slice(i, j).reduce((a, b) => a + b) / (j - i);
+                    for (let k = i; k < j; k++) {
+                        demodulatedSignal[k] = mean;
+                    }
+                    i = j; // Move to the next segment
+                }
+            }
+
+            // Apply low-pass filter (simple moving average for demo purposes)
+            const cutoffFreq = document.getElementById("cutoffFrequency").value; // or any desired cutoff in Hz
+            const filterSize = Math.floor(0.443 * resolution / cutoffFreq);
+            const filter = Array(filterSize).fill(1 / filterSize);
+            const filteredSignal = convolve(demodulatedSignal, filter);
+
+            // Apply smoothing filter (simple moving average for smoothing)
+            const smoothingFilterSize = Math.floor(0.443 * resolution / (2 * cutoffFreq)); // Adjust filter size as needed
+            const smoothingFilter = Array(smoothingFilterSize).fill(1 / smoothingFilterSize);
+            const smoothedSignal = convolve(filteredSignal, smoothingFilter);
+
+            // Plotting Demodulated Signal
+            Plotly.newPlot('plot4', [{
+                x: t,
+                y: smoothedSignal,
+                type: 'scatter'
+            }], {
+                title: 'Demodulated Signal'
+            });
+        }
+
+        function convolve(signal, filter) {
+            const output = new Array(signal.length + filter.length - 1).fill(0);
+            for (let i = 0; i < signal.length; i++) {
+                for (let j = 0; j < filter.length; j++) {
+                    if (i + j < output.length) {
+                        output[i + j] += signal[i] * filter[j];
+                    }
+                }
+            }
+			
+									            // Scroll to the plot area
+            document.getElementById('modtodemod').scrollIntoView({ behavior: 'smooth' });
+			
+            return output.slice(0, signal.length);
+        }
     </script>
 	
 	
   <style>
-        #modulation {
+        #demodulation {
       display: none;
     }
         #container {

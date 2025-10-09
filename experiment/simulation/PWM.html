@@ -49,7 +49,7 @@
                 <label
                   for="carrierFrequency"
                   class="text-[#2c99ce] text-md font-medium"
-                  >Triangular Carrier Frequency in Hz:</label
+                  >Carrier Frequency in Hz:</label
                 >
                 <input
                   class="border w-36 border-black px-1 py-1 rounded-sm"
@@ -298,8 +298,7 @@
 
         const a = 1;
         const messageSignal = linspace(0, duration, resolution * duration).map(
-          (t) => 1.01 * a * Math.sin(2 * Math.PI * messageFrequency * t + 0.5)
-        );
+          (t) => 1 * a * (Math.sin(2 * Math.PI * messageFrequency * t) + 1) /2);
 
         //plotSignal("messageChart", t, messageSignal, "Message Signal");
 			    // Plotting with Plotly
@@ -358,7 +357,8 @@
         //const carrierSignal = linspace(0, duration, resolution * duration).map(
          // (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * t + 0.5))
         //);
-        const carrierSignal = linspace(0, duration, resolution * duration).map(t => 2 * Math.abs(2 * (t * fc % 1) - 1) - 1); 
+        const carrierSignal = linspace(0, duration, resolution * duration).map(t => 1.05 * (1-(Math.abs(2 * ((t * fc) % 1) - 1)))); 
+        //const carrier = time.map(t => 1.05 * (1 - Math.abs(2 * ((t * fs) % 1) - 1)));
         //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 					    // Plotting with Plotly
     const carrierPlotData = [{
@@ -371,7 +371,7 @@
     }];
 
     const layout = {
-        title: 'Triangular Carrier Signal',
+        title: 'Carrier Signal (Triangle-Wave)',
         xaxis: {
             title: 'Time (s)',
         },
@@ -473,18 +473,19 @@
 
             // Generate the square carrier wave (alternates between 1 and -1)
             //const carrier = time.map(t => Math.sign(Math.sin(2 * Math.PI * fs * t))); // Square wave carrier
-            const carrier = time.map(t => 2 * Math.abs(2 * (t * fs % 1) - 1) - 1); 
+            const carrier = time.map(t => 1.05 * (1 - Math.abs(2 * ((t * fs) % 1) - 1)));
+
             // Generate the sinusoidal reference signal (low frequency)
-            const signal = time.map(t => Math.sin(2 * Math.PI * f_signal * t)); // Sinusoidal reference signal
+            const signal = time.map(t => (Math.sin(2 * Math.PI * f_signal * t) + 1) / 2); // Sinusoidal reference signal
 
             // Generating PWM signal (SPWM) by comparing the sinusoidal signal with the carrier wave
-            const pwm = time.map((t, idx) => signal[idx] > carrier[idx] ? 1 : -1);
+            const pwm = time.map((t, idx) => signal[idx] > carrier[idx] ? 1 : 0);
 
             return { time, signal, carrier, pwm };
         }
 
         // Function to plot the SPWM signal using Plotly
-        let pwmTrace;
+        let signalTrace, pwmTrace, layout;
         function plotSPWM() {
             const { time, signal, carrier, pwm } = generateSPWM();
 		        const messageFrequency = parseFloat(
@@ -493,11 +494,11 @@
 
 const totalSamplesForThreeCycles = Math.floor(3 * (5000 / messageFrequency));
             // Data for Plotly
-            const signalTrace = {
+            signalTrace = {
                 x: time.slice(1, totalSamplesForThreeCycles),
                 y: signal.slice(1, totalSamplesForThreeCycles),
                 mode: 'lines',
-                name: 'Sinusoidal Reference Signal',
+                name: 'Message Signal',
                 line: { color: 'blue' }
             };
 
@@ -505,7 +506,7 @@ const totalSamplesForThreeCycles = Math.floor(3 * (5000 / messageFrequency));
                 x: time,
                 y: carrier,
                 mode: 'lines',
-                name: 'Carrier Signal (Square)',
+                name: 'Carrier Signal (Triangle-Wave)',
                 line: { color: 'green' }
             };
 
@@ -513,20 +514,21 @@ const totalSamplesForThreeCycles = Math.floor(3 * (5000 / messageFrequency));
                 x: time.slice(1, totalSamplesForThreeCycles),
                 y: pwm.slice(1, totalSamplesForThreeCycles),
                 mode: 'lines',
-                name: 'PWM Signal (SPWM)',
+                name: 'PWM Signal',
                 line: { color: 'red' }
             };
 
-            const layout = {
+            layout = {
                 title: 'PWM Signal',
                 xaxis: { title: 'Time (s)' },
                 yaxis: { title: 'Amplitude' },
                 showlegend: false,
-                height: 500
+                //height: 500
             };
 
             // Plotting using Plotly, all three traces (signal, carrier, pwm)
-            Plotly.newPlot('pwmChart', [pwmTrace], layout);
+           // Plotly.newPlot('pwmChart', [signalTrace, carrierTrace, pwmTrace] ,layout);
+           Plotly.newPlot('pwmChart', [pwmTrace] ,layout);
 
             // Scroll to the pwm chart after it has been generated
             document.getElementById("pwmChart").scrollIntoView({
@@ -674,7 +676,7 @@ function sinc(x) {
   const fs = parseFloat(document.getElementById('carrierFrequency').value);
 
   // Store as an object (use the variables you actually defined)
-  const myData = { fm: fm, fs: fs, pwmTrace: pwmTrace };
+  const myData = { fm: fm, fs: fs, signalTrace: signalTrace,pwmTrace: pwmTrace, layout: layout };
 
   localStorage.setItem('sharedData', JSON.stringify(myData));
 } 
