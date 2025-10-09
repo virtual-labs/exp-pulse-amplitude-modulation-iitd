@@ -427,7 +427,7 @@ const pamSignal = messageSignal.map((msg, index) => {
             const filterOrder = Math.floor(samplingFreq / messageFreq);
 
             const t = Array.from({length: samplingFreq}, (_, i) => i / samplingFreq);
-            const m = t.map(time => Math.cos(2 * Math.PI * messageFreq * time));
+            const m = t.map(time => Math.cos(2 * Math.PI * messageFreq * time + 0.5));
             const c = t.map(time => Math.sign(Math.sin(2 * Math.PI * carrierFreq * time)));
             const s = t.map((time, index) => m[index] * c[index]);
 
@@ -570,14 +570,37 @@ if (isNaN(messageFreq) || isNaN(carrierFreq)) {
     }
 const t = linspace(0, duration, resolution * duration);
 
-messageSignal = t.map(t => Math.sin(2 * Math.PI * messageFreq * t));
+messageSignal = t.map(t => Math.sin(2 * Math.PI * messageFreq * t + 0.5));
+
+const shift = 1 / (2 * carrierFreq); // Half-period shift (180 degrees)
 
 carrierSignal = linspace(0, duration, resolution * duration).map(
-      (t) => Math.sign(Math.sin(2 * Math.PI * carrierFreq * t))
+      (t) => Math.sign(Math.sin(2 * Math.PI * carrierFreq * (t-shift)))
     );
+    /*
 const pamSignal = messageSignal.map((msg, index) => {
   return carrierSignal[index] > 0 ? msg * carrierSignal[index] : 0;
 });
+*/
+const pamSignal = [];
+let currentValue = 0;
+let inPulse = false;
+
+for (let i = 0; i < messageSignal.length; i++) {
+  const carrier = carrierSignal[i];
+
+  if (carrier > 0) {
+    // Start of a new pulse
+    if (!inPulse) {
+      inPulse = true;
+      currentValue = messageSignal[i]; // sample message at start of pulse
+    }
+    pamSignal.push(currentValue); // hold value flat during the pulse
+  } else {
+    inPulse = false;
+    pamSignal.push(0); // carrier is off, so signal is zero
+  }
+}
 
 // Plotting with Plotly
 const messagePlotData = [{
