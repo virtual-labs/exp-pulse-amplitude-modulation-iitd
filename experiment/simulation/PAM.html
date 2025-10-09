@@ -56,7 +56,7 @@
                   class="border w-36 border-black px-1 py-1 rounded-sm"
                   type="number"
                   id="carrierFrequency"
-                  value="100"
+                  value="10"
                   min = "1"
                 />
               </div>
@@ -277,7 +277,7 @@ function generateMessage() {
 
     const a = 1; // Amplitude of the message signal
     // Generate the message signal using the same time array
-    messageSignal = time.map(t => a * Math.sin(2 * Math.PI * messageFrequency * t));
+    messageSignal = time.map(t => a * Math.sin(2 * Math.PI * messageFrequency * t + 0.5));
 
     // Plotting with Plotly
     const messagePlotData = [{
@@ -330,8 +330,9 @@ function generateCarrier() {
 
     const fc = carrierFrequency;
     const a = 1;
+    const shift = 1 / (2 * fc); // Half-period shift (180 degrees)
     carrierSignal = linspace(0, duration, resolution * duration).map(
-      (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * t))
+      (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * (t-shift)))
     );
 
     //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
@@ -377,11 +378,32 @@ function performPAM() {
       document.getElementById("messageFrequency").value
     );
     const t = linspace(0, duration, resolution * duration);
-
+/*
 const pamSignal = messageSignal.map((msg, index) => {
   return carrierSignal[index] > 0 ? msg * carrierSignal[index] : 0;
 
 });
+*/
+
+const pamSignal = [];
+let currentValue = 0;
+let inPulse = false;
+
+for (let i = 0; i < messageSignal.length; i++) {
+  const carrier = carrierSignal[i];
+
+  if (carrier > 0) {
+    // Start of a new pulse
+    if (!inPulse) {
+      inPulse = true;
+      currentValue = messageSignal[i]; // sample message at start of pulse
+    }
+    pamSignal.push(currentValue); // hold value flat during the pulse
+  } else {
+    inPulse = false;
+    pamSignal.push(0); // carrier is off, so signal is zero
+  }
+}
 
 //plotSignal("pamChart", t, pamSignal, "PAM Signal");
 	    // Plotting with Plotly
