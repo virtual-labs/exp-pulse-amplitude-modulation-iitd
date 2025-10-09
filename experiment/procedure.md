@@ -29,7 +29,7 @@
     <div class="procedure">
         <h2>PPM (Pulse Position Modulation)</h2>
         <ol>
-            <li><strong>Generate Message Signal:</strong> Input the <code>message frequency</code>, <code>sampling frequency</code>, <code>samples per pulse</code>, and <code>pulse width fraction</code> into the provided fields. Click the <button>Generate Message</button> button to create the message signal.</li>
+            <li><strong>Generate Message Signal:</strong> Input the <code>message frequency</code>, and <code>square carrier pulse frequency</code> into the provided fields. Click the <button>Generate Message</button> button to create the message signal.</li>
             <li><strong>Generate PPM Signal:</strong> Click the <button>Generate PPM Signal</button> button to produce the PPM signal.</li>
             <li><strong>Demodulate PPM Signal:</strong> Click the <button>Demodulate PPM Signal</button> button to recover the original message signal from the modulated PPM signal.</li>
         </ol>
