@@ -1,0 +1,723 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Virtual Labs</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+  <div id = "modulation">
+
+<div id = "container">
+    <h1>Instructions for Pulse Amplitude Modulation (PAM)</h1>
+    <ul>
+        <li class="step step1">Step 1: Click on 'Generate Message' button to generate input message signal</li>
+        <li class="step step2">Step 2: Then click on 'Generate Carrier' button to generate carrier signal. You can change the message and carrier signal frequencies from the input field. The carrier frequency has to be more than the message frequency</li>
+        <li class="step step3">Step 3: Click on 'Generate PAM Signal' button to generate Pulse Amplitude Modulated (PAM) Signal</li>
+        <li class="step step4">Step 4: Click the 'Show Frequency Spectrums' button to view the PAM spectrum</li>
+    </ul>
+<br/>
+
+  <!-- sidebar and body -->
+  <div class="flex min-h-[80vh]">
+    <div class="px-6 pb-6 flex-1">
+      <!--  -->
+      <div class="flex">
+        <div class="flex-1 flex basis-4/5 flex-col">
+          <div class="flex max-lg:flex-col mt-5 items-center gap-x-2 gap-y-2">
+		              <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label
+                  for="messageFrequency"
+                  class="text-[#2c99ce] text-md font-medium"
+                  >Message Frequency in Hz:</label
+                >
+                <input
+                  class="border w-36 border-black px-1 py-1 rounded-sm"
+                  type="number"
+                  id="messageFrequency"
+                  value="2"
+                />
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-1">
+                <label
+                  for="carrierFrequency"
+                  class="text-[#2c99ce] text-md font-medium"
+                  >Square Carrier Frequency in Hz:</label
+                >
+                <input
+                  class="border w-36 border-black px-1 py-1 rounded-sm"
+                  type="number"
+                  id="carrierFrequency"
+                  value="100"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 border-t-2">
+        <div class="flex gap-2">
+          <div class="w-[50%] flex flex-col items-center">
+            <div class="relative my-4 w-[659px] h-[233px]">
+              <!-- buttons -->
+              <div class="absolute top-[132px] left-[-50px]">
+                <button
+                  class="bg-blue-500 text-white rounded-md px-2 py-1"
+                  class="button"
+                  onclick="generateMessage()"
+                >
+                  Generate Message
+                </button>
+              </div>
+              <div class="absolute top-[234px] left-[90px]">
+                <button
+                  class="bg-blue-500 text-white rounded-md px-2 py-1"
+                  class="button"
+                  onclick="generateCarrier()"
+                >
+                  Generate Carrier
+                </button>
+              </div>
+<div class="absolute top-[112px] right-[55px] flex flex-col gap-2">
+  <button
+    class="bg-blue-500 text-white rounded-md px-2 py-1"
+    onclick="performPAM()"
+  >
+    Generate PAM Signal
+  </button>
+  <button 
+  class="bg-blue-500 text-white py-1 px-3 text-sm rounded-md hover:scale-105"
+  onclick="frequencySpectrums()">Show Frequency Spectrums</button>
+  <!--
+  <button
+    class="bg-gray-500 text-white rounded-md px-2 py-1"
+    onclick="plotDemodulatedSignal()"
+  >
+    Perform PAM Demodulation
+  </button>
+  -->
+</div>
+
+              <img
+                src=".././images/pam.png"
+                alt="PAM"
+                class="w-[100%] h-[100%]"
+              />
+            </div>
+          </div>
+<div class="flex flex-col justify-center items-center" style="position: relative; overflow: auto;">
+  <div class="w-[600px] h-[450px] mb-5">
+    <div id="messageChart" class="w-[650px] h-[450px]"></div>
+  </div>
+    <div class="w-[600px] h-[450px] mb-5">
+    <div id="carrierChart" class="w-[650px] h-[450px]"></div>
+  </div>
+  <div class="w-[600px] h-[450px] mb-5">
+    <div id="pamChart" class="w-[650px] h-[450px]"></div>
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br/><br/>
+  <div class="plot-container1">
+    <div id="plot-message" class="plot1"></div>
+    <div id="plot-dsb" class="plot1"></div>
+    <div id="plot-demodulated" class="plot1"></div>
+</div>
+  <br/><br/><hr/>
+  
+</div></div>
+
+  <div id = "container">
+    <h1>Instructions for Pulse Amplitude Demodulation</h1>
+    <ul>
+	    <li class="step step1">Step 1: The reconstruction filter is used to recover the original message signal from the sampled PAM signal (typically by multiplying with the carrier and then low-pass filtering)</li>
+		<li class="step step2">Step 2: You can Demodulate the PAM Signal clicking on the 'Demodulate PAM Signal' button</li>
+    <li class="step step3">A reconstruction filter is a low-pass filter (LPF) with cutoff at or just above the message frequency which passes only the baseband and blocks higher-frequency copies</li>
+    <li class="step step4"><strong>Tip:</strong> Pulse Amplitude Modulation (PAM) settings auto-transfer to the Pulse Amplitude Demodulation tab. No need to re-enter values. Keep both tabs open, or demodulate immediately after modulation.</li>
+  </ul>
+</div>	
+  
+  <!-- sidebar and body -->
+  <div class="flex min-h-[80vh]">
+    <div class="px-6 pb-6 flex-1">
+      <div class="flex">
+        <div class="flex-1 flex basis-4/5 flex-col">
+          <div class="flex max-lg:flex-col mt-5 items-center gap-x-2 gap-y-2">
+            <!-- Input fields -->
+
+          </div>
+        </div>
+        <div class="flex-1 flex items-center gap-2 py-2 flex-col basis-1/5">
+
+        </div>
+      </div>
+      <div class="mt-4 border-t-2">
+        <div class="flex gap-2">
+          <div class="w-[50%] flex flex-col items-center">
+            <div class="relative my-4 w-[659px] h-[233px]">
+              <!-- buttons -->
+              <button
+              onclick="PAMInput();"
+              class="bg-blue-500 text-white py-1 px-3 mt-1 rounded-md hover:bg-[#0c9c0c] hover:scale-105"
+            >
+              PAM Input
+            </button>
+              <div class="absolute top-[170px] right-[-15px]">
+                <p class="font-medium">Cut-off Frequency (Hz)</p>
+                <input
+                  class="border px-1 w-[152px] py-1 rounded-sm border-black"
+                  type="number"
+                  id="cutoffFrequency"
+                  min="1"
+                  value="2"
+                />
+                <button class="bg-blue-500 text-white rounded-md px-2 py-1" onclick="plotDemodulatedSignal()" id = "modtodemod">Demodulate PAM Signal</button>
+				
+              </div>
+              <img src=".././images/pam_demod.png" alt="PAM_Demodulation" class="w-[100%] h-[100%]" />
+            </div>
+          </div>
+		  
+		    <div class="flex justify-center flex-wrap items-center">
+              <div class="m-1">
+                <!-- <h2 class="text-center font-medium text-[#2c99ce]">Demodulated Signal</h2> -->
+                <div id="PAMInput" style="width: 600px; height: 400px;"></div>
+               
+                <div id="demodulated-signal" style="width: 600px; height: 400px;"></div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+	
+    <script>
+        function checkFrequencies() {
+            // Get values from input fields
+            let carrierFrequency = parseFloat(document.getElementById('carrierFrequency').value);
+            let messageFrequency = parseFloat(document.getElementById('messageFrequency').value);
+            
+            // Check the frequencies
+            if (carrierFrequency <= messageFrequency) {
+                alert("Carrier frequency should be greater than message frequency.");
+				            // Perform a hard refresh after the alert is dismissed
+            window.location.reload(true);  // Hard refresh the page
+            } else {
+                console.log("Carrier frequency is greater than message frequency.");
+            }
+        }
+
+        // Function to attach event listeners to all buttons
+        function attachEventListeners() {
+            let buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('click', checkFrequencies);
+            });
+        }
+
+        // Attach event listeners when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', attachEventListeners);
+
+    </script>
+	
+ 
+ 
+ <script>
+ let messageSignal = [];
+ let carrierSignal = [];
+function linspace(start, end, num) {
+    const step = (end - start) / (num - 1);
+    return Array.from({ length: num }, (_, index) => start + index * step);
+}
+
+function generateMessage() {
+    const duration = 1; // Duration of the signal in seconds
+    const resolution = 100 * parseFloat(document.getElementById("carrierFrequency").value); // Resolution based on carrier frequency
+    const numSamples = resolution * duration; // Total number of samples
+
+    // Generate time values only once
+    const time = linspace(0, duration, numSamples);
+
+    const messageFrequency = parseFloat(document.getElementById("messageFrequency").value); // Get message frequency from input
+
+    // Validate the message frequency
+    if (isNaN(messageFrequency) || messageFrequency <= 0) {
+        console.error("Invalid message frequency");
+        return;
+    }
+
+    const a = 1; // Amplitude of the message signal
+    // Generate the message signal using the same time array
+    messageSignal = time.map(t => a * Math.sin(2 * Math.PI * messageFrequency * t));
+
+    // Plotting with Plotly
+    const messagePlotData = [{
+        x: time.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: messageSignal.slice(1,parseInt(3/messageFrequency*resolution)),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Message Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Message Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('messageChart', messagePlotData, layout);
+
+    // Scroll to the message chart after it has been generated
+    document.getElementById("messageChart").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+function generateCarrier() {
+
+    const duration = 1;
+    const resolution = 100*parseFloat(
+      document.getElementById("carrierFrequency").value
+    );;
+    const t = linspace(0, duration, resolution * duration);
+
+    const carrierFrequency = parseFloat(
+      document.getElementById("carrierFrequency").value
+    );
+
+    if (isNaN(carrierFrequency)) {
+      console.error("Invalid carrier frequency");
+      return;
+    }
+
+    const fc = carrierFrequency;
+    const a = 1;
+    carrierSignal = linspace(0, duration, resolution * duration).map(
+      (t) => a * Math.sign(Math.sin(2 * Math.PI * fc * t))
+    );
+
+    //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
+	    // Plotting with Plotly
+    const carrierPlotData = [{
+        x: t.slice(1,parseInt(3/carrierFrequency*resolution)),
+        y: carrierSignal.slice(1,parseInt(3/carrierFrequency*resolution)),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'Carrier Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'Carrier Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('carrierChart', carrierPlotData, layout);
+
+    // Scroll to the carrier chart after it has been generated
+    document.getElementById("carrierChart").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+  
+
+function performPAM() {
+
+    const duration = 1;
+    const resolution = 100*parseFloat(
+      document.getElementById("carrierFrequency").value
+    );
+    const messageFrequency = parseFloat(
+      document.getElementById("messageFrequency").value
+    );
+    const t = linspace(0, duration, resolution * duration);
+
+const pamSignal = messageSignal.map((msg, index) => {
+  return carrierSignal[index] > 0 ? msg * carrierSignal[index] : 0;
+
+});
+
+//plotSignal("pamChart", t, pamSignal, "PAM Signal");
+	    // Plotting with Plotly
+    const pamPlotData = [{
+        x: t.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: pamSignal.slice(1,parseInt(3/messageFrequency*resolution)),
+        type: 'scatter',
+        mode: 'lines',
+        name: 'PAM Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+    const layout = {
+        title: 'PAM Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('pamChart', pamPlotData, layout);
+
+    // Scroll to the PAM chart after it has been generated
+    document.getElementById("pamChart").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+  }
+
+        function lowPassFilter(signal, cutoffFreq, fs, filterOrder) {
+		    const fm = parseFloat(document.getElementById("cutoffFrequency").value);
+            const filterLength = filterOrder*fm + 1;
+            const filter = Array.from({length: filterLength}, () => 1 / filterLength);
+            const filteredSignal = [];
+
+            for (let i = 0; i < signal.length; i++) {
+                let sum = 0;
+                for (let j = 0; j < filter.length && i - j >= 0; j++) {
+                    sum += signal[i - j] * filter[j];
+                }
+                filteredSignal.push(sum);
+            }
+
+            return filteredSignal;
+        }
+
+        function plotDemodulatedSignal() {
+            const messageFreq = parseFloat(document.getElementById("messageFrequency").value);
+            const carrierFreq = parseFloat(document.getElementById("carrierFrequency").value);
+            const samplingFreq = 100*parseFloat(document.getElementById("carrierFrequency").value);
+            const cutoffFrequency = parseFloat(document.getElementById("cutoffFrequency").value);
+
+            if (isNaN(messageFreq) || isNaN(carrierFreq)) {
+        alert("Perform Pulse Amplitude Modulation first!");
+        return;
+    }
+
+            const filterOrder = Math.floor(samplingFreq / messageFreq);
+
+            const t = Array.from({length: samplingFreq}, (_, i) => i / samplingFreq);
+            const m = t.map(time => Math.cos(2 * Math.PI * messageFreq * time));
+            const c = t.map(time => Math.sign(Math.sin(2 * Math.PI * carrierFreq * time)));
+            const s = t.map((time, index) => m[index] * c[index]);
+
+
+
+            // Demodulation
+            const d = t.map((time, index) => s[index] * c[index]);
+            const original_t_signal1 = lowPassFilter(d, cutoffFrequency, samplingFreq, filterOrder);
+            const minVal = Math.min(...original_t_signal1);
+            const maxVal = Math.max(...original_t_signal1);
+
+            const original_t_signal = original_t_signal1.map(value => (2 * (value - minVal) / (maxVal - minVal)) - 1);
+            // Plot Demodulated Signal
+            const t1 = Array.from({length: original_t_signal.length}, (_, i) => i / (original_t_signal.length - 1));
+            const demodulatedPlotData = [{
+                x: t1.slice(1,parseInt(3/messageFreq*original_t_signal.length)),
+                y: original_t_signal.slice(1,parseInt(3/messageFreq*original_t_signal.length)),
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Demodulated Signal'
+            }];
+            Plotly.newPlot('demodulated-signal', demodulatedPlotData, {
+                title: 'Demodulated Signal',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Amplitude' }
+            });
+			
+						            // Scroll to the plot area
+            document.getElementById('modtodemod').scrollIntoView({ behavior: 'smooth' });
+        }
+
+
+ 
+        function frequencySpectrums() {
+    const carrierFreq = parseFloat(document.getElementById('carrierFrequency').value);
+    const messageFreq = parseFloat(document.getElementById('messageFrequency').value);
+
+    const carrierFrequency = carrierFreq;
+    const messageFrequency = messageFreq;
+    
+    const tau = 0.01; // Pulse width (seconds)
+    const Am = 1;
+
+    const maxHarmonic = 5;
+    const harmonics = Array.from({length: maxHarmonic+1}, (_, k) => k);
+
+    const allFrequencies = [];
+    const allMagnitudes = [];
+
+    harmonics.forEach(k => {
+        // Positive sidebands
+        const lsbFreq = k * carrierFrequency - messageFrequency;
+        const usbFreq = k * carrierFrequency + messageFrequency;
+        allFrequencies.push(lsbFreq, usbFreq);
+
+        const lsbMag = Math.abs(sinc(lsbFreq * tau));
+        const usbMag = Math.abs(sinc(usbFreq * tau));
+        allMagnitudes.push(lsbMag, usbMag);
+
+        // Negative sidebands
+        const negLsbFreq = -k * carrierFrequency + messageFrequency;
+        const negUsbFreq = -k * carrierFrequency - messageFrequency;
+        allFrequencies.push(negLsbFreq, negUsbFreq);
+
+        const negLsbMag = Math.abs(sinc(negLsbFreq * tau));
+        const negUsbMag = Math.abs(sinc(negUsbFreq * tau));
+        allMagnitudes.push(negLsbMag, negUsbMag);
+    });
+
+    const maxMag = Math.max(...allMagnitudes);
+
+    // Convert to dB scale normalized
+    const allMagnitudesDb = allMagnitudes.map(m => 20 * Math.log10(m / maxMag));
+
+    // Continuous envelope for positive & negative frequencies
+    const fEnvelope = [];
+    const envMagnitudes = [];
+    const fMax = (maxHarmonic+1) * carrierFrequency + messageFrequency + 50;
+    const df = 1;
+    for (let f = -fMax; f <= fMax; f += df) {
+        fEnvelope.push(f);
+        envMagnitudes.push(20 * Math.log10(Math.abs(sinc(f * tau)) / maxMag));
+    }
+
+    const layoutDSB = {
+        title: 'PAM Spectrum',
+        xaxis: { title: 'Frequency (Hz)', showgrid: true, zeroline: false },
+        yaxis: { title: 'Magnitude (dB)', showgrid: true, zeroline: false },
+        showlegend: true
+    };
+
+    const traces = [];
+
+    // Continuous envelope
+    traces.push({
+        x: fEnvelope,
+        y: envMagnitudes,
+        mode: 'lines',
+        type: 'scatter',
+        line: { width: 2, color: 'black', dash: 'dot' },
+        name: 'Sinc Envelope'
+    });
+
+    // Impulses
+    allFrequencies.forEach((freq, i) => {
+        traces.push({
+            x: [freq, freq],
+            y: [-100, allMagnitudesDb[i]],
+            mode: 'lines',
+            type: 'scatter',
+            line: { width: 3, color: freq < 0 ? 'green' : (i % 2 === 0 ? 'blue' : 'red') },
+            name: `f=${freq.toFixed(1)} Hz`
+        });
+    });
+
+    Plotly.newPlot('plot-dsbpp', traces, layoutDSB);
+    document.querySelector('.plot-container1').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Sinc function
+function sinc(x) {
+    if (x === 0) return 1;
+    return Math.sin(Math.PI * x) / (Math.PI * x);
+}
+
+function PAMInput() {
+
+
+    const duration = 1;
+    const carrierFreq = parseFloat(
+  document.getElementById("carrierFrequency").value);
+const resolution = 100 * carrierFreq;
+const messageFreq = parseFloat(
+  document.getElementById("messageFrequency").value
+);
+
+if (isNaN(messageFreq) || isNaN(carrierFreq)) {
+        alert("Perform Pulse Amplitude Modulation first!");
+        return;
+    }
+const t = linspace(0, duration, resolution * duration);
+
+messageSignal = t.map(t => Math.sin(2 * Math.PI * messageFreq * t));
+
+carrierSignal = linspace(0, duration, resolution * duration).map(
+      (t) => Math.sign(Math.sin(2 * Math.PI * carrierFreq * t))
+    );
+const pamSignal = messageSignal.map((msg, index) => {
+  return carrierSignal[index] > 0 ? msg * carrierSignal[index] : 0;
+});
+
+// Plotting with Plotly
+const messagePlotData = [{
+  x: t.slice(1, parseInt(3 / messageFreq * resolution)),
+  y: messageSignal.slice(1, parseInt(3 / messageFreq * resolution)),
+  type: 'scatter',
+  mode: 'lines',
+  name: 'Message Signal',
+  //line: { color: 'blue', width: 2 }
+}];
+
+// Plotting with Plotly
+const pamPlotData = [{
+  x: t.slice(1, parseInt(3 / messageFreq * resolution)),
+  y: pamSignal.slice(1, parseInt(3 / messageFreq * resolution)),
+  type: 'scatter',
+  mode: 'lines',
+  name: 'PAM Signal',
+  //line: { color: 'blue', width: 2 }
+}];
+
+const layout = {
+  title: 'Superimposition of Message Signal and PAM Signal',
+  xaxis: {
+    title: 'Time (s)',
+  },
+  yaxis: {
+    title: 'Amplitude',
+    range: [-1, 1],
+  }
+};
+
+const data  = [...pamPlotData,...messagePlotData];
+// Create or update the plot in the specified chart element
+Plotly.newPlot('PAMInput', data, layout);
+
+// Scroll to the PAM chart after it has been generated
+document.getElementById("PAMInput").scrollIntoView({
+  behavior: "smooth",
+  block: "center"
+});
+
+
+    //plotImpulseResponses00();
+}
+
+
+function loadData() {
+  const data = localStorage.getItem('sharedData');
+  if (data) {
+    const parsed = JSON.parse(data);
+
+    // Update input fields in current tab
+    document.getElementById('messageFrequency').value = parsed.messageFreq ?? '';
+    document.getElementById('carrierFrequency').value = parsed.carrierFreq ?? '';
+    document.getElementById('cutoffFrequency').value = parsed.cutoffFrequency ?? '';
+  }
+}
+
+// Load immediately
+loadData();
+
+// Update if storage changes (works across tabs)
+window.addEventListener('storage', loadData);
+
+    </script>
+	
+	
+  <style>
+    #modulation {
+      display: none;
+    }
+        #container {
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  padding: 25px 40px;
+  max-width: 100%;
+  margin: 20px auto;
+  text-align: left;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1 {
+  color: #1e3a8a;
+  font-size: 24px;
+  margin-bottom: 25px;
+  text-align: justify;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+li.step {
+  margin: 12px 0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+li.step::before {
+  content: "✔";
+  color: #10b981;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+li.step:hover {
+  transform: scale(1.02);
+  background-color: #f3f4f6;
+}
+
+/* Color code each step */
+.step1 {
+  background-color: #ffe0e0;
+  border-left: 5px solid #ef4444;
+}
+.step2 {
+  background-color: #e0f7ff;
+  border-left: 5px solid #0ea5e9;
+}
+.step3 {
+  background-color: #e0ffe5;
+  border-left: 5px solid #22c55e;
+}
+.step4 {
+  background-color: #f5e0ff;
+  border-left: 5px solid #a855f7;
+}
+        /* Hide scrollbar for Chrome, Safari, and Opera */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+  </style>
+  
+</body>
+</html>
