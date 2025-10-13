@@ -1,0 +1,108 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. In Pulse Amplitude Modulation (PAM), what is a critical trade-off encountered when increasing the signal bandwidth to mitigate inter-symbol interference (ISI)?",
+      "answers": {
+        "a": "Improved spectral efficiency but increased noise susceptibility",
+        "b": "Reduced quantization error but higher transmission delay",
+        "c": "Lower distortion but reduced amplitude resolution",
+        "d": "Better noise immunity but higher bit error rate"
+      },
+      "explanations": {
+        "a": "Correct! Increasing bandwidth can help reduce ISI but increases the system's susceptibility to noise due to a broader noise spectrum.",
+        "b": "Incorrect. Quantization error is not directly addressed by bandwidth.",
+        "c": "Incorrect. Amplitude resolution is determined by quantizer levels, not bandwidth.",
+        "d": "Incorrect. Improved noise immunity and higher BER are contradictory."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "2. In high-frequency switching applications, what makes Pulse Width Modulation (PWM) inherently less power-efficient compared to other modulation schemes?",
+      "answers": {
+        "a": "High-frequency harmonics result in greater switching losses",
+        "b": "The need for linear amplifiers increases energy demands",
+        "c": "PWM requires higher sampling rates than PAM",
+        "d": "Duty cycle variations distort the signal envelope"
+      },
+      "explanations": {
+        "a": "Correct! High-frequency switching leads to increased power loss in the form of heat due to parasitic capacitances and inductances.",
+        "b": "Incorrect. Linear amplifiers are not typically used in PWM-based power circuits.",
+        "c": "Incorrect. Sampling rates are not inherently higher for PWM.",
+        "d": "Incorrect. Envelope distortion is not the primary concern in PWM."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    }, 
+    {
+      "question": "3. In Pulse Position Modulation (PPM), how does timing jitter specifically impact the symbol detection process in a non-ideal receiver?",
+      "answers": {
+        "a": "It randomly shifts the phase of the detected pulses",
+        "b": "It causes inter-symbol interference due to overlapping symbols",
+        "c": "It introduces uncertainty in pulse arrival times, increasing symbol error probability",
+        "d": "It reduces the amplitude of received pulses, causing clipping"
+      },
+      "explanations": {
+        "a": "Incorrect. PPM is position-based, not phase-based.",
+        "b": "Incorrect. PPM does not suffer ISI in the traditional sense due to non-overlapping symbols.",
+        "c": "Correct! Jitter directly affects the timing of pulse arrival, which is central to detection in PPM.",
+        "d": "Incorrect. Pulse amplitude is irrelevant in PPM."
+      },
+      "correctAnswer": "c",
+      "difficulty": "hard"
+    },
+
+    {
+      "question": "4. What is the primary non-ideality introduced by a nonlinear modulator in a PAM system from a frequency domain perspective?",
+      "answers": {
+        "a": "Spectral nulls at harmonics of the pulse frequency",
+        "b": "Generation of intermodulation products and harmonic distortion",
+        "c": "Increase in channel noise floor",
+        "d": "Reduction in spectral efficiency due to pulse spreading"
+      },
+      "explanations": {
+        "a": "Incorrect. Spectral nulls relate to pulse shape and windowing, not nonlinearity.",
+        "b": "Correct! Nonlinearities introduce distortion that generates new unwanted frequency components.",
+        "c": "Incorrect. Noise floor is not inherently raised by nonlinearity.",
+        "d": "Incorrect. Nonlinearity does not inherently spread pulses."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    },
+    {
+      "question": "5. Why is Pulse Width Modulation (PWM) more suitable for motor control applications compared to PAM?",
+      "answers": {
+        "a": "PWM minimizes power loss during switching and allows efficient average voltage control",
+        "b": "PWM provides higher resolution of control at lower voltages",
+        "c": "PWM reduces electromagnetic interference compared to PAM",
+        "d": "PWM signals are easier to encode into digital logic levels"
+      },
+      "explanations": {
+        "a": "Correct! PWM allows transistors to operate in on/off modes, minimizing power dissipation.",
+        "b": "Incorrect. Resolution advantage depends on implementation.",
+        "c": "Incorrect. PWM often introduces more EMI due to fast edges.",
+        "d": "Incorrect. Encoding is not the main reason for motor control suitability."
+      },
+      "correctAnswer": "a",
+      "difficulty": "hard"
+    },
+    {
+      "question": "6. In high-speed PPM systems, what is a key reason for preferring higher-order modulation despite its susceptibility to timing jitter?",
+      "answers": {
+        "a": "It reduces symbol duration, increasing robustness to timing noise",
+        "b": "It allows higher data throughput without increasing pulse rate",
+        "c": "It mitigates phase noise in long-distance transmission",
+        "d": "It simplifies the demodulation circuitry by reducing synchronization requirements"
+      },
+      "explanations": {
+        "a": "Incorrect. Shorter symbols are more vulnerable to jitter.",
+        "b": "Correct! Higher-order PPM can encode more bits per symbol, increasing throughput within the same time frame.",
+        "c": "Incorrect. PPM is not phase-sensitive.",
+        "d": "Incorrect. Higher-order modulation increases synchronization complexity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "hard"
+    }
+  ]
+}

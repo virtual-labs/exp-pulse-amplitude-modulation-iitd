@@ -1,0 +1,107 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "1. Which statement best explains why Pulse Amplitude Modulation (PAM) is more susceptible to noise compared to digital modulation schemes?",
+      "answers": {
+        "a": "Because it encodes information in continuous levels susceptible to amplitude distortion.",
+        "b": "Because it uses wide bandwidth.",
+        "c": "Because it relies on frequency variation, which is inherently noisy.",
+        "d": "Because timing synchronization is not used."
+      },
+      "explanations": {
+        "a": "Correct! PAM's analog-like amplitude levels are more vulnerable to noise.",
+        "b": "Incorrect. While PAM may require bandwidth, susceptibility is due to amplitude sensitivity.",
+        "c": "Incorrect. PAM does not use frequency modulation.",
+        "d": "Incorrect. Timing synchronization is required in most pulse techniques."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "2. In PWM systems, why can higher signal amplitudes lead to intersymbol interference if the system is not properly designed?",
+      "answers": {
+        "a": "Because increased pulse width can overlap adjacent symbols.",
+        "b": "Because amplitude fluctuations distort the pulse height.",
+        "c": "Because higher amplitudes cause frequency drift.",
+        "d": "Because signal reflection occurs at higher amplitudes."
+      },
+      "explanations": {
+        "a": "Correct! Wide pulses from high amplitudes may overlap, causing ISI.",
+        "b": "Incorrect. PWM varies width, not amplitude.",
+        "c": "Incorrect. Frequency drift is unrelated in PWM.",
+        "d": "Incorrect. Reflection is more a transmission line issue."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "3. Which property of Pulse Position Modulation (PPM) makes it advantageous in low-power optical communication systems?",
+      "answers": {
+        "a": "It transmits energy in short bursts, allowing efficient power usage.",
+        "b": "It has a constant pulse width for all signal levels.",
+        "c": "It requires no synchronization.",
+        "d": "It encodes amplitude variations efficiently."
+      },
+      "explanations": {
+        "a": "Correct! Short pulses allow high peak power with low average energy.",
+        "b": "Incorrect. While pulse width is fixed, the advantage is energy use.",
+        "c": "Incorrect. PPM requires tight timing synchronization.",
+        "d": "Incorrect. PPM does not encode amplitude variations."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "4. Why is PAM often used as an intermediate step in digital modulation schemes such as QAM or OFDM?",
+      "answers": {
+        "a": "Because it allows simple mapping from digital bits to amplitude levels.",
+        "b": "Because it uses time division to reduce bandwidth.",
+        "c": "Because it requires no synchronization.",
+        "d": "Because it is robust against phase distortion."
+      },
+      "explanations": {
+        "a": "Correct! PAM maps binary values to distinct amplitude levels efficiently.",
+        "b": "Incorrect. PAM does not inherently implement TDM.",
+        "c": "Incorrect. PAM requires synchronization for accurate decoding.",
+        "d": "Incorrect. PAM is sensitive to amplitude distortion, not phase."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "5. In PWM, which factor makes it more robust than PAM under varying channel gain conditions?",
+      "answers": {
+        "a": "Information is encoded in time (width), not amplitude.",
+        "b": "It uses orthogonal frequency tones.",
+        "c": "Its pulses are less frequent than in PAM.",
+        "d": "It automatically adjusts pulse spacing."
+      },
+      "explanations": {
+        "a": "Correct! Since information is in width, amplitude fading has less impact.",
+        "b": "Incorrect. This applies to techniques like OFDM.",
+        "c": "Incorrect. Pulse rate does not confer robustness.",
+        "d": "Incorrect. PWM pulse spacing is not adaptive."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "6. In PPM, what is the key disadvantage when comparing synchronization requirements to PAM or PWM?",
+      "answers": {
+        "a": "PPM requires precise timing alignment to decode correctly.",
+        "b": "PPM uses more bandwidth due to wider pulses.",
+        "c": "PPM encodes information in amplitude which is noise sensitive.",
+        "d": "PPM can only support binary encoding."
+      },
+      "explanations": {
+        "a": "Correct! Even small timing errors affect PPM accuracy.",
+        "b": "Incorrect. PPM often uses narrow pulses.",
+        "c": "Incorrect. PPM does not encode amplitude.",
+        "d": "Incorrect. PPM can be extended to multilevel schemes."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    }
+  ]
+}

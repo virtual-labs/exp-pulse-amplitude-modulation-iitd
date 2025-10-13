@@ -1,0 +1,470 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+	<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+    <title>Virtual Labs</title>
+    <link rel="stylesheet" href="../css/vlabs-style.css" />
+    <link rel="shortcut icon" href="../images/favicon.ico" />
+  </head>
+  <body>
+    <header class="border-b-orange-500 border-b-8">
+      <nav class="flex justify-between">
+        <button class="px-4 py-1 rounded-r-md border-r" onclick="showModal()">
+          <img class="w-[30px] h-[30px]" src="../images/menu.png" />
+        </button>
+        <div class="flex justify-center">
+          <a href="https://vlab.co.in" class="navbar-brand">
+            <img
+              src="../images/vlabs-color-small-moe.jpg"
+              alt="vlabs logo"
+              class="mx-4 px-4 max-md:w-[118px] max-md:h-[64px] py-2"
+            />
+          </a>
+        </div>
+        <div id="headerNavbar" class="flex items-center ml-auto max-md:hidden">
+          <ul
+            class="flex text-center text-[#2c98cd]"
+            style="font-family: Raleway, sans-serif"
+          >
+            <li class="px-2 m-1">
+              <a
+                class="mx-4 px-4 py-2 hover:bg-[#99cc3e] hover:underline hover:text-white rounded-lg"
+                href="https://vlab.co.in"
+                >HOME</a
+              >
+            </li>
+            <li class="px-2 m-1">
+              <a
+                class="mx-4 px-4 py-2 hover:bg-[#99cc3e] hover:underline hover:text-white rounded-lg"
+                href="https://vlab.co.in/participating-institutes"
+                >PARTNERS</a
+              >
+            </li>
+            <li class="px-2 m-1">
+              <a
+                class="mx-4 px-4 py-2 hover:bg-[#99cc3e] hover:underline hover:text-white rounded-lg"
+                href="https://vlab.co.in/contact-us"
+                >CONTACT</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- overlaynavbar -->
+      <div
+        class="overlaycontainer w-[100%] h-[100vh] bg-[#00000080] fixed top-[0%] -z-50 opacity-0"
+      ></div>
+      <div
+        class="overlaysignupform ease-in-out duration-100 fixed -top-[150%] left-[50%] -translate-x-1/2 z-50"
+      >
+        <div class="flex justify-center items-center px-4 h-[100vh] w-[100vw]">
+          <div
+            class="relative bg-white border border-solid border-[#00000033] rounded-md w-[498px] flex flex-col overflow-y-auto"
+          >
+            <div class="p-4 flex justify-between items-center border-b">
+              <div class="w-[87px] h-[50px] flex justify-center items-center">
+                <a href="https://vlab.co.in">
+                  <img
+                    src="../images/vlabs-color-small-moe.jpg"
+                    alt="vlabs logo"
+                    class="w-[71px] h-[40px]"
+                  />
+                </a>
+              </div>
+              <button class="w-[24px] h-[24px]" onclick="closeModal()">
+                <img src="../images/close.png" />
+              </button>
+            </div>
+            <div
+              class="p-4 flex flex-col text-[19.2px] font-bold text-[#3e6389]"
+            >
+              <div class="flex justify-center">
+                <a
+                  href="../index.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Aim
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../theory.html"
+                  class="p-2 text-[#FF6600] hover:underline"
+                >
+                  Theory
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../pretest.html"
+                  class="p-2 text-[#FF6600] hover:underline"
+                >
+                  Pretest
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../procedure.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Procedure
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../simulation.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Simulation
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../posttest.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Posttest
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../references.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  References
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../feedback.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Feedback
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- sidebar and body -->
+    <div class="flex min-h-[380px]">
+      <div class="maincontent px-8 pb-6 flex-1">
+        <div
+          class="w-full text-[19.2px] text-[#313636]"
+          style="font-family: Raleway, sans-serif"
+        >
+          <h2
+            class="text-center pt-6 border-b pb-2 mb-2 text-[#2C99CE] text-[32px]"
+          >
+            Pulse-width Modulation (PWM)
+          </h2>
+          <p class="mb-4">
+            Pulse-width modulation (PWM), or pulse-duration modulation (PDM), is
+            a method of controlling the average power delivered by an electrical
+            signal.
+          </p>
+
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm1.png"
+              alt="pwm_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: An example of PWM in an idealized inductor driven by a blue
+            line voltage source modulated as a series of pulses, resulting in a
+            red line sine-like current in the inductor. The rectangular voltage
+            pulses nonetheless result in a more and more smooth current
+            waveform, as the switching frequency increases. The current waveform
+            is the integral of the voltage waveform.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">Duty cycle</h3>
+          <p>
+            A low duty cycle equates to low power because the power is off for
+            most of the time; the word duty cycle reflects the ratio of "on"
+            time to the regular interval or "period" of time. The duty cycle is
+            measured in percent, with 100% representing full on. A digital
+            signal has a duty cycle of 50% and looks like a "square" wave when
+            it is on 50% of the time and off the other 50%. A digital signal has
+            a duty cycle of greater than 50% when it spends more time in the on
+            state than the off state. A digital signal has a duty cycle of 50%
+            when it alternates between the on and off states more often than
+            not.
+          </p>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm2.png"
+              alt="pwm_image"
+            />
+          </div>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm3.png"
+              alt="pwm_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Duty cycle of 75%, 25%, and 50%
+          </p>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/vl3.jpg"
+              alt="pam_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Pulse Amplitude Modulation Signal
+          </p>
+          <!--  -->
+          <h3 class="text-[24px] font-semibold text-black">
+            Mathematical Formulation of pulse-width waveform
+          </h3>
+          <p>
+            Pulse-width modulation uses a rectangular pulse wave whose pulse
+            width is modulated resulting in the variation of the average value
+            of the waveform. If we consider a pulse waveform f(t), with period
+            T, low-value ymin, a high-value ymax, and a duty cycle D, the
+            average value of the waveform is given by
+          </p>
+<p class="pl-6">
+    \(\bar{y} = \frac{1}{T} \int_0^t f(t) \, dt\)
+</p>
+<p class="pl-6">
+    \(\bar{y} = \frac{1}{T} \left( \int_0^{DT} y_{\text{max}} \, dt + \int_{DT}^T y_{\text{min}} \, dt \right)\)
+</p>
+<p class="pl-6">
+    \(= \frac{1}{T} \left( D \cdot T \cdot y_{\text{max}} + T(1 - D) \cdot y_{\text{min}} \right)\)
+</p>
+<p class="pl-6">
+    \(= D \cdot y_{\text{max}} + (1 - D) \cdot y_{\text{min}}\)
+</p>
+
+          <p class="">
+            From this, the average value of the signal (y ̅) is directly
+            dependent on the duty cycle D.
+            <br /><br />
+            The simplest way to generate a PWM signal is the intersection
+            method, which requires only a sawtooth or a triangle waveform
+            (easily generated using a simple oscillator) and a comparator. When
+            the value of the reference signal is more than the modulation
+            waveform, the PWM signal (magenta) is in the high state, otherwise,
+            it is in the low state.
+          </p>
+
+          <h3 class="text-[24px] font-semibold text-black">
+            Generation of PWM and PPM Signals
+          </h3>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm4.png"
+              alt="pam_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: PWM and PPM Generator
+          </p>
+          <p class="pl-4">
+            (i) A sawtooth generator generates a sawtooth signal of frequency
+            fs, and this sawtooth signal in this case is used as a sampling
+            signal.
+            <br />
+            (ii) It is applied to the inverting terminal of a comparator.
+            <br />
+            (iii) The modulating signal x (t) is applied to the non-inverting
+            terminal of the same comparator.
+            <br />
+            (iv) The comparator output will remain high as long as the
+            instantaneous amplitude of x (t) is higher than that of the ramp
+            signal.
+            <br />
+            (v) This gives rise to a PWM signal at the comparator output as
+            shown in the figure below
+          </p>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm5.png"
+              alt="pam_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: PWM and PPM Modulation
+          </p>
+          <p>
+            Here, it may be noted that the leading edges of the PWM waveform
+            coincide with the falling edges of the ramp signal. Thus, the
+            leading edges of the PWM signal are always generated at fixed time
+            instants. <br /><br />
+            However, the occurrence of its trailing edges will be dependent on
+            the instantaneous amplitude of x(t). Therefore, this PWM signal is
+            said to be trail edge modulated PWM.
+          </p>
+          <!--  -->
+          <h3 class="text-[24px] font-semibold text-black">
+            Demodulation of PWM Signal
+          </h3>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm6.png"
+              alt="pam_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Schematic diagram of Pulse Width Modulation
+          </p>
+          <p>
+            PWM signal must first be converted to a pulse-amplitude modulation
+            (PAM) signal and then passed through a low-pass filter. The PWM
+            signal is applied to an integrator and hold circuit. When the
+            positive edge of pulse appears, the integrator generates ramp output
+            whose magnitude is proportional to the pulse width. After the
+            negative edge, the hold circuit maintains the peak ramp voltage for
+            a given period and then forces the output voltage to zero. <br />
+            The waveform is the sum of a sequence of constant-amplitude and
+            constant-width pulse generated by demodulator. This signal is then
+            applied to the input of clipping circuit, which cuts off the portion
+            of signal below the threshold voltage and outputs the reminder.
+            Therefore the output of clipping circuit is a PAM signal whose
+            amplitude is proportional to the width of PWM signal. Finally, the
+            PAM signal passes through a simple low-pass filter and the original
+            audio signal is obtained.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">
+            Effect of Distortion on pulse width modulation
+          </h3>
+          <p>
+            Distortion for a PWM waveform is a direct function of the
+            transmission channel. For a given step function, the rise time of
+            the pulse edge will increase as the cable length increases. Since a
+            pulse is composed of several harmonics of sine functions, the
+            high-frequency components of the pulse will have the highest
+            susceptibility to attenuation and delay. If the frequency of the
+            transmission exceeds the bandwidth of the channel, significant
+            distortion will occur.
+          </p>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm7.png"
+              alt="pam_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Example of Distortion of a Pulse Edge with Increased Cable
+            Length
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">
+            Effect of noise on pulse width modulation
+          </h3>
+          <p>
+            Like frequency modulation, PWM has inherent noise immunity that
+            permits an analog signal to be sent on a relatively lengthy
+            wire-line communication channel with minimal interference. The
+            amplitude assumes one of two relatively discrete values similar to
+            digital communication; thereby the noise has to be significant
+            enough to change the switching of the states. However, as the length
+            of the transmission channel increases, the probability of outside
+            interference affecting the signal integrity also increases. Noise
+            and distortion can compromise the function of PWM by skewing the
+            duty cycle and altering the wave shape of the pulse.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">Applications</h3>
+          <p>
+            Pulse-width modulation (PWM), or pulse-duration modulation (PDM), is
+            a method of controlling the average power delivered by an electrical
+            signal. <br />
+            For telecommunication purposes, the utility of pulse width
+            modulation (PWM) lies within the duty cycle of the encoded signal.
+            Like frequency modulation, PWM has inherent noise immunity that
+            permits an analog signal to be sent on a relatively lengthy
+            wire-line communication channel with minimal interference
+          </p>
+          <!--  -->
+        </div>
+      </div>
+    </div>
+    <footer class="">
+      <div class="flex max-sm:flex-col text-white bg-[#111111] px-6">
+        <div class="flex-1 flex flex-col px-[15px]">
+          <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3"
+            >Community Links</span
+          >
+          <a href="https://www.sakshat.ac.in/" class="text-light"
+            >Sakshat Portal</a
+          >
+          <a href="http://outreach.vlabs.ac.in/" class="text-light"
+            >Outreach Portal</a
+          >
+          <a href="https://vlab.co.in/faq" class="text-light"
+            >FAQ: Virtual Labs</a
+          >
+        </div>
+        <div class="flex-1 flex flex-col px-[15px]">
+          <span class="font-bold vlabs-footer-sect-name pb-2 mb-3"
+            >Contact Us</span
+          >
+          <span> Phone: General Information: 011-26582050 </span>
+          <span> Email: support@vlabs.ac.in </span>
+        </div>
+        <div class="flex-1 flex flex-col px-[15px]">
+          <span class="font-bold vlabs-footer-sect-name pb-2 mb-3"
+            >Follow Us</span
+          >
+          <div class="flex pb-2">
+            <a
+              class="p-2 mt-1 mr-2 rounded-full flex justify-center items-center"
+              style="background: #55acee"
+              href="https://twitter.com/TheVirtualLabs"
+            >
+              <img src="../images/twitter.png" alt="twitter" />
+            </a>
+            <a
+              class="p-2 mt-1 mr-2 flex rounded-full justify-center items-center"
+              style="background: #3b5998"
+              href="https://www.facebook.com/Virtual-Labs-IIT-Delhi-301510159983871/"
+            >
+              <img src="../images/facebook.png" alt="facebook" />
+            </a>
+            <a
+              class="p-2 mt-1 mr-2 flex rounded-full justify-center items-center"
+              style="background: #e52d27"
+              href="https://www.youtube.com/watch?v=asxRaOgk6a0"
+            >
+              <img src="../images/youtube.png" alt="youtube" />
+            </a>
+            <a
+              class="p-2 mt-1 mr-2 flex rounded-full justify-center items-center"
+              style="background: #2867b2"
+              href="https://in.linkedin.com/in/virtual-labs-008ba9136"
+            >
+              <img src="../images/linkedin.png" alt="linkedin" />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m-0 py-2 text-center text-white text-sm max-sm:text-[12px]"
+        style="font-family: 'Open Sans', sans-serif; background: #212121"
+      >
+        <a
+          class="text-[#007bff] hover:text-[#3273dc] hover:underline font-bold"
+          href="https://www.gnu.org/licenses/agpl-3.0.en.html"
+        >
+          AGPL 3.0
+        </a>
+        &nbsp;&amp;&nbsp;
+        <a
+          class="text-[#007bff] hover:text-[#3273dc] hover:underline font-bold"
+          href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        >
+          Creative Commons (CC BY-NC-SA 4.0)
+        </a>
+      </div>
+    </footer>
+    <script src="../js/toggleSidebar.js"></script>
+  </body>
+</html>
