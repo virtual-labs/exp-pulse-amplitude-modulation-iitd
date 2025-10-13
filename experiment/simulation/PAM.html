@@ -133,6 +133,10 @@
     <div class="w-[600px] h-[450px] mb-5">
     <div id="carrierChart" class="w-[650px] h-[450px]"></div>
   </div>
+
+  <div class="w-[600px] h-[450px] mb-5">
+    <div id="superimposed" class="w-[600px] h-[450px]"></div>
+  </div>
   <div class="w-[600px] h-[450px] mb-5">
     <div id="pamChart" class="w-[650px] h-[450px]"></div>
   </div>
@@ -259,6 +263,7 @@ function linspace(start, end, num) {
     return Array.from({ length: num }, (_, index) => start + index * step);
 }
 
+let messagePlotData;
 function generateMessage() {
     const duration = 1; // Duration of the signal in seconds
     const resolution = 100 * parseFloat(document.getElementById("carrierFrequency").value); // Resolution based on carrier frequency
@@ -280,7 +285,7 @@ function generateMessage() {
     messageSignal = time.map(t => a * Math.sin(2 * Math.PI * messageFrequency * t + 0.5));
 
     // Plotting with Plotly
-    const messagePlotData = [{
+    messagePlotData = [{
         x: time.slice(1,parseInt(3/messageFrequency*resolution)),
         y: messageSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
@@ -310,6 +315,7 @@ function generateMessage() {
     });
 }
 
+let carrierPlotData;
 function generateCarrier() {
 
     const duration = 1;
@@ -337,7 +343,7 @@ function generateCarrier() {
 
     //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 	    // Plotting with Plotly
-    const carrierPlotData = [{
+    carrierPlotData = [{
         x: t.slice(1,parseInt(3/messageFrequency*resolution)),
         y: carrierSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
@@ -370,6 +376,7 @@ function generateCarrier() {
 
 function performPAM() {
 
+  superimposed();
     const duration = 1;
     const resolution = 100*parseFloat(
       document.getElementById("carrierFrequency").value
@@ -588,7 +595,25 @@ function sinc(x) {
 
 
 
+function superimposed() {
+  const layout = {
+        title: 'Superimposition of Message Signal and Carrier Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
 
+    const data = [...messagePlotData,...carrierPlotData];
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('superimposed', data, layout);
+
+
+}
 
 
 function saveData() {
