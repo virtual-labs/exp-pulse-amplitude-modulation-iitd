@@ -140,6 +140,9 @@
   </div>
 
   <div class="w-[600px] h-[400px] mb-5">
+    <div id="superimposed" class="w-[700px] h-[400px]"></div>
+  </div>
+  <div class="w-[600px] h-[400px] mb-5">
     <div id="pwmChart" class="w-[600px] h-[400px]"></div>
   </div>
   
@@ -278,6 +281,7 @@
         return signal;
       }
 
+      let messagePlotData, normalizedMessagePlotData;
       async function generateMessage() {
         //destroyChart("messageChart");
 
@@ -299,15 +303,57 @@
         const a = 1;
         const messageSignal = linspace(0, duration, resolution * duration).map(
           (t) => Math.sin(2 * Math.PI * messageFrequency * t));
-
+        const normalizedSignal = messageSignal.map(v => (v + 1) / 2);
         //plotSignal("messageChart", t, messageSignal, "Message Signal");
 			    // Plotting with Plotly
-    const carrierPlotData = [{
+    messagePlotData = [{
         x: t.slice(1,parseInt(3/messageFrequency*resolution)),
         y: messageSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
         name: 'Message Signal',
+        //line: { color: 'blue', width: 2 }
+    }];
+
+
+    // Assuming messageSignal is the array of normalized message values
+// and t is the time array.
+
+const intervalSize = parseInt(resolution/parseFloat(
+      document.getElementById("carrierFrequency").value
+    ));  // Define the interval size (100 samples per interval)
+let colors = [];
+
+// Loop through the normalized message signal and assign colors based on intervals
+for (let i = 0; i < normalizedSignal.length; i++) {
+    const interval = Math.floor(i / intervalSize);  // Determine the interval number
+
+    // Assign colors based on intervals
+    switch (interval) {
+        case 0:
+            colors.push('blue');   // Interval 0-100 samples -> blue
+            break;
+        case 1:
+            colors.push('black');  // Interval 101-200 samples -> black
+            break;
+        case 2:
+            colors.push('green');  // Interval 201-300 samples -> green
+            break;
+        case 3:
+            colors.push('red');    // Interval 301-400 samples -> red
+            break;
+        // Add more cases as needed for additional intervals
+        default:
+            colors.push('gray');   // Default color for other intervals
+    }
+}
+    normalizedMessagePlotData = [{
+        x: t.slice(1,parseInt(3/messageFrequency*resolution)),
+        y: normalizedSignal.slice(1,parseInt(3/messageFrequency*resolution)),
+        type: 'scatter',
+        mode: 'markers',
+        name: 'Message Signal',
+        marker: {color: colors, size: 2}
         //line: { color: 'blue', width: 2 }
     }];
 
@@ -323,7 +369,7 @@
     };
 
     // Create or update the plot in the specified chart element
-    Plotly.newPlot('messageChart', carrierPlotData, layout);
+    Plotly.newPlot('messageChart', messagePlotData, layout);
 		
 		    // Scroll to the message chart after it has been generated
     document.getElementById("messageChart").scrollIntoView({
@@ -334,6 +380,7 @@
      //   return messageSignal;
       }
 
+      let carrierPlotData;
       async function generateCarrier() {
         //destroyChart("carrierChart");
 
@@ -368,12 +415,12 @@
         //const carrier = time.map(t => 1.05 * (1 - Math.abs(2 * ((t * fs) % 1) - 1)));
         //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 					    // Plotting with Plotly
-    const carrierPlotData = [{
+    carrierPlotData = [{
         x: t.slice(1,parseInt(3/messageFrequency*resolution)),
         y: carrierSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
-        name: 'Triangular Carrier Signal',
+        name: 'Carrier Signal',
         //line: { color: 'blue', width: 2 }
     }];
 
@@ -473,6 +520,7 @@
 
       let signalTrace, pwmTrace, layout;
         function plotSPWM() {
+          superimposed();
           const fs = 50000; // Sample rate (samples per second)
   const carrierFreq = parseFloat(document.getElementById('carrierFrequency').value);
   const messageFreq = parseFloat(document.getElementById('messageFrequency').value);
@@ -576,7 +624,34 @@
             });
 saveData();
         }
-		
+/*
+const fs = 1000; // sampling rate (Hz)
+const carrierFreq = 100; // carrier frequency (Hz)
+const totalSamples = 1000; // number of samples
+const messageSignal = [];
+
+const samplesPerCarrierPeriod = Math.floor(fs / carrierFreq); // Samples in one carrier period
+const pwm = new Array(totalSamples).fill(0); // Initialize PWM array
+
+// Generate PWM with modulated carrier duty cycle and PWM pulse width
+for (let i = 0; i < totalSamples; i += samplesPerCarrierPeriod) {
+  // Modulate the carrier's duty cycle using the message signal (message signal should be normalized)
+  const carrierDutyCycle = Math.abs(messageSignal[i]); // Carrier duty cycle modulated by message signal
+  const pwmDutyCycle = carrierDutyCycle; // PWM pulse width modulated by same signal or another signal
+  
+  // Calculate how long the carrier should be on in each cycle (based on carrierDutyCycle)
+  const onSamples = Math.floor(samplesPerCarrierPeriod * pwmDutyCycle);
+
+  // Generate the PWM signal
+  for (let j = 0; j < samplesPerCarrierPeriod; j++) {
+    const idx = i + j;
+    if (idx >= totalSamples) break;
+
+    // Apply carrier duty cycle first, then apply PWM duty cycle for pulse width
+    pwm[idx] = (j < onSamples) ? 1 : 0; // Carrier pulse width modulated
+  }
+}
+*/		
       function plotSignal(canvasId, time, signal, label) {
         const ctx = document.getElementById(canvasId).getContext("2d");
         new Chart(ctx, {
@@ -710,6 +785,26 @@ function sinc(x) {
     return Math.sin(Math.PI * x) / (Math.PI * x);
 }
 
+
+
+function superimposed() {
+  const layout = {
+        title: 'Superimposition of Sampled Normalized Message Signal and Carrier Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude'
+        }
+    };
+
+    const data = [...normalizedMessagePlotData,...carrierPlotData];
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('superimposed', data, layout);
+
+
+}
       function saveData() {
   const fm = parseFloat(document.getElementById('messageFrequency').value);
   const fs = parseFloat(document.getElementById('carrierFrequency').value);

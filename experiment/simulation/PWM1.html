@@ -138,7 +138,9 @@
   <div class="w-[600px] h-[400px] mb-5">
     <div id="carrierChart" class="w-[600px] h-[400px]"></div>
   </div>
-
+  <div class="w-[600px] h-[400px] mb-5">
+    <div id="superimposed" class="w-[600px] h-[400px]"></div>
+  </div>
   <div class="w-[600px] h-[400px] mb-5">
     <div id="pwmChart" class="w-[600px] h-[400px]"></div>
   </div>
@@ -278,6 +280,7 @@
         return signal;
       }
 
+      let messagePlotData;
       async function generateMessage() {
         //destroyChart("messageChart");
 
@@ -302,7 +305,7 @@
 
         //plotSignal("messageChart", t, messageSignal, "Message Signal");
 			    // Plotting with Plotly
-    const carrierPlotData = [{
+    messagePlotData = [{
         x: t.slice(1,parseInt(3/messageFrequency*resolution)),
         y: messageSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
@@ -323,7 +326,7 @@
     };
 
     // Create or update the plot in the specified chart element
-    Plotly.newPlot('messageChart', carrierPlotData, layout);
+    Plotly.newPlot('messageChart', messagePlotData, layout);
 		
 		    // Scroll to the message chart after it has been generated
     document.getElementById("messageChart").scrollIntoView({
@@ -334,6 +337,7 @@
      //   return messageSignal;
       }
 
+      let carrierPlotData;
       async function generateCarrier() {
         //destroyChart("carrierChart");
 
@@ -368,12 +372,12 @@
         //const carrier = time.map(t => 1.05 * (1 - Math.abs(2 * ((t * fs) % 1) - 1)));
         //plotSignal("carrierChart", t, carrierSignal, "Square Carrier Signal");
 					    // Plotting with Plotly
-    const carrierPlotData = [{
+    carrierPlotData = [{
         x: t.slice(1,parseInt(3/messageFrequency*resolution)),
         y: carrierSignal.slice(1,parseInt(3/messageFrequency*resolution)),
         type: 'scatter',
         mode: 'lines',
-        name: 'Triangular Carrier Signal',
+        name: 'Carrier Signal',
         //line: { color: 'blue', width: 2 }
     }];
 
@@ -538,6 +542,7 @@
 
 let signalTrace, pwmTrace, layout;
 function plotSPWM() {
+  superimposed();
   const { time, signal, carrierSquare, pwm } = generateSPWM();
 
   const messageFrequency = parseFloat(document.getElementById("messageFrequency").value);
@@ -719,6 +724,27 @@ saveData();
 function sinc(x) {
     if (x === 0) return 1;
     return Math.sin(Math.PI * x) / (Math.PI * x);
+}
+
+
+function superimposed() {
+  const layout = {
+        title: 'Superimposition of Message Signal and Carrier Signal',
+        xaxis: {
+            title: 'Time (s)',
+        },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-1, 1],
+        }
+    };
+
+    const data = [...messagePlotData,...carrierPlotData];
+
+    // Create or update the plot in the specified chart element
+    Plotly.newPlot('superimposed', data, layout);
+
+
 }
 
       function saveData() {
