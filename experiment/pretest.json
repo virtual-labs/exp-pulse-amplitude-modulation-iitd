@@ -16,7 +16,7 @@
         "d": "Incorrect. Timing synchronization is required in most pulse techniques."
       },
       "correctAnswer": "a",
-      "difficulty": "intermediate"
+      "difficulty": "beginner"
     },
     {
       "question": "2. In PWM systems, why can higher signal amplitudes lead to intersymbol interference if the system is not properly designed?",
@@ -33,7 +33,7 @@
         "d": "Incorrect. Reflection is more a transmission line issue."
       },
       "correctAnswer": "a",
-      "difficulty": "intermediate"
+      "difficulty": "beginner"
     },
     {
       "question": "3. Which property of Pulse Position Modulation (PPM) makes it advantageous in low-power optical communication systems?",
