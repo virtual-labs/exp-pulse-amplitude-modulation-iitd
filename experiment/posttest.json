@@ -16,7 +16,7 @@
         "d": "Incorrect. Improved noise immunity and higher BER are contradictory."
       },
       "correctAnswer": "a",
-      "difficulty": "hard"
+      "difficulty": "intermediate"
     },
     {
       "question": "2. In high-frequency switching applications, what makes Pulse Width Modulation (PWM) inherently less power-efficient compared to other modulation schemes?",
@@ -33,7 +33,7 @@
         "d": "Incorrect. Envelope distortion is not the primary concern in PWM."
       },
       "correctAnswer": "a",
-      "difficulty": "hard"
+      "difficulty": "intermediate"
     }, 
     {
       "question": "3. In Pulse Position Modulation (PPM), how does timing jitter specifically impact the symbol detection process in a non-ideal receiver?",
@@ -50,7 +50,7 @@
         "d": "Incorrect. Pulse amplitude is irrelevant in PPM."
       },
       "correctAnswer": "c",
-      "difficulty": "hard"
+      "difficulty": "intermediate"
     },
 
     {
@@ -68,7 +68,7 @@
         "d": "Incorrect. Nonlinearity does not inherently spread pulses."
       },
       "correctAnswer": "b",
-      "difficulty": "hard"
+      "difficulty": "intermediate"
     },
     {
       "question": "5. Why is Pulse Width Modulation (PWM) more suitable for motor control applications compared to PAM?",
@@ -85,7 +85,7 @@
         "d": "Incorrect. Encoding is not the main reason for motor control suitability."
       },
       "correctAnswer": "a",
-      "difficulty": "hard"
+      "difficulty": "advanced"
     },
     {
       "question": "6. In high-speed PPM systems, what is a key reason for preferring higher-order modulation despite its susceptibility to timing jitter?",
@@ -102,7 +102,7 @@
         "d": "Incorrect. Higher-order modulation increases synchronization complexity."
       },
       "correctAnswer": "b",
-      "difficulty": "hard"
+      "difficulty": "advanced"
     }
   ]
 }
