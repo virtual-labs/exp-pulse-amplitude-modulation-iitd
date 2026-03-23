@@ -335,201 +335,90 @@ MODULATION(PPM), PULSE CODED MODULATION &amp; THEIR DEMODULATION">
         </div>
           
 
-    <!-- sidebar and body -->
-    <script type="text/javascript" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-    <div class="flex min-h-[380px]">
-      <div class="maincontent px-8 pb-6 flex-1">
-        <div
-          class="w-full text-[19.2px] text-[#313636]"
-          style="font-family: Raleway, sans-serif"
-        >
-        <h2>Theory</h2>
-        <p>
-            Pulse Amplitude Modulation (PAM) is a modulation technique where the amplitude of a series of regularly spaced pulses (the carrier signal) is varied in proportion to the instantaneous amplitude of the message signal. In simpler terms, the message information is encoded in the amplitude of these pulses. PAM is a foundational technique for digital communications and serves as a basis for other digital modulation methods.
-        </p>
-        <h3>Generation of a PAM Signal</h3>
-        <p>The generation of a PAM signal involves two primary operations:</p>
-        <ol>
-            <li>
-                <strong>Sampling:</strong> The continuous-time message signal, <code>m(t)</code>, is sampled at regular intervals, denoted by the sampling period, <code>T<sub>s</sub></code>. The sampling rate, <code>f<sub>s</sub> = 1/T<sub>s</sub></code>, must adhere to the Nyquist theorem to avoid aliasing, which is the distortion of the signal due to under-sampling. To prevent aliasing, the message signal is often first passed through a low-pass filter.
-            </li>
-            <li>
-                <strong>Amplitude Modulation of Pulses:</strong> The amplitude of each pulse in a pulse train is then modulated based on the corresponding sample value of the message signal.
-            </li>
-        </ol>
-        <p>
-          The resulting PAM signal, \(s(t)\), can be expressed mathematically as:
+<!-- sidebar and body -->
+<script type="text/javascript" async
+src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+<div class="flex min-h-[380px]">
+  <div class="maincontent px-8 pb-6 flex-1">
+    <div class="w-full text-[19.2px] text-[#313636]" style="font-family: Raleway, sans-serif">
+
+      <h2>Theory</h2>
+      <p>
+        Pulse Amplitude Modulation (PAM) is a modulation technique where the amplitude of a series of regularly spaced pulses (the carrier signal) is varied in proportion to the instantaneous amplitude of the message signal. In other words, the information from the message signal is carried by the amplitudes of the pulses. PAM is a foundational technique for digital communications and serves as a basis for other digital modulation methods.
       </p>
+
+      <h3>Generation of a PAM Signal</h3>
+      <p>The generation of a PAM signal involves two primary operations:</p>
+      <ol>
+        <li>
+          <strong>Sampling:</strong> The continuous-time message signal, <code>m(t)</code>, is sampled at regular intervals, denoted by the sampling period <code>T<sub>s</sub></code>. The sampling rate, <code>f<sub>s</sub> = 1/T<sub>s</sub></code>, must satisfy the Nyquist theorem, which states that the sampling rate should be at least twice the highest frequency present in the message signal to avoid aliasing.
+        </li>
+        <li>
+          <strong>Amplitude Modulation of Pulses:</strong> The amplitude of each pulse in a pulse train is modulated according to the corresponding sample value of the message signal.
+        </li>
+      </ol>
+
+      <p>The resulting PAM signal, \(s(t)\), can be expressed mathematically as:</p>
       <div class="formula">
-          $$s(t) = \sum_{n=-\infty}^{\infty} m(nT_s) \cdot h(t - nT_s)$$
+        $$s(t) = \sum_{n=-\infty}^{\infty} m(nT_s) \cdot h(t - nT_s)$$
       </div>
       <p>where:</p>
       <ul>
-          <li>\(m(nT_s)\) is the sample of the message signal at time \(t = nT_s\).</li>
-          <li>\(h(t)\) is the shape of the pulse.</li>
-          <li>The summation is over all integer values of \(n\).</li>
+        <li>\(m(nT_s)\) is the sample of the message signal at time \(t = nT_s\).</li>
+        <li>\(h(t)\) is the shape of the pulse.</li>
+        <li>The summation is over all integer values of \(n\).</li>
+      </ul>
+      
+      <h3>Flat-Top PAM</h3>
+      <p>In <b>flat-top PAM</b>, each pulse is stretched to have a fixed width <code>T_p</code> while maintaining the sampled amplitude. This helps in easier demodulation and practical transmission.</p>
+      <div class="formula">
+        $$s_{\text{flat}}(t) = \sum_{n=-\infty}^{\infty} m(nT_s) \cdot \text{rect}\left(\frac{t - nT_s}{T_p}\right)$$
+      </div>
+      <p>where:</p>
+      <ul>
+        <li>\(\text{rect}\left(\frac{t - nT_s}{T_p}\right)\) is a rectangular pulse of width \(T_p\) centered at \(t = nT_s\).</li>
+        <li>\(T_p \leq T_s\) is the pulse width, usually less than or equal to the sampling period.</li>
+        <li>\(m(nT_s)\) is the sampled amplitude, as before.</li>
       </ul>
 
-          <h2>
-        Block Diagram 
-          </h2>
-          <div align = "center" class="flex justify-center">
-            <img
-              src="./images/pam.png"
-              alt="pam_image"
-            />
-            <br/>
-          <p class="mb-4 text-center font-semibold text-black">
-            <strong>Fig: Pulse Amplitude Modulation Signal</strong>
-          </p>
-        </div>
-          <!----
-          <p class="mb-4">
-            It is useful and important to generate a continuous-time (CT) signal
-            from a sequence in communication systems, in which discrete data—for
-            example, digital or quantized data — is to be transmitted over a
-            channel in the form of a continuous-time signal. Unlike in the case
-            of discrete-time (DT) processing of CT signals, the resulting
-            continuous-time signal will be converted back to a discrete-time
-            signal at the receiving end.
-          </p>
-
-          <div class="flex justify-center">
-            <img
-              src="./images/theory/pulsemodulation/vl1.jpg"
-              alt="pam_image"
-            />
-          </div>
-          <p>
-            Pulse–amplitude modulation (PAM) is a form of signal modulation
-            where the message information is encoded in the amplitude of a
-            series of signal pulses.
-            <br />
-            The basic idea in PAM for communication over a CT channel is to
-            transmit a sequence of CT pulses of some pre-specified shape p(t),
-            with the sequence of pulse amplitudes carrying the information.
-          </p>
-          <div class="flex justify-center">
-            <img
-              src="./images/theory/pulsemodulation/vl2.jpg"
-              alt="pam_image"
-            />
-          </div>
-          <p class="mb-4 text-center font-semibold text-black">
-            Fig: Block Diagram of PAM Generation
-          </p>
-          <div class="flex justify-center">
-            <img
-              src="./images/theory/pulsemodulation/vl3.jpg"
-              alt="pam_image"
-            />
-          </div>
-          <p class="mb-4 text-center font-semibold text-black">
-            Fig: Pulse Amplitude Modulation Signal
-          </p>
-          <p>
-            The message signal and the sequence of amplitude-modulated
-            rectangular pulses whose amplitude is in accordance with the
-            amplitude of the message signal is termed as pulse amplitude
-            modulation signal.
-          </p>
-          <p>
-            There are two operations involved in the generation of the PAM
-            signal <br />
-          </p>
-          <p class="pl-6">
-            1. Instantaneous sampling of the message signal (say, m(t)) every Ts
-            seconds, where the sampling rate, fs = 1/ Ts is chosen in accordance
-            with the sampling theorem. <br />
-            2. Lengthening the duration of each sample so obtained to some
-            constant value T. <br />
-            Let s(t) denote the sequence of flat-top pulse amplitude signal
-            generated then we may express the PAM signal as
-          </p>
-          <p class="pl-14">
-            s(t) = ∫_(n= -∞)^∞▒〖m(nT_s 〗). h(t - nT_s) <br />where Ts is the
-            sampling period m(nTs) is the sample value of m(t) obtained at time
-            t = nT_s .
-          </p>
-
-          <h3 class="text-[24px] font-semibold text-black">Demodulation</h3>
-          <p>
-            Demodulation is performed by detecting the amplitude level of the
-            carrier at every single period. The number of possible pulse
-            amplitudes in analog PAM is theoretically infinite. Digital PAM
-            reduces the number of pulse amplitudes to some power of two. For
-            example, in 4-level PAM there are 22 possible discrete pulse
-            amplitudes; in 8-level PAM there are 23 possible discrete pulse
-            amplitudes; and in 16-level PAM there are 24 possible discrete pulse
-            amplitudes.
-          </p>
-          <h3 class="text-[24px] font-semibold text-black">Applications</h3>
-          <p>
-            The translation of a DT signal to a CT signal appropriate for
-            transmission, and the translation back to a DT signal at the
-            receiver, are both accomplished by devices referred to as modems
-            (modulators/demodulators). Pulse Amplitude Modulation (PAM)
-            underlies the operation of a wide variety of modems. <br /><br />
-            Power consumption is low in pulse modulation. Explanation: In pulse
-            modulation, the carrier is not transmitted continuously but in
-            pulses whose width is determined by the amplitude of the modulating
-            signal.
-          </p>
-          <h3 class="text-[24px] font-semibold text-black">
-            Effect of Noise on Pulse Amplitude Modulation
-          </h3>
-          <p>
-            The frequency varies according to the modulating signal or message
-            signal. Due to these variations in the signal frequency,
-            interferences will be there. So the noise will be great. For PAM,
-            noise immunity is less when compared to other modulation techniques.
-            It is almost equal to amplitude modulation.
-          </p>
-          ---->
-          <h2>Demodulation of a PAM Signal</h2>
-          <p>
-              Demodulation is the process of recovering the original message signal from the modulated PAM signal. For analog PAM, this is typically achieved by passing the PAM signal through a low-pass filter. The low-pass filter smooths out the high-frequency components of the pulses, effectively reconstructing the original analog message signal.
-          </p>
-          <p>
-              In digital PAM, demodulation involves detecting the discrete amplitude level of each pulse at specific time intervals. This is often done by sampling the received signal at the correct instants and comparing the sampled values to predefined thresholds to determine the transmitted symbol.
-          </p>
-  
-          <h2>Digital PAM (M-ary PAM)</h2>
-          <p>
-              In digital communication, the number of possible pulse amplitudes is finite and is typically a power of two. This is known as M-ary PAM, where M represents the number of distinct amplitude levels. For example:
-          </p>
-          <ul>
-              <li><strong>2-Level PAM (2-PAM or Binary PAM):</strong> Uses two amplitude levels, often representing binary 0 and 1.</li>
-              <li><strong>4-Level PAM (4-PAM):</strong> Uses four distinct amplitude levels to represent two bits of information per pulse (2² = 4).</li>
-              <li><strong>8-Level PAM (8-PAM):</strong> Uses eight distinct amplitude levels to represent three bits of information per pulse (2³ = 8).</li>
-          </ul>
-  
-  
-          <h2>Effect of Noise on PAM</h2>
-          <p>
-              Noise is an unavoidable aspect of communication channels. Since the information in PAM is encoded in the amplitude of the pulses, it is susceptible to noise that affects the signal's amplitude. This makes PAM's noise immunity lower compared to other modulation techniques like Pulse Width Modulation (PWM) or Pulse Position Modulation (PPM). The interference from other transmitted symbols, known as Intersymbol Interference (ISI), can also introduce errors in the received signal.
-          </p>
-  
-  
-          <h2>Applications of Pulse Amplitude Modulation</h2>
-          <p>PAM is a fundamental technology with a wide range of applications, including:</p>
-          <ul>
-              <li><strong>Ethernet Communications:</strong> Various Ethernet standards, such as 100BASE-T4 (PAM-3) and 1000BASE-T (PAM-5), utilize PAM for high-speed data transmission.</li>
-              <li><strong>Digital Subscriber Line (DSL):</strong> DSL modems use PAM to transmit digital data over telephone lines.</li>
-              <li><strong>Fiber Optic Communications:</strong> PAM is used to send digital data over optical fibers.</li>
-              <li><strong>Microcontrollers:</strong> PAM is used for generating control signals in many microcontrollers.</li>
-              <li><strong>LED Lighting:</strong> It is used as an electronic driver for LED lighting.</li>
-              <li><strong>Biomedical Signal Processing:</strong> PAM is employed for transmitting physiological signals like electrocardiograms (ECG).</li>
-          </ul>
-  
-      </div>
-
-
-        </div>
-      </div>
+      <h2>Block Diagram</h2>
+      <div align="center" class="flex justify-center">
+        <img src="./pam.png" 
+        alt="pam_image" 
+        width="50%"
+        height="50%"
+        />
+<br/><br/><br/>
+      <p class="mb-4 text-center font-semibold text-black">
+        <strong>Fig : Pulse Amplitude Modulation Signal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>
+      </p>
     </div>
+    <h2>Demodulation of a PAM Signal</h2>
+    <p>
+      Demodulation is the process of recovering the original message signal from a PAM signal. This is generally accomplished by detecting the amplitudes of the pulses and, if needed, passing the signal through a <b>low-pass filter (LPF)</b> to smooth out the high-frequency components, reconstructing the original message waveform.
+    </p>
+
+      <h2>Effect of Noise on PAM</h2>
+      <p>
+        Noise is unavoidable in communication channels. Since PAM encodes information in the amplitude of pulses, it is susceptible to amplitude noise, giving it lower noise immunity than techniques like Pulse Width Modulation (PWM) or Pulse Position Modulation (PPM). Intersymbol interference (ISI) can also distort pulse amplitudes, causing errors in the received symbols.
+      </p>
+
+      <h2>Applications of Pulse Amplitude Modulation</h2>
+      <p>PAM has a wide range of applications, including:</p>
+      <ul>
+        <li><strong>Ethernet Communications:</strong> Standards like 100BASE-T4 (PAM-3) and 1000BASE-T (PAM-5) use PAM for high-speed data transmission.</li>
+        <li><strong>Digital Subscriber Line (DSL):</strong> DSL modems use PAM to transmit digital data over telephone lines.</li>
+        <li><strong>Fiber Optic Communications:</strong> PAM transmits digital data over optical fibers.</li>
+        <li><strong>Microcontrollers:</strong> Used for generating control signals.</li>
+        <li><strong>LED Lighting:</strong> PAM is employed in electronic drivers for LEDs.</li>
+        <li><strong>Biomedical Signal Processing:</strong> Used to transmit physiological signals like ECG.</li>
+      </ul>
+
+    </div>
+  </div>
+</div>
 
 
 
