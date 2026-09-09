@@ -2,12 +2,12 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "Which statement best explains why Pulse Amplitude Modulation (PAM) is more susceptible to noise compared to digital modulation schemes?",
+      "question": "Pulse Amplitude Modulation (PAM) is more susceptible to noise compared to digital modulation schemes because",
       "answers": {
-        "a": "Because it encodes information in continuous levels susceptible to amplitude distortion.",
-        "b": "Because it uses wide bandwidth.",
-        "c": "Because it relies on frequency variation, which is inherently noisy.",
-        "d": "Because timing synchronization is not used."
+        "a": "it encodes information in continuous levels susceptible to amplitude distortion.",
+        "b": "it uses wide bandwidth.",
+        "c": "it relies on frequency variation, which is inherently noisy.",
+        "d": "timing synchronization is not used."
       },
       "explanations": {
         "a": "Correct! PAM's analog-like amplitude levels are more vulnerable to noise.",
@@ -19,12 +19,12 @@
       "difficulty": "beginner"
     },
     {
-      "question": "In PWM systems, why can wider pulses cause intersymbol interference (ISI) if the system is not properly designed?",
+      "question": "In PWM systems, if the system is not properly designed, wider pulses can cause intersymbol interference (ISI) because",
       "answers": {
-        "a": "Because wide pulses can overlap adjacent symbols, causing ISI.",
-        "b": "Because amplitude fluctuations distort the pulse height.",
-        "c": "Because higher amplitudes cause frequency drift.",
-        "d": "Because signal reflection occurs at higher amplitudes."
+        "a": "wide pulses can overlap adjacent symbols, causing ISI.",
+        "b": "amplitude fluctuations distort the pulse height.",
+        "c": "higher amplitudes cause frequency drift.",
+        "d": "signal reflection occurs at higher amplitudes."
       },
       "explanations": {
         "a": "Correct! In PWM, increasing pulse width can cause pulses to overlap neighboring symbols, leading to intersymbol interference.",
@@ -53,12 +53,12 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "Why is PAM (Pulse Amplitude Modulation) often used as an intermediate step in digital modulation schemes such as QAM or OFDM?",
+      "question": "PAM (Pulse Amplitude Modulation) is often used as an intermediate step in digital modulation schemes such as QAM or OFDM because",
       "answers": {
-        "a": "Because it allows simple mapping from digital bits to discrete amplitude levels.",
-        "b": "Because it uses time division to reduce the required channel bandwidth.",
-        "c": "Because it is an asynchronous protocol and requires no clock synchronization.",
-        "d": "Because it is inherently robust against phase distortion and multipath fading."
+        "a": "it allows simple mapping from digital bits to discrete amplitude levels.",
+        "b": "it uses time division to reduce the required channel bandwidth.",
+        "c": "it is an asynchronous protocol and requires no clock synchronization.",
+        "d": "it is inherently robust against phase distortion and multipath fading."
       },
       "explanations": {
         "a": "Correct! Digital bits are grouped and mapped to specific PAM levels, which then form the In-phase and Quadrature components of complex schemes like QAM.",
