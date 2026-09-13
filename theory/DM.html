@@ -1,0 +1,350 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Virtual Labs</title>
+    <link rel="stylesheet" href="../css/vlabs-style.css" />
+    <link rel="shortcut icon" href="../images/favicon.ico" />
+  </head>
+  <body>
+    <header class="border-b-orange-500 border-b-8">
+      <nav class="flex justify-between">
+        <button class="px-4 py-1 rounded-r-md border-r" onclick="showModal()">
+          <img class="w-[30px] h-[30px]" src="../images/menu.png" />
+        </button>
+        <div class="flex justify-center">
+          <a href="https://vlab.co.in" class="navbar-brand">
+            <img
+              src="../images/vlabs-color-small-moe.jpg"
+              alt="vlabs logo"
+              class="mx-4 px-4 max-md:w-[118px] max-md:h-[64px] py-2"
+            />
+          </a>
+        </div>
+        <div id="headerNavbar" class="flex items-center ml-auto max-md:hidden">
+          <ul
+            class="flex text-center text-[#2c98cd]"
+            style="font-family: Raleway, sans-serif"
+          >
+            <li class="px-2 m-1">
+              <a
+                class="mx-4 px-4 py-2 hover:bg-[#99cc3e] hover:underline hover:text-white rounded-lg"
+                href="https://vlab.co.in"
+                >HOME</a
+              >
+            </li>
+            <li class="px-2 m-1">
+              <a
+                class="mx-4 px-4 py-2 hover:bg-[#99cc3e] hover:underline hover:text-white rounded-lg"
+                href="https://vlab.co.in/participating-institutes"
+                >PARTNERS</a
+              >
+            </li>
+            <li class="px-2 m-1">
+              <a
+                class="mx-4 px-4 py-2 hover:bg-[#99cc3e] hover:underline hover:text-white rounded-lg"
+                href="https://vlab.co.in/contact-us"
+                >CONTACT</a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- overlaynavbar -->
+      <div
+        class="overlaycontainer w-[100%] h-[100vh] bg-[#00000080] fixed top-[0%] -z-50 opacity-0"
+      ></div>
+      <div
+        class="overlaysignupform ease-in-out duration-100 fixed -top-[150%] left-[50%] -translate-x-1/2 z-50"
+      >
+        <div class="flex justify-center items-center px-4 h-[100vh] w-[100vw]">
+          <div
+            class="relative bg-white border border-solid border-[#00000033] rounded-md w-[498px] flex flex-col overflow-y-auto"
+          >
+            <div class="p-4 flex justify-between items-center border-b">
+              <div class="w-[87px] h-[50px] flex justify-center items-center">
+                <a href="https://vlab.co.in">
+                  <img
+                    src="../images/vlabs-color-small-moe.jpg"
+                    alt="vlabs logo"
+                    class="w-[71px] h-[40px]"
+                  />
+                </a>
+              </div>
+              <button class="w-[24px] h-[24px]" onclick="closeModal()">
+                <img src="../images/close.png" />
+              </button>
+            </div>
+            <div
+              class="p-4 flex flex-col text-[19.2px] font-bold text-[#3e6389]"
+            >
+              <div class="flex justify-center">
+                <a
+                  href="../index.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Aim
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../theory.html"
+                  class="p-2 text-[#FF6600] hover:underline"
+                >
+                  Theory
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../pretest.html"
+                  class="p-2 text-[#FF6600] hover:underline"
+                >
+                  Pretest
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../procedure.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Procedure
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../simulation.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Simulation
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../posttest.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Posttest
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../references.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  References
+                </a>
+              </div>
+              <div class="flex justify-center">
+                <a
+                  href="../feedback.html"
+                  class="p-2 hover:text-[#343a40] hover:underline"
+                >
+                  Feedback
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- sidebar and body -->
+    <div class="flex min-h-[380px]">
+      <div class="maincontent px-8 pb-6 flex-1">
+        <div
+          class="w-full text-[19.2px] text-[#313636]"
+          style="font-family: Raleway, sans-serif"
+        >
+          <h2
+            class="text-center pt-6 border-b pb-2 mb-2 text-[#2C99CE] text-[32px]"
+          >
+            Delta Modulation(DM)
+          </h2>
+          <p class="mb-4">
+            DM is the simplest form of differential pulse-code modulation
+            (DPCM). The encoder performs the function of differentiation; a
+            quantizer precedes the differencing of adjacent quantized samples;
+            the decoder is an accumulator, which if correctly initialized
+            exactly recovers the quantized signal. In this technique, the
+            difference between successive samples is encoded into n-bit data
+            streams. In delta modulation, the transmitted data are reduced to a
+            1-bit data stream. It uses the simplest possible quantizer i.e.
+            two-level or one-bit quantizer.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">
+            Generation of Delta Modulated Signal
+          </h3>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm10.png"
+              alt="dm_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Delta Modulation and Demodulation
+          </p>
+          <p>
+            DPCM is much simpler if we just use the previous sample for the
+            predictor. The predictor is just a delay. In delta modulation, the
+            transmitted data are reduced to a 1-bit data stream. It uses the
+            simplest possible quantizer i.e. two-level or one-bit quantizer.
+          </p>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm11.png"
+              alt="dm_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Waveform representation of delta modulation where m(t) is the
+            analog signal and u(t) is the staircase function.
+          </p>
+          <p>
+            Here, the present sample value is compared with the previous sample
+            value and this result whether the amplitude is increased or
+            decreased is transmitted. If the difference is positive then the
+            approximated signal is increased by one step i.e. ′∆′ and ‘1’ is
+            transmitted. If the difference is negative then the approximated
+            signal is reduced by ′∆′ and ‘0’ is transmitted as shown in the
+            figure. Since the delta modulation transmits only one bit per
+            sample. Therefore, the signalling rate and transmission bandwidth is
+            quite small for delta modulation as compared to PCM and DPCM.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">
+            Effects of noise on delta modulation or drawbacks of delta
+            modulation
+          </h3>
+          <p>
+            There are two kinds of quantization errors or noises that are
+            present in delta modulation. They are
+            <span class="font-semibold"> 1. Granular noise</span> and
+            <span class="font-semibold">2. Slope Overload Distortion.</span>
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">
+            1. Granular noise
+          </h3>
+          <div class="flex justify-center">
+            <img
+              src="../images/theory/pulsemodulation/pwm12.png"
+              alt="dm_image"
+            />
+          </div>
+          <p class="mb-4 text-center font-semibold text-black">
+            Fig: Delta Modulation where x(t) is the analog signal and u(t) is
+            the staircase function.
+          </p>
+          <p class="pl-8">
+            Granular or Idle noise occurs when the step size is too large
+            compared to a small variation in the input signal. This means that
+            for very small variations in the input signal, the staircase signal
+            is changed by a large amount (Δ) because of the large step size. The
+            figure shows that when the input signal is almost flat, the
+            staircase signal u(t) keeps on oscillating by ±Δ around the signal.
+            The error between the input and approximated signal is called
+            granular noise. The solution to this problem is to make the step
+            size small.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">
+            2. Slope Overload Distortion
+          </h3>
+          <p class="pl-8">
+            Slope overload distortion occurs due to the large dynamic range of
+            the input signal. In the above figure, the rate of rise of input
+            signal x(t) is so high that the staircase signal cannot approximate
+            it, the step size delta becomes too small for staircase signal u(t)
+            to follow the step segment of x(t). Hence, there is a large error
+            between the staircase approximated signal and the original input
+            signal x(t). This error or noise is known as slope overload
+            distortion.
+          </p>
+          <h3 class="text-[24px] font-semibold text-black">Applications</h3>
+          <p>
+            The Delta Modulation method is generally used for the encoding of
+            signals from analog to PCM. It is also applied for signal conversion
+            in television systems. One of the most critical applications of this
+            technique is that it is used for real-time Signal Processing
+          </p>
+        </div>
+      </div>
+    </div>
+    <footer class="">
+      <div class="flex max-sm:flex-col text-white bg-[#111111] px-6">
+        <div class="flex-1 flex flex-col px-[15px]">
+          <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3"
+            >Community Links</span
+          >
+          <a href="https://www.sakshat.ac.in/" class="text-light"
+            >Sakshat Portal</a
+          >
+          <a href="http://outreach.vlabs.ac.in/" class="text-light"
+            >Outreach Portal</a
+          >
+          <a href="https://vlab.co.in/faq" class="text-light"
+            >FAQ: Virtual Labs</a
+          >
+        </div>
+        <div class="flex-1 flex flex-col px-[15px]">
+          <span class="font-bold vlabs-footer-sect-name pb-2 mb-3"
+            >Contact Us</span
+          >
+          <span> Phone: General Information: 011-26582050 </span>
+          <span> Email: support@vlabs.ac.in </span>
+        </div>
+        <div class="flex-1 flex flex-col px-[15px]">
+          <span class="font-bold vlabs-footer-sect-name pb-2 mb-3"
+            >Follow Us</span
+          >
+          <div class="flex pb-2">
+            <a
+              class="p-2 mt-1 mr-2 rounded-full flex justify-center items-center"
+              style="background: #55acee"
+              href="https://twitter.com/TheVirtualLabs"
+            >
+              <img src="../images/twitter.png" alt="twitter" />
+            </a>
+            <a
+              class="p-2 mt-1 mr-2 flex rounded-full justify-center items-center"
+              style="background: #3b5998"
+              href="https://www.facebook.com/Virtual-Labs-IIT-Delhi-301510159983871/"
+            >
+              <img src="../images/facebook.png" alt="facebook" />
+            </a>
+            <a
+              class="p-2 mt-1 mr-2 flex rounded-full justify-center items-center"
+              style="background: #e52d27"
+              href="https://www.youtube.com/watch?v=asxRaOgk6a0"
+            >
+              <img src="../images/youtube.png" alt="youtube" />
+            </a>
+            <a
+              class="p-2 mt-1 mr-2 flex rounded-full justify-center items-center"
+              style="background: #2867b2"
+              href="https://in.linkedin.com/in/virtual-labs-008ba9136"
+            >
+              <img src="../images/linkedin.png" alt="linkedin" />
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="m-0 py-2 text-center text-white text-sm max-sm:text-[12px]"
+        style="font-family: 'Open Sans', sans-serif; background: #212121"
+      >
+        <a
+          class="text-[#007bff] hover:text-[#3273dc] hover:underline font-bold"
+          href="https://www.gnu.org/licenses/agpl-3.0.en.html"
+        >
+          AGPL 3.0
+        </a>
+        &nbsp;&amp;&nbsp;
+        <a
+          class="text-[#007bff] hover:text-[#3273dc] hover:underline font-bold"
+          href="https://creativecommons.org/licenses/by-nc-sa/4.0/"
+        >
+          Creative Commons (CC BY-NC-SA 4.0)
+        </a>
+      </div>
+    </footer>
+    <script src="../js/toggleSidebar.js"></script>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Virtual Labs</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
+  <div id="container">
+    <h1>Instructions for PAM / PWM / PPM Side-by-Side Comparison</h1>
+    <ul>
+      <li class="step step4"><strong>Note:</strong> This page generates one message signal and one square carrier, then produces PAM, PWM, and PPM from them together, so you can directly compare the three.</li>
+      <li class="step step1"><strong>Step 1:</strong> Use the sliders to set message frequency and carrier frequency.</li>
+      <li class="step step2"><strong>Step 2:</strong> Click <em>"Generate Comparison"</em> to plot all three pulse modulation outputs stacked for the same message and carrier.</li>
+      <li class="step step1"><strong>Tip:</strong> PAM varies pulse amplitude, PWM varies pulse width, and PPM varies pulse position -- all three carry the same message information in a different pulse parameter.</li>
+    </ul>
+  </div>
+  <br/>
+
+  <div class="flex items-start gap-10 flex-wrap">
+    <div class="flex flex-col items-center">
+      <p class="font-medium">Message Frequency (Hz)</p>
+      <div class="leading-none messageFrequencyDiv">2</div>
+      <input id="messageFrequency" value="2" type="range" min="1" max="10" onchange="updateLabels()" />
+    </div>
+    <div class="flex flex-col items-center">
+      <p class="font-medium">Carrier Frequency (Hz)</p>
+      <div class="leading-none carrierFrequencyDiv">20</div>
+      <input id="carrierFrequency" value="20" type="range" min="10" max="60" onchange="updateLabels()" />
+    </div>
+  </div>
+  <br/>
+
+  <button
+    class="bg-blue-500 text-white py-1 px-3 rounded-md hover:scale-105"
+    onclick="generateComparison()"
+  >
+    Generate Comparison
+  </button>
+
+  <div id="messagePlotSection" class="flex gap-4 mt-4">
+    <div id="messagePlot" class="flex-1 w-[600px]"></div>
+  </div>
+
+  <div id="comparisonSection1" class="flex gap-4 mt-4">
+    <div id="pamPlot" class="flex-1 w-[600px]"></div>
+    <div id="pwmPlot" class="flex-1 w-[600px]"></div>
+  </div>
+  <div id="comparisonSection2" class="flex gap-4 mt-4">
+    <div id="ppmPlot" class="flex-1 w-[600px]"></div>
+  </div>
+
+  <script>
+    function updateLabels() {
+      document.querySelector('.messageFrequencyDiv').innerHTML = document.getElementById('messageFrequency').value;
+      document.querySelector('.carrierFrequencyDiv').innerHTML = document.getElementById('carrierFrequency').value;
+    }
+
+    function linspace(start, end, num) {
+      const step = (end - start) / (num - 1);
+      return Array.from({ length: num }, (_, i) => start + i * step);
+    }
+
+    // Generates ONE message signal and ONE square carrier, then produces
+    // PAM, PWM, and PPM from them together -- same message, same carrier,
+    // so the three outputs are a fair like-for-like comparison.
+    function generateComparison() {
+      var fm = parseFloat(document.getElementById('messageFrequency').value);
+      var fc = parseFloat(document.getElementById('carrierFrequency').value);
+      var duration = 1;
+      var resolution = 100 * fc;
+      var t = linspace(0, duration, resolution * duration);
+      var a = 1;
+
+      // Message: same phase-shift convention as PAM.html.
+      var m = t.map(function (time) { return a * Math.sin(2 * Math.PI * fm * time + 0.5); });
+
+      // Square carrier: same convention as PAM.html (with a half-period shift).
+      var shift = 1 / (2 * fc);
+      var carrier = t.map(function (time) { return a * Math.sign(Math.sin(2 * Math.PI * fc * (time - shift))); });
+
+      // PAM: sample-and-hold during each positive carrier half-cycle
+      // (exact same logic as PAM.html).
+      var pam = [];
+      var currentValue = 0;
+      var inPulse = false;
+      for (var i = 0; i < m.length; i++) {
+        if (carrier[i] > 0) {
+          if (!inPulse) { inPulse = true; currentValue = m[i]; }
+          pam.push(currentValue);
+        } else {
+          inPulse = false;
+          pam.push(0);
+        }
+      }
+
+      // PWM: message compared against the square carrier (same convention
+      // as PWM1.html) -- pulse is high wherever the message exceeds the
+      // carrier's instantaneous value, so the ON-time varies with amplitude.
+      var carrierPWM = t.map(function (time) { return a * Math.sign(Math.sin(2 * Math.PI * fc * time + 0.5)); });
+      var mPWM = t.map(function (time) { return 1.01 * a * Math.sin(2 * Math.PI * fm * time + 0.5); });
+      var pwm = mPWM.map(function (msg, index) { return msg >= carrierPWM[index] ? 1 : 0; });
+
+      // PPM: standard definition -- within each carrier period, a fixed-
+      // width pulse's START position shifts in proportion to the message
+      // amplitude at the start of that period (normalized to [0, 1]).
+      var samplesPerPeriod = Math.round(resolution / fc);
+      var pulseWidth = Math.max(1, Math.round(samplesPerPeriod * 0.05));
+      var ppm = new Array(m.length).fill(0);
+      for (var p = 0; p * samplesPerPeriod < m.length; p++) {
+        var periodStart = p * samplesPerPeriod;
+        var sample = m[periodStart] !== undefined ? m[periodStart] : 0;
+        var normalized = (sample + a) / (2 * a); // map [-a, a] -> [0, 1]
+        var maxOffset = samplesPerPeriod - pulseWidth;
+        var offset = Math.round(normalized * maxOffset);
+        for (var k = periodStart + offset; k < periodStart + offset + pulseWidth && k < m.length; k++) {
+          ppm[k] = 1;
+        }
+      }
+
+      var plotRange = [1, Math.min(Math.floor((3 / fm) * resolution), m.length - 1)];
+
+      Plotly.newPlot('messagePlot', [{
+        x: t.slice(plotRange[0], plotRange[1]), y: m.slice(plotRange[0], plotRange[1]),
+        mode: 'lines', name: 'Message signal', line: { color: 'green' }
+      }], {
+        title: 'Shared message signal m(t)',
+        xaxis: { title: 'Time (s)' }, yaxis: { title: 'Amplitude' }
+      });
+
+      Plotly.newPlot('pamPlot', [{
+        x: t.slice(plotRange[0], plotRange[1]), y: pam.slice(plotRange[0], plotRange[1]),
+        mode: 'lines', name: 'PAM signal', line: { color: 'blue' }
+      }], {
+        title: 'PAM output (amplitude varies)',
+        xaxis: { title: 'Time (s)' }, yaxis: { title: 'Amplitude' }
+      });
+
+      Plotly.newPlot('pwmPlot', [{
+        x: t.slice(plotRange[0], plotRange[1]), y: pwm.slice(plotRange[0], plotRange[1]),
+        mode: 'lines', name: 'PWM signal', line: { color: 'red' }
+      }], {
+        title: 'PWM output (pulse width varies)',
+        xaxis: { title: 'Time (s)' }, yaxis: { title: 'Amplitude', range: [-0.2, 1.2] }
+      });
+
+      Plotly.newPlot('ppmPlot', [{
+        x: t.slice(plotRange[0], plotRange[1]), y: ppm.slice(plotRange[0], plotRange[1]),
+        mode: 'lines', name: 'PPM signal', line: { color: 'purple' }
+      }], {
+        title: 'PPM output (pulse position varies)',
+        xaxis: { title: 'Time (s)' }, yaxis: { title: 'Amplitude', range: [-0.2, 1.2] }
+      });
+
+      document.getElementById('messagePlotSection').scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+  </body>
+</html>
